@@ -1,0 +1,55 @@
+#include <registers.h>
+
+void printCurrentRegisters(registerStructT * dumpedRegisters) {
+	printString("RIP=0x", 10);
+	printNumber(dumpedRegisters->rip, 16);
+	printChar('\n');
+	printString("RAX=0x", 10);
+	printNumber(dumpedRegisters->rax, 16);
+	printChar('\n');
+	printString("RBX=0x", 10);
+	printNumber(dumpedRegisters->rbx, 16);
+	printChar('\n');
+	printString("RCX=0x", 10);
+	printNumber(dumpedRegisters->rcx, 16);
+	printChar('\n');
+	printString("RDX=0x", 10);
+	printNumber(dumpedRegisters->rdx, 16);
+	printChar('\n');
+	printString("RSP=0x", 10);
+	printNumber(dumpedRegisters->rsp, 16);
+	printChar('\n');
+	printString("RBP=0x", 10);
+	printNumber(dumpedRegisters->rbp, 16);
+	printChar('\n');
+	printString("RSI=0x", 10);
+	printNumber(dumpedRegisters->rsi, 16);
+	printChar('\n');
+	printString("RDI=0x", 10);
+	printNumber(dumpedRegisters->rdi, 16);
+	printChar('\n');
+	printString("R8 =0x", 10);
+	printNumber(dumpedRegisters->r8, 16);
+	printChar('\n');
+	printString("R9 =0x", 10);
+	printNumber(dumpedRegisters->r9, 16);
+	printChar('\n');
+	printString("R10=0x", 10);
+	printNumber(dumpedRegisters->r10, 16);
+	printChar('\n');
+	printString("R11=0x", 10);
+	printNumber(dumpedRegisters->r11, 16);
+	printChar('\n');
+	printString("R12=0x", 10);
+	printNumber(dumpedRegisters->r12, 16);
+	printChar('\n');
+	printString("R13=0x", 10);
+	printNumber(dumpedRegisters->r13, 16);
+	printChar('\n');
+	printString("R14=0x", 10);
+	printNumber(dumpedRegisters->r14, 16);
+	printChar('\n');
+	printString("R15=0x", 10);
+	printNumber(dumpedRegisters->r15, 16);
+	printChar('\n');
+}

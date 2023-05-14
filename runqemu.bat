@@ -1,0 +1,1 @@
+qemu-system-x86_64 -audiodev dsound,id=mimi -hda Image/x64BareBonesImage.qcow2 -m 512 -machine pcspk-audiodev=mimi
