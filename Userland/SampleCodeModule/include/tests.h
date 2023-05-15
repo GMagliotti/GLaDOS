@@ -5,6 +5,6 @@
 
 void testInvalidExc();
 void test0Div();
-// void testMalloc(); 
+void testMalloc(); 
 
 #endif

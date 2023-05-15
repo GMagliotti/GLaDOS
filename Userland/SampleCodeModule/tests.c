@@ -6,7 +6,7 @@ void test0Div() {
     var=80/var;
 }
 
-// void testMalloc() {
-// 	void * theptr = call_to_malloc((uint32_t)0x100);
-// 	*((char *) theptr) = 69;
-// }
+void testMalloc() {
+	void * theptr = call_to_malloc((uint32_t)0x100);
+	*((char *) theptr) = 69;
+}
