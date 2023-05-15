@@ -5,6 +5,7 @@
 #include <moduleLoader.h>
 #include <naiveConsole.h>
 #include <interrupts.h>
+#include <MemoryManager.h>
 
 extern uint8_t text;
 extern uint8_t rodata;
@@ -13,6 +14,7 @@ extern uint8_t bss;
 extern uint8_t endOfKernelBinary;
 extern uint8_t endOfKernel;
 
+MemoryManagerADT the_memory_manager = NULL;
 static const uint64_t PageSize = 0x1000;
 
 static void * const sampleCodeModuleAddress = (void*)0x400000;
@@ -104,6 +106,7 @@ extern void testInvalidExc();
 int main()
 {	
 	hvdClear();
+	the_memory_manager = createMemoryManager((void *)0x50000, (void *)0x1000000);
 	((EntryPoint)sampleCodeModuleAddress)();
 	return 0;
 }

@@ -1,10 +1,13 @@
 #include <syscalls.h>
+#include <MemoryManager.h>
 
 #define STDIN 0
 #define STDOUT 1
 #define STDERR 2
 
 extern uint8_t memoryAt(int dir); 
+
+extern MemoryManagerADT the_memory_manager;
 
 void sys_exit() {
     hvdClear();
@@ -160,4 +163,8 @@ void sys_setSize(int newSize) {
 
 void sys_printRegisters() {
     printCurrentRegisters(&registerDump);
+}
+
+void * sys_malloc(uint32_t requestedMemory) {
+    return allocMemory(the_memory_manager, requestedMemory);
 }

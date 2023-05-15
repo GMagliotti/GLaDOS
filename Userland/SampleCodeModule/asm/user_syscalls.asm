@@ -18,6 +18,7 @@ GLOBAL call_to_accessRTC
 GLOBAL call_to_memoryAt
 GLOBAL call_to_setSize
 GLOBAL call_to_printRegisters
+GLOBAL call_to_malloc
 
 %macro call_to_handler 1
     push rbp
@@ -87,3 +88,6 @@ call_to_setSize:
 
 call_to_printRegisters:
     call_to_handler 19
+
+call_to_malloc:
+    call_to_handler 20

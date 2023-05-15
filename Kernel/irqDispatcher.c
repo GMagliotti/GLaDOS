@@ -99,6 +99,9 @@ uint64_t int_80(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t
 		case 19:
 			sys_printRegisters();
 			break;
+		case 20:
+			sys_malloc((uint32_t) rsi);
+			break;
 		default:
 			return 0;
 			break;
