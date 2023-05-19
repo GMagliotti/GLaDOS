@@ -66,7 +66,7 @@ void * initializeKernelBinary()
 	ncPrint("[Initializing kernel's binary]");
 	ncNewline();
 
-	// memset(&bss, 0, &endOfKernel - &bss);
+	memset(&bss, 0, &endOfKernel - &bss);
 	// The &endOfKernel variable above is, for some reason, the address 0x409000 
 	// Instead of the expected 0x109000
 	// This completely breaks the OS since all memory from BSS (0x108000) all the way past the
@@ -77,7 +77,7 @@ void * initializeKernelBinary()
 	// 0x400000, the start of a function which works) but this makes more questions pop up 
 	// since the code at 0x400000 is in section .text which should be WRITE PROTECTED
 
-	clearBSS(&bss, 0x1000);
+	// clearBSS(&bss, 0x1000);
 	load_idt();
 	
 	

@@ -58,7 +58,9 @@ VBEModeInfoStructT * VBEModeInfoBlock = (VBEModeInfoStructT *) 0x0000000000005C0
 uint16_t getVBEHeight(){return VBEModeInfoBlock->height;}
 uint16_t getVBEWidth(){return VBEModeInfoBlock->width;}
 
-uint32_t videobuffer[1024 * 768] = {0};
+// TODO verify if deprecated, we could use it in the future for double 
+// buffer video memory
+// uint32_t videobuffer[1024 * 768] = {0};
 
 
 /* 
