@@ -5,6 +5,13 @@
 .bash_history
 maker.sh
 
+### QEMU ###
+*.bin
+*.sys
+*.img
+*.qcow2
+*.vmdk
+
 ### C ###
 # Prerequisites
 *.d

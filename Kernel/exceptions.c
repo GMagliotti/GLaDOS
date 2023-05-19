@@ -62,7 +62,7 @@ static void page_fault() {									// Falta un comentario de lo que hace esta ex
 static void general_protection_exc() {
 	hvdClear();
 	printColorString("Wait for it...", 15, RED);
-	sleep(3);
+	sleep(1);
 	printColorString("SEGMENTATION FAULT", 99, RED);
 }
 
