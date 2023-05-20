@@ -1,6 +1,6 @@
 #include <bitmap.h>
 
-#define AVAILABLE_SPACE 0x10000
+#define AVAILABLE_SPACE 0x22000
 
 typedef struct bitmap {
     uint8_t * bitmap_array;
@@ -60,15 +60,20 @@ void bmp_set_off(bit_amount bits_to_set, bit_amount start_bit) {
             current_index = start_bit/BITS_PER_SLOT,
             total_bits_set = 0;
     for ( ; total_bits_set < bits_to_set ; current_index++ ) {
-        for ( ; total_bits_set < bits_to_set && current_subindex < BITS_PER_SLOT ; current_subindex++) {
+        if (BITS_PER_SLOT < bits_to_set) {
+            the_bitmap.bitmap_array[current_index] = 0;
+            total_bits_set += BITS_PER_SLOT;
+        } else {
+            for ( ; total_bits_set < bits_to_set && current_subindex < BITS_PER_SLOT ; current_subindex++) {
             // Essentially:
             // 1. Take the least significant bit and shift it n bits left, assuming n=2  0b0001 turns into 0b0100
             // 2. Flip all bits, in our example: 0b0100 turns into 0b1011
             // 3. In the array, make it so all bits except for the one that is in the same position as the 
             //    last 0, remain the same whilst that one changes to 0.
             //    If the number was 0b1110, then after this the number will be 0b1010
-            the_bitmap.bitmap_array[current_index] = the_bitmap.bitmap_array[current_index] & (~(0x01U << current_subindex));
-            total_bits_set++;
+                the_bitmap.bitmap_array[current_index] = the_bitmap.bitmap_array[current_index] & (~(0x01U << current_subindex));
+                total_bits_set++;
+            }
         }
         current_subindex = 0;
     }
@@ -80,7 +85,7 @@ void bmp_set_off(bit_amount bits_to_set, bit_amount start_bit) {
  * @param size_in_bits The amount of consecutive free bits that are needed
  * @param index An address to a WORD, the index of the bitmap array will be returned here
  * @param bit An address to a BYTE, the bit subindex of the bitmap array will be returned here
- * @return bit_amount = DWORD - The starting bit of the position that fits the object in the bitmap, -1 if no fitting space was found
+ * @return bit_amount = QWORD - The starting bit of the position that fits the object in the bitmap, -1 if no fitting space was found
  */
 bit_amount bmp_find(bit_amount size_in_bits, slot_index * slot, bit_index * bit) {
     // TODO cambiar por un algoritmo mas rapido, este es muy naive

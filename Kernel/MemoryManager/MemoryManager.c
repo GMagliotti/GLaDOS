@@ -11,7 +11,8 @@ typedef struct MemoryManagerCDT {
 
 MemoryManagerADT createMemoryManager(void *const restrict memoryForMemoryManager, void *const restrict managedMemory) {
 	MemoryManagerADT the_mman = (MemoryManagerADT) memoryForMemoryManager;
-	bmp_initialize((uint8_t *)memoryForMemoryManager+sizeof(MemoryManagerCDT), MMAN_MEMSIZE/MMAN_PAGESIZE);
+	if (!bmp_initialize((uint8_t *)memoryForMemoryManager+sizeof(MemoryManagerCDT), MMAN_PAGECOUNT)) return NULL;
+	sleep(2);
 	the_mman->managed_memory_start_address = (uint8_t *) managedMemory;
 	return the_mman;
 }

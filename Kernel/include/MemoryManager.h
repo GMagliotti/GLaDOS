@@ -5,12 +5,14 @@
 #define MMAN_USED 1
 #define MMAN_BOUNDARY 2 
 
-#define MMAN_PAGECOUNT  (MMAN_MEMSIZE/MMAN_PAGESIZE)
+
 #define MMAN_PAGESIZE   0x1000
 #define MMAN_MEMSIZE    0x10000000
+#define MMAN_PAGECOUNT  (MMAN_MEMSIZE/MMAN_PAGESIZE)
 
 #include <stdlib.h>
 #include <bitmap.h>
+#include <lib.h>
 
 typedef struct MemoryManagerCDT *MemoryManagerADT;
 
