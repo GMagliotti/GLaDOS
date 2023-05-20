@@ -3,9 +3,14 @@
 #define AVAILABLE_SPACE 0x10000
 
 typedef struct bitmap {
-    uint8_t * bitmapArray;
+    uint8_t * bitmap_array;
     uint16_t size;
 } bitmap;
+
+typedef struct pageinfo {
+    uint32_t start_addr;
+    uint8_t state;
+} pageinfo;
 
 bitmap the_bitmap;
 
@@ -17,11 +22,11 @@ bitmap the_bitmap;
  * @return false if sizeInBits is 0 or larger than what's available, true if bitmap was correctly initialized
  */
 bool bmp_initialize(uint8_t * start_address, bit_amount size_in_bits) {
-    if (size_in_bits == 0 || size_in_bits > AVAILABLE_SPACE*8) return false;
-    the_bitmap.bitmapArray = start_address;
+    if (size_in_bits == 0 || size_in_bits > AVAILABLE_SPACE*BITS_PER_SLOT) return false;
+    the_bitmap.bitmap_array = start_address;
     the_bitmap.size = (size_in_bits%BITS_PER_SLOT == 0) ? 
         size_in_bits/BITS_PER_SLOT : (size_in_bits/BITS_PER_SLOT)+1;
-    memset(the_bitmap.bitmapArray, 0, the_bitmap.size);
+    memset(the_bitmap.bitmap_array, 0, the_bitmap.size);
     return true;
 }
 
@@ -37,7 +42,7 @@ void bmp_set_on(bit_amount bits_to_set, bit_amount start_bit) {
             total_bits_set = 0;
     for ( ; total_bits_set < bits_to_set ; current_index++ ) {
         for ( ; total_bits_set < bits_to_set && current_subindex < BITS_PER_SLOT ; current_subindex++) {
-            the_bitmap.bitmapArray[current_index] = the_bitmap.bitmapArray[current_index] | (0x01U << current_subindex);
+            the_bitmap.bitmap_array[current_index] = the_bitmap.bitmap_array[current_index] | (0x01U << current_subindex);
             total_bits_set++;
         }
         current_subindex = 0;
@@ -62,7 +67,7 @@ void bmp_set_off(bit_amount bits_to_set, bit_amount start_bit) {
             // 3. In the array, make it so all bits except for the one that is in the same position as the 
             //    last 0, remain the same whilst that one changes to 0.
             //    If the number was 0b1110, then after this the number will be 0b1010
-            the_bitmap.bitmapArray[current_index] = the_bitmap.bitmapArray[current_index] & (~(0x01U << current_subindex));
+            the_bitmap.bitmap_array[current_index] = the_bitmap.bitmap_array[current_index] & (~(0x01U << current_subindex));
             total_bits_set++;
         }
         current_subindex = 0;
@@ -80,10 +85,10 @@ void bmp_set_off(bit_amount bits_to_set, bit_amount start_bit) {
 bit_amount bmp_find(bit_amount size_in_bits, slot_index * slot, bit_index * bit) {
     // TODO cambiar por un algoritmo mas rapido, este es muy naive
     bit_amount bits_traveled = 0, consecutive_free_bits = 0, consecutive_start_bit = 0; 
-    const bit_amount max_bits = the_bitmap.size*BITS_PER_SLOT;
+    const bit_amount max_bits = ((bit_amount)the_bitmap.size)*BITS_PER_SLOT;
     for (slot_index i = 0; bits_traveled < max_bits; i++) {
         for (bit_index j = 0; bits_traveled < max_bits && j < BITS_PER_SLOT; j++) {
-            if ( ((the_bitmap.bitmapArray[i] >> j) & 0x01U) == 0 ) {
+            if ( ((the_bitmap.bitmap_array[i] >> j) & 0x01U) == 0 ) {
                 consecutive_free_bits++;
                 if (consecutive_free_bits == 1) {
                     *slot = i;
@@ -120,7 +125,7 @@ bit_amount bmp_find(bit_amount size_in_bits, slot_index * slot, bit_index * bit)
 //     printf("Bitmap after setting bits on: ");
 //     for (int i = 0; i < the_bitmap.size; i++) {
 //         for (int j = 0; j < BITS_PER_SLOT; j++) {
-//             printf("%d", (the_bitmap.bitmapArray[i] >> j) & 0x01U);
+//             printf("%d", (the_bitmap.bitmap_array[i] >> j) & 0x01U);
 //         }
 //     }
 //     printf("\n");
@@ -130,7 +135,7 @@ bit_amount bmp_find(bit_amount size_in_bits, slot_index * slot, bit_index * bit)
 //     printf("Bitmap after setting bits off: ");
 //     for (int i = 0; i < the_bitmap.size; i++) {
 //         for (int j = 0; j < BITS_PER_SLOT; j++) {
-//             printf("%d", (the_bitmap.bitmapArray[i] >> j) & 0x01U);
+//             printf("%d", (the_bitmap.bitmap_array[i] >> j) & 0x01U);
 //         }
 //     }
 //     printf("\n");
