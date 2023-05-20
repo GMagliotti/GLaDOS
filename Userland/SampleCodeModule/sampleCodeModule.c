@@ -9,10 +9,14 @@
 #include <tests.h>
 #include <funclib.h>
 
+// debug //
+#include "tests/test_mm.h"
+
 void help();
 
 int main() {
 	hvdClear();
+	test_mm();
 	shell();	
 	return 0;
 }

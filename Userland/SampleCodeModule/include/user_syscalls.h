@@ -2,6 +2,8 @@
 #define USER_SYSCALLS_H
 
 #include <stdint.h>
+#include <user_syscalls.h>
+#include <stdlib.h>
 #include <time.h>
 
 #define STDIN 0
@@ -30,7 +32,8 @@ void call_to_accessRTC(timeStructT * timeStruct);
 uint8_t call_to_memoryAt(int dir);
 void call_to_setSize(int newSize);
 void call_to_printRegisters();
-void * call_to_malloc(uint32_t requestedMemory);
+void * call_to_malloc(size_t requestedMemory);
+void call_to_free(void * mem_ptr);
 
 
 #endif

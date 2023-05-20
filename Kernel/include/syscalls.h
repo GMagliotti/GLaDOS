@@ -7,6 +7,7 @@
 #include <textModeDriver.h>
 #include <textDriver.h>
 #include <videoDriver.h>
+#include <stdlib.h>
 #include <lib.h>
 #include <interrupts.h>
 #include <time.h>
@@ -41,6 +42,7 @@ void sys_setbash();
 void sys_beep(int freq, int timems);
 void sys_setSize(int newSize);
 void sys_printRegisters();
-void * sys_malloc(uint32_t requestedSize);
+void * sys_malloc(size_t requestedSize);
+void sys_free(void * memptr);
 
 #endif

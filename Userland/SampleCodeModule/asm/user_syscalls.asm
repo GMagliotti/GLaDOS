@@ -19,6 +19,7 @@ GLOBAL call_to_memoryAt
 GLOBAL call_to_setSize
 GLOBAL call_to_printRegisters
 GLOBAL call_to_malloc
+GLOBAL call_to_free
 
 %macro call_to_handler 1
     push rbp
@@ -91,3 +92,6 @@ call_to_printRegisters:
 
 call_to_malloc:
     call_to_handler 20
+
+call_to_free:
+    call_to_handler 21

@@ -165,6 +165,10 @@ void sys_printRegisters() {
     printCurrentRegisters(&registerDump);
 }
 
-void * sys_malloc(uint32_t requestedMemory) {
+void * sys_malloc(size_t requestedMemory) {
     return allocMemory(the_memory_manager, requestedMemory);
+}
+
+void sys_free(void * memptr) {
+    mman_free(the_memory_manager, memptr);
 }
