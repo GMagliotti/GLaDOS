@@ -4,6 +4,7 @@
 ### HARRY ###
 .bash_history
 maker.sh
+/Userland/SampleCodeModule/tests/*
 
 ### QEMU ###
 *.bin
