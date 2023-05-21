@@ -1,2 +1,2 @@
 #!/bin/bash
-qemu-system-x86_64 -audiodev pa,id=foo -hda Image/x64BareBonesImage.qcow2 -m 512 -machine pcspk-audiodev=foo
+qemu-system-x86_64 -audiodev pa,id=foo -hda Image/x64BareBonesImage.qcow2 -m 512

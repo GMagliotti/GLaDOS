@@ -14,7 +14,12 @@
 #include <bitmap.h>
 #include <lib.h>
 
-typedef struct MemoryManagerCDT *MemoryManagerADT;
+#include <stdlib.h>
+#include <stdint.h>
+#include <string.h>
+#include <stdbool.h>
+
+typedef struct MemoryManager *MemoryManagerADT;
 
 MemoryManagerADT createMemoryManager(void *const restrict memoryForMemoryManager, void *const restrict managedMemory);
 

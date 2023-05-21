@@ -4,7 +4,7 @@ typedef struct page_info {
 	uint8_t state;
 } page_info;
 
-typedef struct MemoryManagerCDT {
+typedef struct MemoryManager {
 	uint8_t * managed_memory_start_address;
 	page_info page_info_array[MMAN_PAGECOUNT];
 } MemoryManagerCDT;

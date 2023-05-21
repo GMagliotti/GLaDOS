@@ -1,6 +1,6 @@
-docker start dockerarqui
-docker exec -it dockerarqui make clean -C/root/Toolchain
-docker exec -it dockerarqui make clean -C/root/
-docker exec -it dockerarqui make -C/root/Toolchain
-docker exec -it dockerarqui make -C/root/
-docker stop dockerarqui
+docker start SO
+docker exec -it SO make clean -C/root/TP2-SO/GLaDOS/Toolchain
+docker exec -it SO make clean -C/root/TP2-SO/GLaDOS/
+docker exec -it SO make -C/root/TP2-SO/GLaDOS/Toolchain
+docker exec -it SO make enable_buddy=1 -C/root/TP2-SO/GLaDOS/
+docker stop SO
