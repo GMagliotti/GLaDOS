@@ -36,4 +36,6 @@ uint8_t accessRTC(uint8_t reg);
 void sleep(uint32_t seconds);
 void sleepms(int mseconds);
 
+int32_t strlen(char * string);
+
 #endif

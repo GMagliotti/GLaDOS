@@ -24,6 +24,7 @@ void printNumber(int value, int base);
 
 int stringEquals(char* buf, char* arr);
 int strLength(char* str);
+void strCpy(char* dest, char* src);
 
 void checkBuffer();
 void saveChar(uint8_t c);

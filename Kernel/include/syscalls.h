@@ -44,5 +44,13 @@ void sys_setSize(int newSize);
 void sys_printRegisters();
 void * sys_malloc(size_t requestedSize);
 void sys_free(void * memptr);
+int sys_getpid();
+void sys_ps();
+void sys_loop(int pid, int ms);
+int sys_kill(int pid);
+int sys_nice(int pid, int priority);
+void sys_block(int pid);
+int sys_create_process(char* name);
+void sys_foreground(int pid);
 
 #endif

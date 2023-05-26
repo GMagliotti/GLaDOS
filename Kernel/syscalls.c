@@ -203,7 +203,7 @@ void sys_block(int pid) {
     return;
 }
 
-int create_process(char* name) {
+int sys_create_process(char* name) {
     return 0;
 }
 
