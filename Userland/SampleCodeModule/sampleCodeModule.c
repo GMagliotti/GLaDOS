@@ -16,7 +16,7 @@ void help();
 
 int main() {
 	hvdClear();
-	test_mm();
+	// test_mm();
 	shell();	
 	return 0;
 }

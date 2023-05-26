@@ -1,6 +1,6 @@
 #include <tron.h>
 
-#define NULL 0
+#define NONE 0
 #define UP -1
 #define DOWN 1
 #define LEFT -1
@@ -32,7 +32,7 @@ void drawGrid();
 void movePlayers(player *p1, player *p2);
 void clearTaken();
 
-int p1YFlag=UP, p2YFlag=DOWN, p1XFlag=NULL, p2XFlag=NULL; //en que direccion de x e y se moverá cada jugador en cada refresh 
+int p1YFlag=UP, p2YFlag=DOWN, p1XFlag=NONE, p2XFlag=NONE; //en que direccion de x e y se moverá cada jugador en cada refresh 
 //inicialmente se mueven para arriba
 
 
@@ -81,7 +81,7 @@ void tron(){
     gameOver(whoHit); //imprime ganador de UNA partida (de 3)
 	//volvemos a bash:
     clearTaken(); //seteo array de taken en 0 para proxima vez que se juegue
-	p1XFlag=p2XFlag=NULL;	//seteo direccion default de comienzo (para arriba)
+	p1XFlag=p2XFlag=NONE;	//seteo direccion default de comienzo (para arriba)
 	p1YFlag=UP;
 	p2YFlag=DOWN;
 	playedGames++;
@@ -96,7 +96,7 @@ void tron(){
 }
 void endGame(){
 	clearTaken();
-	p1XFlag=p2XFlag=NULL;	//seteo direccion default de comienzo (para arriba)
+	p1XFlag=p2XFlag=NONE;	//seteo direccion default de comienzo (para arriba)
 	p1YFlag=UP;
 	p2YFlag=DOWN;
 	playedGames = 0;
@@ -108,7 +108,7 @@ void endGame(){
 void clearTaken(){
 	for(int i=0; i<GRIDXLIMIT; i++) //seteo array de taken en 0 para proxima vez que se juegue
         for(int j=0; j<GRIDYLIMIT; j++)
-            taken[i][j]=NULL;
+            taken[i][j]=NONE;
 }
 
 void printScore(int p1, int p2){
@@ -201,35 +201,35 @@ void tronChar(uint8_t c){
 	//si quieren moverse en mismo eje, sentido opuesto que ya se estaban moviendo, no se modifica nada 
 	if(c=='W' && p1YFlag!=DOWN){ //arriba jugador 1
 		p1YFlag=UP; 
-		p1XFlag=NULL;
+		p1XFlag=NONE;
 	}
 	if(c=='S' && p1YFlag!=UP){ //abajo jugador 1
 		p1YFlag=DOWN;
-		p1XFlag=NULL;
+		p1XFlag=NONE;
 	}
 	if(c=='A' && p1XFlag!=RIGHT){ //izquierda jugador 1
 		p1XFlag=LEFT;
-		p1YFlag=NULL;
+		p1YFlag=NONE;
 	}
 	if(c=='D' && p1XFlag!=LEFT){ //derecha jugador 1
 		p1XFlag=RIGHT;
-		p1YFlag=NULL; 
+		p1YFlag=NONE; 
 	}
 	if(c=='I' && p2YFlag!=DOWN){ //arriba jugador 2
 		p2YFlag=UP;
-		p2XFlag=NULL;
+		p2XFlag=NONE;
 	}
 	if(c=='K' && p2YFlag!=UP){ //abajo jugador 2
 		p2YFlag=DOWN;
-		p2XFlag=NULL; 
+		p2XFlag=NONE; 
 	}
 	if(c=='L' && p2XFlag!=LEFT){ //derecha jugador 2
 		p2XFlag=RIGHT;
-		p2YFlag=NULL; 
+		p2YFlag=NONE; 
 	}
 	if(c=='J' && p2XFlag!=RIGHT){ //izquierda jugador 2
 		p2XFlag=LEFT;
-		p2YFlag=NULL; 
+		p2YFlag=NONE; 
 	}
 }
 

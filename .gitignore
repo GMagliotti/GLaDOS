@@ -86,4 +86,6 @@ dkms.conf
 .history
 .ionide
 
+*.bat
+
 # End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,cC
