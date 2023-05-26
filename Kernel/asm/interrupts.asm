@@ -9,6 +9,7 @@ EXTERN hvdPrintChar
 EXTERN hvdClear
 EXTERN terminate
 EXTERN guruMeditation
+EXTERN scheduler
 
 GLOBAL _irq00Handler
 GLOBAL _irq01Handler
@@ -182,7 +183,22 @@ picSlaveMask:
 
 ;8254 Timer (Timer Tick)
 _irq00Handler:
-	irqHandlerMaster 0h
+
+	pushState
+
+	mov rdi, 0h ; pasaje de parametro de irq code
+	call irqDispatcher
+
+	mov rdi, rsp
+	call scheduler
+	mov rsp, rax
+
+	; signal pic EOI (End of Interrupt)
+	mov al, 20h
+	out 20h, al
+
+	popState
+	iretq
 
 ;Keyboard
 _irq01Handler:
@@ -193,8 +209,8 @@ _irq01Handler:
 	cmp eax, 0
 	jz .eoi
 	dumpState
+
 	; signal pic EOI (End of Interrupt)
-	
 	.eoi: mov al, 20h
 	out 20h, al
 

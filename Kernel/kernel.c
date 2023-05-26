@@ -81,10 +81,7 @@ void * initializeKernelBinary()
 	// 0x400000, the start of a function which works) but this makes more questions pop up 
 	// since the code at 0x400000 is in section .text which should be WRITE PROTECTED
 
-	// clearBSS(&bss, 0x1000);
-	load_idt();
-	
-	
+	// clearBSS(&bss, 0x1000);	
 
 	ncPrint("  text: 0x");
 	ncPrintHex((uint64_t)&text);
@@ -114,11 +111,14 @@ int main()
 	the_scheduler = create_scheduler(idle);
 	// ((EntryPoint)sampleCodeModuleAddress)();
 	printColorString("Scheduler creado", 0xFFFFFFFFFFFFFFFF, 0x00FF00);
+	load_idt();
+	sleep(1);
 	return 0;
 }
 
 void idle(int argc, char ** argv) {
 	while (1) {
+		printColorString("I'm idling mofos", 0xFFFFFFFFFFFFFFFF, 0x0000FF);
 		_hlt();
 	}
 }
