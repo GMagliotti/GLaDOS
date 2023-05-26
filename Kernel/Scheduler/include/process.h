@@ -52,7 +52,7 @@ typedef struct process {
 typedef process * process_ptr;
 
 process_ptr initialize_shell(void);
-process_ptr initialize_idle(void);
+process_ptr initialize_idle(void (*idle_fn)(int, char **));
 void uninitialize(void);
 
 process_ptr create_process(char* name, int argc, char** argv, void (*fn)(int, char **), int visibility, int fd[2]);

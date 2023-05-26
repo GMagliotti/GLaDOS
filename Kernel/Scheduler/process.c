@@ -13,9 +13,9 @@ process_ptr initialize_shell(void) {
     return create_process("Shell", 0, NULL, NULL, FOREGROUND, fd);
 }
 
-process_ptr initialize_idle(void) {
+process_ptr initialize_idle(void (*idle_fn)(int, char **)) {
     int fd[2] = { 0, 1 };
-    process_ptr idle = create_process("Idle", 0, NULL, NULL, FOREGROUND, fd);
+    process_ptr idle = create_process("Idle", 0, NULL, idle_fn, FOREGROUND, fd);
     idle->priority = -1;
     return idle;
 }

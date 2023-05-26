@@ -6,6 +6,7 @@
 #include <naiveConsole.h>
 #include <interrupts.h>
 #include <MemoryManager.h>
+#include "./Scheduler/include/scheduler.h"
 
 extern uint8_t text;
 extern uint8_t rodata;
@@ -15,10 +16,13 @@ extern uint8_t endOfKernelBinary;
 extern uint8_t endOfKernel;
 
 MemoryManagerADT the_memory_manager = NULL;
+rr_queue_ptr the_scheduler = NULL;
 static const uint64_t PageSize = 0x1000;
 
 static void * const sampleCodeModuleAddress = (void*)0x400000;
 static void * const sampleDataModuleAddress = (void*)0x500000;
+
+void idle(int, char **);
 
 typedef int (*EntryPoint)();
 
@@ -107,6 +111,14 @@ int main()
 {	
 	hvdClear();
 	the_memory_manager = createMemoryManager((void *)0x50000, (void *)0x1000000);
-	((EntryPoint)sampleCodeModuleAddress)();
+	the_scheduler = create_scheduler(idle);
+	// ((EntryPoint)sampleCodeModuleAddress)();
+	printColorString("Scheduler creado", 0xFFFFFFFFFFFFFFFF, 0x00FF00);
 	return 0;
+}
+
+void idle(int argc, char ** argv) {
+	while (1) {
+		_hlt();
+	}
 }

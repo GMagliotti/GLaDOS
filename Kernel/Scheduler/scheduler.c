@@ -1,10 +1,11 @@
 #include "include/scheduler.h"
-#include <MemoryManager.h>
+
+rr_queue_ptr rr_scheduler;  
 
 // newScheduler: crea un scheduler de tipo RoundRobinWithPriority
-rr_queue_ptr create_scheduler(void) {
-    rr_scheduler = create_new_round_robin(initialize_shell());
-    scheduler_enqueue_process(initialize_idle());
+rr_queue_ptr create_scheduler(void (*fn)(int, char **)) {
+    rr_scheduler = create_new_round_robin(initialize_idle(fn));
+    // scheduler_enqueue_process(initialize_shell());
     
     return rr_scheduler;
 }
