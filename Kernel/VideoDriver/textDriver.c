@@ -111,6 +111,15 @@ int strLength(char* str){
 	return i;
 }
 
+void strCpy(char* dest, char* src) {
+    int i = 0;
+    while (src[i] != '\0') {
+        dest[i] = src[i];
+        i++;
+    }
+    dest[i] = '\0'; // Don't forget to add the null terminator at the end
+}
+
 /* -------------------------------- GUARDADO DE KEY INTERRUPTS --------------------------------*/
 static char keyBuffer[256] = {0};
 static int keyBufferPos = 0;

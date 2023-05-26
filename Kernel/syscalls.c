@@ -172,3 +172,43 @@ void * sys_malloc(size_t requestedMemory) {
 void sys_free(void * memptr) {
     mman_free(the_memory_manager, memptr);
 }
+
+int sys_getpid() {
+    //return current_pid();
+    return 0;
+}
+
+void sys_ps() {
+    // ps();
+    return;
+}
+
+void sys_loop(int pid, int ms) {
+    //loop_process(pid, ms);
+    return;
+}
+
+int sys_kill(int pid) {
+    //return kill_process(pid);
+    return 0;
+}
+
+int sys_nice(int pid, int priority) {
+    //return nice_process(pid, priority);
+    return 0;
+}
+
+void sys_block(int pid) {
+    //block_process(pid);
+    return;
+}
+
+int create_process(char* name) {
+    return 0;
+}
+
+void sys_foreground(int pid) {
+    //foreground_process(pid);
+    return;
+}
+
