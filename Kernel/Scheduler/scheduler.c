@@ -41,15 +41,18 @@ void * scheduler(void * rsp) {
         }
     } else if(current_process->status == BLOCKED) {
         
+        save_rsp(current_process, rsp);
+
         current_process = next_process(rr_scheduler);
 
         *to_ret_rsp = context_switch(current_process);
     } else {
         process_ptr incoming_process = next_tick(rr_scheduler);
         
-        // if(incoming_process != current_process) { //context switch necessary
-            to_ret_rsp = (uint64_t) context_switch(current_process);
-        // }
+        if(incoming_process != current_process) { //context switch necessary
+            save_rsp(current_process, rsp);
+            to_ret_rsp = (uint64_t) context_switch(incoming_process);
+        }
 
     }
     return to_ret_rsp;
@@ -80,7 +83,7 @@ uint64_t context_switch(process_ptr process) {
 
 
 void save_rsp(process_ptr process, uint64_t * to_save) {
-    process->rsp = *to_save;
+    process->rsp = to_save;
 }
 
 
