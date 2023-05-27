@@ -109,9 +109,10 @@ int main()
 	hvdClear();
 	the_memory_manager = createMemoryManager((void *)0x50000, (void *)0x1000000);
 	the_scheduler = create_scheduler(idle);
-	// ((EntryPoint)sampleCodeModuleAddress)();
-	printColorString("Scheduler creado", 0xFFFFFFFFFFFFFFFF, 0x00FF00);
 	load_idt();
+	((EntryPoint)sampleCodeModuleAddress)();
+	printColorString("Scheduler creado", 0xFFFFFFFFFFFFFFFF, 0x00FF00);
+	
 	sleep(1);
 	return 0;
 }
