@@ -4,7 +4,6 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include <lib.h>
 
 #define ERROR -1
 
@@ -48,8 +47,11 @@ typedef struct process {
     uint64_t rbp;
 } process;
 
-
 typedef process * process_ptr;
+
+#include <lib.h>
+
+
 
 process_ptr initialize_shell(void);
 process_ptr initialize_idle(void (*idle_fn)(int, char **));
@@ -66,7 +68,6 @@ process_ptr get_process(int pid);
 void foreground_process(int pid);
 void copy_args(char** destination, char** source, int amount);
 void free_args(char** args, int argc);
-void initialize_stack(process_ptr process, char** argv, int argc);
 int process_exists(int pid);
 int get_free_pid(void);
 void force_timer(void);
@@ -79,5 +80,6 @@ void set_current_process(int new_pid);
 
 int get_free_pid(void);
 bool wants_to_run(process_ptr process);
+extern void initialize_stack(uint64_t new_program_stack, char** argv, int argc, void (*fn)(int, char **));
 
 #endif

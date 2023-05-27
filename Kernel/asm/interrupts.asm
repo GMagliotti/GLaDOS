@@ -5,11 +5,14 @@ GLOBAL picMasterMask
 GLOBAL picSlaveMask
 GLOBAL haltcpu
 GLOBAL _hlt
+GLOBAL initialize_stack
+
 EXTERN hvdPrintChar
 EXTERN hvdClear
 EXTERN terminate
 EXTERN guruMeditation
 EXTERN scheduler
+
 
 GLOBAL _irq00Handler
 GLOBAL _irq01Handler
@@ -148,6 +151,69 @@ SECTION .text
 GLOBAL test
 test:
 	mov rax, rcx
+	ret
+
+; rdi = void * rsp
+; rsi = char** argv
+; rdx = int argc 
+; rcx = void (*fn)(int, char **)
+initialize_stack:
+	;pop rbx			; Direccion de retorno a funcion create_process()
+	;push rdx		; ARGC
+	;push rsi		; ARGV	
+	mov rax, 0h 
+	mov [rdi+152], rax	 
+	;push QWORD 0h 	; Stack Segment (Hardcoded, cambiar)
+	mov [rdi+144], rdi
+	;push rdi		; RSP
+	mov rax, 202h
+	mov [rdi+136], rax
+	;push QWORD 202h ; RFLAGS (Hardcoded, cambiar)
+	mov rax, 8h
+	mov [rdi+128], rax
+	;push QWORD 8h	; Code Segment (Hardcoded, cambiar)
+	mov [rdi+120], rcx
+	;push rcx		; Puntero a programa
+	;pushState		; El resto, porque popState se llama en int
+	mov [rdi+112], rax
+	;push QWORD 1h
+	mov [rdi+104], rbx
+	;push QWORD 2h
+	mov [rdi+96], rcx
+	;push QWORD 3h
+	mov [rdi+88], rdx
+	;push QWORD 4h
+	mov [rdi+80], rsi
+	;push QWORD 5h
+	mov [rdi+72], rdi
+	;push QWORD 6h
+	mov rsi, 0h
+	mov [rdi+64], rsi
+	;push QWORD 7h
+	mov r8, 8h
+	mov [rdi+56], r8
+	;push QWORD 8h
+	mov r9, 9h
+	mov [rdi+48], r9
+	;push QWORD 9h
+	mov r10, 10h
+	mov [rdi+40], r10
+	;push QWORD 10h
+	mov r11, 11h
+	mov [rdi+32], r11
+	;push QWORD 11h
+	mov r12, 12h
+	mov [rdi+24], r12
+	;push QWORD 12h
+	mov r13, 13h
+	mov [rdi+16], r13
+	;push QWORD 13h
+	mov r14, 14h
+	mov [rdi+8], r14
+	;push QWORD 14h
+	mov r15, 15h
+	mov [rdi], r15
+	;push rax		; Direccion de retorno
 	ret
 	
 _hlt:

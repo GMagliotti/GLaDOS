@@ -97,7 +97,7 @@ process_ptr create_process(char* name, int argc, char** argv, void (*fn)(int, ch
     new_process->pid = pid;
     new_process->status = ALIVE;
 
-    initialize_stack(new_process, args, argc);
+    initialize_stack(new_process->rsp, args, argc, fn);
     process_array[pid] = new_process;
     process_count++;
     return new_process;
@@ -256,33 +256,33 @@ void foreground_process(int pid) {
     process_array[pid]->visibility = FOREGROUND;
 }
 
-void initialize_stack(process_ptr process, char** argv, int argc) {
-    registerBackup * stack = (registerBackup *) process->rsp; 
+// void initialize_stack(process_ptr process, char** argv, int argc, void (*fn)(int, char **)) {
+//     registerBackup * stack = (registerBackup *) process->rsp; 
 
-    stack->r15  = 0x001;
-    stack->r14  = 0x002;
-    stack->r13  = 0x003;
-    stack->r12  = 0x004;
-    stack->r11  = 0x005;
-    stack->r10  = 0x006;
-    stack->r9   = 0x007;
-    stack->r8   = 0x008;
+//     stack->r15  = 0x001;
+//     stack->r14  = 0x002;
+//     stack->r13  = 0x003;
+//     stack->r12  = 0x004;
+//     stack->r11  = 0x005;
+//     stack->r10  = 0x006;
+//     stack->r9   = 0x007;
+//     stack->r8   = 0x008;
 
-    //info necesaria
-    stack->rsi  = (uint64_t) argv;
+//     //info necesaria
+//     stack->rsi  = (uint64_t) argv;
 
-    stack->rdi  = argc;
-    stack->rbp  = 0; //para testeo
-    stack->rdx  = 0;
-    stack->rcx  = 0;
-    stack->rbx  = 0;
-    stack->rax  = 0;
-    stack->rip  = 0;
-    stack->cs   = 0x8;
-    stack->rflags = 0x202;
-    stack->rsp = 0; //para testeo
-    stack->ss = 0x0;
-}
+//     stack->rdi  = argc;
+//     stack->rbp  = process->rbp; //para testeo
+//     stack->rdx  = 0;
+//     stack->rcx  = 0;
+//     stack->rbx  = 0;
+//     stack->rax  = 0;
+//     stack->rip  = fn;
+//     stack->cs   = 0x8;
+//     stack->rflags = 0x202;
+//     stack->rsp = process->rsp; //para testeo
+//     stack->ss = 0x0;
+// }
 
 /**
  * @brief 

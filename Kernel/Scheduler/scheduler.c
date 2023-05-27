@@ -47,9 +47,9 @@ void * scheduler(void * rsp) {
     } else {
         process_ptr incoming_process = next_tick(rr_scheduler);
         
-        if(incoming_process != current_process) { //context switch necessary
-            *to_ret_rsp = context_switch(incoming_process);
-        }
+        // if(incoming_process != current_process) { //context switch necessary
+            to_ret_rsp = (uint64_t) context_switch(current_process);
+        // }
 
     }
     return to_ret_rsp;

@@ -52,4 +52,13 @@ void printCurrentRegisters(registerStructT * dumpedRegisters) {
 	printString("R15=0x", 10);
 	printNumber(dumpedRegisters->r15, 16);
 	printChar('\n');
+	printString("RFLAGS=0x", 10);
+	printNumber(dumpedRegisters->rflags, 16);
+	printChar('\n');
+	printString("SS=0x", 10);
+	printNumber(dumpedRegisters->ss, 16);
+	printChar('\n');
+	printString("CS=0x", 10);
+	printNumber(dumpedRegisters->cs, 16);
+	printChar('\n');
 }
