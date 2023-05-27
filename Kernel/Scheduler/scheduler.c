@@ -16,12 +16,18 @@ process_ptr current_process(void) {
     return get_current_process(rr_scheduler);
 }
 
+int get_current_pid(void) {
+    process_ptr current_proc = current_process();
+    if(current_proc == NULL)
+        return ERROR;
+    return current_proc->pid;
+}
+
 bool initialized = false;
 
 // función que se llama cada vez que ocurre el timertick, o termina un proceso.
 void * scheduler(void * rsp) { 
-    uint64_t * to_ret_rsp = (uint64_t *)rsp; 
-
+    
     process_ptr current_process = get_current_process(rr_scheduler);
 
     set_current_process(current_process->pid);
@@ -43,18 +49,33 @@ void * scheduler(void * rsp) {
     } else {
         current_process = next_tick(rr_scheduler);
     }
-    return context_switch(current_process);
+    return (void *)context_switch(current_process);
 }
 
 // Agregado de proceso al scheduler
 int scheduler_enqueue_process(process_ptr p) {
-    enqueue_process(rr_scheduler, p);
-    return 69;
+    if(enqueue_process(rr_scheduler, p) == NULL)
+        return ERROR;
+    return 1;
 }
 
-int scheduler_create_process(char* name, int argc, char** argv, void (*fn)(int, char **), int visibility, int fd[2]) {
-    scheduler_enqueue_process(create_process(name, argc, argv, fn, visibility, fd));
-    return 69;
+int scheduler_create_process(char* name, int argc, char** argv, void (*fn)(int, char **), int visibility) {
+    //must find fd's of parent process
+    process_ptr current_proc = current_process();
+    int fd[2] = {0, 1};
+    if(current_proc != NULL) {
+        fd[0] = current_proc->fd_r;
+        fd[1] = current_proc->fd_w;
+    }
+
+    process_ptr created_process = create_process(name, argc, argv, fn, visibility, fd);
+    if(created_process == NULL) {
+        return ERROR;
+    }
+    if(scheduler_enqueue_process(created_process) == ERROR) {
+        return ERROR;
+    }
+    return 1;
 }
 
 
@@ -71,7 +92,7 @@ uint64_t context_switch(process_ptr process) {
 
 
 void save_rsp(process_ptr process, uint64_t * to_save) {
-    process->rsp = to_save;
+    process->rsp = (uint64_t)to_save;
 }
 
 

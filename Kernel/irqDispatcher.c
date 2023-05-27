@@ -107,13 +107,13 @@ uint64_t int_80(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t
 			sys_free((void *) rsi);
 			break;
 		case 22:
-			sys_getpid();
+			return sys_getpid();
 			break;
 		case 23:
 			sys_ps();
 			break;
 		case 24:
-			sys_loop((int) rsi, (int) rdx);
+			sys_loop((int) rsi, (uint64_t) rdx);
 			break;
 		case 25:
 			return sys_kill((int) rsi);
@@ -122,13 +122,17 @@ uint64_t int_80(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t
 			return sys_nice((int) rsi, (int) rdx);
 			break;
 		case 27:
-			sys_block((int) rsi);
+			return sys_block((int) rsi);
 			break;
 		case 28:
-			sys_create_process((char *) rsi);
+			sys_create_process((char *) rsi, (int)rdx, (char**)rcx, (void *)r8, (int)r9);
 			break;
 		case 29:
 			sys_foreground((int) rsi);
+			break;
+		case 30:
+			sys_background((int) rsi);
+			break;
 		default:
 			return 0;
 			break;

@@ -51,12 +51,12 @@ process_ptr create_process(char* name, int argc, char** argv, void (*fn)(int, ch
     }
 
     if( current_proc != NULL && visibility == FOREGROUND ) {
-        if (current_proc->visibility == FOREGROUND) {
+        // if (current_proc->visibility == FOREGROUND) {            // mientras no tengamos todo en userland (asi hay mas de 1 proc en fg)
             current_proc->visibility = BACKGROUND;
             foreground_process_pid = pid;
-        } else {
-            return NULL;
-        }
+        // } else {
+            // return NULL;
+        // }
     }
 
     process_ptr new_process = sys_malloc(sizeof(process) + STACK_SIZE);  //definir STACK SIZE !!
@@ -175,7 +175,7 @@ int free_process(int pid) {
     process_ptr proc = process_array[pid];
     //give parent process foreground:
     if (proc->visibility == FOREGROUND) {
-        set_to_foreground(proc->ppid);
+        foreground_process(proc->ppid);
     }
     
     //set process as ZOMBIE
@@ -257,11 +257,17 @@ int get_free_pid(void) {
 }
 
 //gives a process foreground 
-void set_to_foreground(int pid) {
+void foreground_process(int pid) {
     if(!process_exists(pid))
         return;
     process_array[pid]->visibility = FOREGROUND;
     foreground_process_pid = pid;
+}
+
+void background_process(int pid) {
+    if(!process_exists(pid))
+        return;
+    process_array[pid]->visibility = BACKGROUND;
 }
 
 // void initialize_stack(process_ptr process, char** argv, int argc, void (*fn)(int, char **)) {

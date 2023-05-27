@@ -65,8 +65,8 @@ int nice_process(int pid, int priority);
 int block_process(int pid);
 int unblock_process(int pid);
 process_ptr get_process(int pid);
-process_ptr get_foreground_process();
-void set_to_foreground(int pid);
+void foreground_process(int pid);
+void background_process(int pid);
 void copy_args(char** destination, char** source, int amount);
 void free_args(char** args, int argc);
 int process_exists(int pid);
@@ -79,7 +79,6 @@ void free_shell();
 
 void set_current_process(int new_pid);
 
-int get_free_pid(void);
 bool wants_to_run(process_ptr process);
 extern void initialize_stack(uint64_t new_program_stack, char** argv, int argc, void (*fn)(int, char **));
 

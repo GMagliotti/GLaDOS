@@ -110,15 +110,15 @@ extern void testInvalidExc();
 
 int main()
 {	
-	int fd[2] = { 0, 1 };
 	hvdClear();
 	the_memory_manager = createMemoryManager((void *)0x50000, (void *)0x1000000);
 	the_scheduler = create_scheduler(idle);
-	// scheduler_create_process("Shell", 0, NULL, sampleCodeModuleAddress, FOREGROUND, fd);
-	scheduler_create_process("p1", 0, NULL, p1, FOREGROUND, fd);
-	scheduler_create_process("p2", 0, NULL, p2, FOREGROUND, fd);
-	// scheduler_create_process("p3", 0, NULL, p3, FOREGROUND, fd);
-	// scheduler_create_process("p4", 0, NULL, p4, FOREGROUND, fd);
+	// scheduler_create_process("Shell", 0, NULL, sampleCodeModuleAddress, BACKGROUND);
+	// scheduler_create_process("Shell", 0, NULL, sampleCodeModuleAddress, FOREGROUND);
+	scheduler_create_process("p1", 0, NULL, p1, FOREGROUND);
+	scheduler_create_process("p2", 0, NULL, p2, BACKGROUND);
+	scheduler_create_process("p3", 0, NULL, p3, FOREGROUND);
+	// scheduler_create_process("p4", 0, NULL, p4, FOREGROUND);
 	load_idt();
 	// ((EntryPoint)sampleCodeModuleAddress)();
 	// printColorString("Scheduler creado", 0xFFFFFFFFFFFFFFFF, 0x00FF00);
