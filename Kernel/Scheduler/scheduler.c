@@ -16,6 +16,7 @@ process_ptr current_process(void) {
     return get_current_process(rr_scheduler);
 }
 
+bool initialized = false;
 
 // función que se llama cada vez que ocurre el timertick, o termina un proceso.
 void * scheduler(void * rsp) { 
@@ -25,37 +26,24 @@ void * scheduler(void * rsp) {
 
     set_current_process(current_process->pid);
 
-    if (current_process->status == FINISHED || current_process->status == KILLED) {
+    if (initialized) { save_rsp(current_process, rsp); } 
+    else { initialized = true; }
 
+    if (current_process->status == FINISHED || current_process->status == KILLED) {
         set_current_process(current_process->ppid);
 
         if (current_process->pid != 0 && current_process->priority != -1) {
-
             process_ptr aux = current_process;
-
             scheduler_dequeue_process(current_process); 
-
             free_process(aux->pid);
 
-            *to_ret_rsp = context_switch(current_process);
         }
     } else if(current_process->status == BLOCKED) {
-        
-        save_rsp(current_process, rsp);
-
         current_process = next_process(rr_scheduler);
-
-        *to_ret_rsp = context_switch(current_process);
     } else {
-        process_ptr incoming_process = next_tick(rr_scheduler);
-        
-        if(incoming_process != current_process) { //context switch necessary
-            save_rsp(current_process, rsp);
-            to_ret_rsp = (uint64_t) context_switch(incoming_process);
-        }
-
+        current_process = next_tick(rr_scheduler);
     }
-    return to_ret_rsp;
+    return context_switch(current_process);
 }
 
 // Agregado de proceso al scheduler

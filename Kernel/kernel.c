@@ -132,6 +132,7 @@ int main()
 void idle(int argc, char ** argv) {
 	while (1) {
 		printColorString("This is truly a runescape crocodile moment", 0xFFFFFFFFFFFFFFFF, 0x0000FF);
+		printChar('\n');
 		_hlt();
 	}
 }
