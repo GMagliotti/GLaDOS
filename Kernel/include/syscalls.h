@@ -13,6 +13,8 @@
 #include <time.h>
 #include <soundDriver.h>
 #include <registers.h>
+#include <MemoryManager.h>
+#include "../Scheduler/include/scheduler.h"
 
 typedef struct time{
 	uint8_t seconds, minutes, hours;

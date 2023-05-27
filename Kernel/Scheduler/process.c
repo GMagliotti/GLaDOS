@@ -1,10 +1,10 @@
 #include "include/process.h"
 
 
-
 //array con todos los procesos (organizado por pid)
 process_ptr process_array[MAX_PROCESS_AMOUNT];
 int current_pid = 0;
+int foreground_process_pid = 0;
 int process_count = 0;
 int alive_process_count = 0;
 
@@ -45,12 +45,18 @@ process_ptr create_process(char* name, int argc, char** argv, void (*fn)(int, ch
 
     process_ptr current_proc = get_process(current_pid);
 
-    if(current_proc != NULL && current_proc->visibility == BACKGROUND && visibility == FOREGROUND) {
-        return NULL;
-    }
     int pid = get_free_pid();
     if(pid == ERROR) {
         return NULL;
+    }
+
+    if( current_proc != NULL && visibility == FOREGROUND ) {
+        if (current_proc->visibility == FOREGROUND) {
+            current_proc->visibility = BACKGROUND;
+            foreground_process_pid = pid;
+        } else {
+            return NULL;
+        }
     }
 
     process_ptr new_process = sys_malloc(sizeof(process) + STACK_SIZE);  //definir STACK SIZE !!
@@ -66,12 +72,6 @@ process_ptr create_process(char* name, int argc, char** argv, void (*fn)(int, ch
     }
 
     copy_args(args, argv, argc);
-
-
-    // if(visibility == FOREGROUND && current_pid != 0) {
-    //     printf("visibi\n");
-    //     block_process(current_proc->pid);
-    // }
 
     if(current_proc != NULL) {
         current_proc->children[current_proc->children_count++] = pid;
@@ -174,7 +174,9 @@ int free_process(int pid) {
 
     process_ptr proc = process_array[pid];
     //give parent process foreground:
-    foreground_process(proc->ppid);
+    if (proc->visibility == FOREGROUND) {
+        set_to_foreground(proc->ppid);
+    }
     
     //set process as ZOMBIE
     proc->status = ZOMBIE;
@@ -237,6 +239,11 @@ process_ptr get_process(int pid) {
     return process_array[pid];
 }
 
+process_ptr get_foreground_process() {
+    return process_array[foreground_process_pid];
+}
+
+
 int process_exists(int pid) {
     return !(pid < 0 || pid >= MAX_PROCESS_AMOUNT || process_array[pid] == NULL);
 }
@@ -250,10 +257,11 @@ int get_free_pid(void) {
 }
 
 //gives a process foreground 
-void foreground_process(int pid) {
+void set_to_foreground(int pid) {
     if(!process_exists(pid))
         return;
     process_array[pid]->visibility = FOREGROUND;
+    foreground_process_pid = pid;
 }
 
 // void initialize_stack(process_ptr process, char** argv, int argc, void (*fn)(int, char **)) {

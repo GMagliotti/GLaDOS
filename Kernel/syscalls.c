@@ -1,5 +1,4 @@
 #include <syscalls.h>
-#include <MemoryManager.h>
 
 #define STDIN 0
 #define STDOUT 1
@@ -24,8 +23,11 @@ void sys_write(char * string, int length, char fd) {
     case STDERR:
         printColorString(string, length, RED);
         break;
-    case STDOUT:
-        printString(string, length);
+    case STDOUT:    ;
+        process_ptr proc = current_process();
+        if (proc->visibility == FOREGROUND){
+            printString(string, length);
+        }
         break;
     default:    ;
         char errorMessage[] = "Error: Invalid file descriptor";
@@ -101,7 +103,10 @@ void sys_sleep(uint32_t milliseconds){
 
 
 void sys_putchar(int c){
-    printChar(c);
+    process_ptr proc = current_process();
+    if (proc->visibility == FOREGROUND){
+        printChar(c);
+    }
     return;
 }
 
