@@ -113,7 +113,7 @@ uint64_t int_80(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t
 			sys_ps();
 			break;
 		case 24:
-			sys_loop((int) rsi, (uint64_t) rdx);
+			sys_loop((int) rsi, (int) rdx);
 			break;
 		case 25:
 			return sys_kill((int) rsi);

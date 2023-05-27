@@ -42,6 +42,7 @@ void * scheduler(void * rsp) {
             process_ptr aux = current_process;
             scheduler_dequeue_process(current_process); 
             free_process(aux->pid);
+            current_process = get_current_process(rr_scheduler);
 
         }
     } else if(current_process->status == BLOCKED) {
@@ -93,17 +94,6 @@ uint64_t context_switch(process_ptr process) {
 
 void save_rsp(process_ptr process, uint64_t * to_save) {
     process->rsp = (uint64_t)to_save;
-}
-
-
-char * getProcessStatus(int status) {
-    if (status == ALIVE) return "Alive";
-    if (status == READY) return "Ready";
-    if (status == BLOCKED) return "Blocked";
-    if (status == ZOMBIE) return "Zombie";
-    if (status == FINISHED) return "Finished";
-
-    return "WOOOT??";
 }
 
 

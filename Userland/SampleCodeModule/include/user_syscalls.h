@@ -32,8 +32,19 @@ void call_to_accessRTC(timeStructT * timeStruct);
 uint8_t call_to_memoryAt(int dir);
 void call_to_setSize(int newSize);
 void call_to_printRegisters();
+
 void * call_to_malloc(size_t requestedMemory);
 void call_to_free(void * mem_ptr);
+
+int call_to_getpid();
+int call_to_ps();
+int call_to_loop_process(int pid, int ms);
+int call_to_pkill_process(int pid);
+int call_to_nice_process(int pid, int priority);
+int call_to_block_process(int pid);
+int call_to_create_process(char* name, int argc, char** argv, void (*fn)(int, char **), int visibility);
+void call_to_background_process(int pid);
+void call_to_foreground_process(int pid);
 
 
 #endif

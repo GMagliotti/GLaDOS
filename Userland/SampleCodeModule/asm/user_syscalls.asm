@@ -20,6 +20,15 @@ GLOBAL call_to_setSize
 GLOBAL call_to_printRegisters
 GLOBAL call_to_malloc
 GLOBAL call_to_free
+GLOBAL call_to_getpid
+GLOBAL call_to_ps
+GLOBAL call_to_loop_process
+GLOBAL call_to_pkill_process
+GLOBAL call_to_nice_process
+GLOBAL call_to_block_process
+GLOBAL call_to_create_process
+GLOBAL call_to_background_process
+GLOBAL call_to_foreground_process
 
 %macro call_to_handler 1
     push rbp
@@ -95,3 +104,30 @@ call_to_malloc:
 
 call_to_free:
     call_to_handler 21
+
+call_to_getpid:
+    call_to_handler 22
+
+call_to_ps:
+    call_to_handler 23
+
+call_to_loop_process:
+    call_to_handler 24
+
+call_to_pkill_process:
+    call_to_handler 25
+
+call_to_nice_process:
+    call_to_handler 26
+
+call_to_block_process:
+    call_to_handler 27
+
+call_to_create_process:
+    call_to_handler 28
+
+call_to_background_process:
+    call_to_handler 29
+
+call_to_foreground_process:
+    call_to_handler 30

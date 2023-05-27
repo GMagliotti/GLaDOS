@@ -9,6 +9,7 @@
 #include <funclib.h>
 #include <tests.h>
 #include <beeper.h>
+#include "../programs/include/process_info.h"
 
 #define DEFAULT_TEXT_SIZE 2
 

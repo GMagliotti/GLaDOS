@@ -111,17 +111,24 @@ void ps(void) {
         process_ptr current_process;
         if((current_process = process_array[i]) != NULL) {
             //con funciones de textDriver.c:
-            printString("Process Name: ", strLength("Process Name: "));
+            printString("|| Process Name: ", strLength("|| Process Name: "));
             printString(current_process->name, strLength(current_process->name)); 
             printChar('\n');
-            printString("PID: ", strLength("PID: "));
+            printString("|| PID: ", strLength("|| PID: "));
             printNumber(current_process->pid, 10); //base 10
             printChar('\n');
-            printString("Priority: ", strLength("Priority: "));
-            printNumber(current_process->priority, 10);
+            printString("|| PPID: ", strLength("|| PPID: "));
+            printNumber(current_process->ppid, 10); //base 10
             printChar('\n');
-            printString("Visibility: ", strLength("Visibility: "));
+            printString("|| Priority: ", strLength("|| Priority: "));
+            current_process->priority == -1? printString("-1", 2) : printNumber(current_process->priority, 10);
+            printChar('\n');
+            printString("|| Status: ", strLength("|| Status: "));
+            printString(get_process_status(current_process->status), strLength(get_process_status(current_process->status)));
+            printChar('\n');
+            printString("|| Visibility: ", strLength("|| Visibility: "));
             current_process->visibility == FOREGROUND? printString("Foreground", strLength("Foreground")) : printString("Background", strLength("Background"));
+            printChar('\n');
             printChar('\n');
 
             // printf("|| Process Name: %s\n", current_process->name);
@@ -131,13 +138,14 @@ void ps(void) {
             // printf("||\tStatus: %d\n", current_process->status);
             // printf("||\tVisibility: %s\n", current_process->visibility == FOREGROUND? "Foreground" : "Background");
             // printf("||\t\tSP: %lx \n||\t\tBP: %lx \n\n", current_process->rsp, current_process->rbp);
+            
             printed_count++;
         }
     }
 }
 
 //loop: imprime su pid con un saludo cada ms milisegundos 
-void loop_process(int pid, uint64_t ms) {
+void loop_process(int pid, int ms) {
     int max_prints = 40;
     int i = 0;
     while( i < max_prints) {
@@ -369,3 +377,13 @@ void free_shell() {
     sys_free(shell);
 }
 
+char * get_process_status(int status) {
+    if (status == ALIVE) return "Alive";
+    if (status == READY) return "Ready";
+    if (status == BLOCKED) return "Blocked";
+    if (status == ZOMBIE) return "Zombie";
+    if (status == FINISHED) return "Finished";
+    if (status == KILLED) return "Killed";
+
+    return "WOOOT??";
+}

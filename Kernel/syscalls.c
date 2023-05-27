@@ -186,7 +186,7 @@ void sys_ps(void) {
     ps();
 }
 
-void sys_loop(int pid, uint64_t ms) {
+void sys_loop(int pid, int ms) {
     loop_process(pid, ms);
 }
 

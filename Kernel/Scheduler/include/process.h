@@ -59,7 +59,7 @@ void uninitialize(void);
 
 process_ptr create_process(char* name, int argc, char** argv, void (*fn)(int, char **), int visibility, int fd[2]);
 void ps(void);
-void loop_process(int pid, uint64_t ms);
+void loop_process(int pid, int ms);
 int kill_process(int pid);
 int nice_process(int pid, int priority);
 int block_process(int pid);
@@ -71,6 +71,7 @@ void copy_args(char** destination, char** source, int amount);
 void free_args(char** args, int argc);
 int process_exists(int pid);
 int get_free_pid(void);
+char * get_process_status(int status);
 void force_timer(void);
 
 int free_process(int pid);

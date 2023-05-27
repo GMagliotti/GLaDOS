@@ -44,11 +44,13 @@ void sys_setbash();
 void sys_beep(int freq, int timems);
 void sys_setSize(int newSize);
 void sys_printRegisters();
+
 void * sys_malloc(size_t requestedSize);
 void sys_free(void * memptr);
+
 int sys_getpid(void);
 void sys_ps(void);
-void sys_loop(int pid, uint64_t ms);
+void sys_loop(int pid, int ms);
 int sys_kill(int pid);
 int sys_nice(int pid, int priority);
 int sys_block(int pid);
