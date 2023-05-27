@@ -4,10 +4,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-#include "process.h"
 #include "circularDoubleLinkedList.h"
-// #include "Scheduler.h"
-
 typedef struct round_robin_queue {
     // DoubleLinkedListADT list;
     NodeType list;
@@ -15,6 +12,9 @@ typedef struct round_robin_queue {
 } rr_queue;
 
 typedef rr_queue * rr_queue_ptr;
+
+#include "process.h"
+// #include "Scheduler.h"
 
 rr_queue_ptr create_new_round_robin(process_ptr idle);
 NodeType enqueue_process(rr_queue_ptr queue, process *p);

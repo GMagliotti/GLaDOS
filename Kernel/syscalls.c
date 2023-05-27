@@ -174,41 +174,37 @@ void sys_free(void * memptr) {
 }
 
 int sys_getpid() {
-    //return current_pid();
-    return 0;
+    return get_current_pid();
 }
 
-void sys_ps() {
-    // ps();
-    return;
+void sys_ps(void) {
+    ps();
 }
 
-void sys_loop(int pid, int ms) {
-    //loop_process(pid, ms);
-    return;
+void sys_loop(int pid, uint64_t ms) {
+    loop_process(pid, ms);
 }
 
 int sys_kill(int pid) {
-    //return kill_process(pid);
-    return 0;
+    return kill_process(pid);
 }
 
 int sys_nice(int pid, int priority) {
-    //return nice_process(pid, priority);
-    return 0;
+    return nice_process(pid, priority);
 }
 
-void sys_block(int pid) {
-    //block_process(pid);
-    return;
+int sys_block(int pid) {
+    return block_process(pid);
 }
 
-int sys_create_process(char* name) {
-    return 0;
+int sys_create_process(char* name, int argc, char** argv, void (*fn)(int, char **), int visibility) {
+    return scheduler_create_process(name, argc, argv, fn, visibility);
 }
 
 void sys_foreground(int pid) {
-    //foreground_process(pid);
-    return;
+    foreground_process(pid);
 }
 
+void sys_background(int pid) {
+    background_process(pid);
+}

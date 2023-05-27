@@ -115,8 +115,8 @@ int main()
 	the_memory_manager = createMemoryManager((void *)0x50000, (void *)0x1000000);
 	the_scheduler = create_scheduler(idle);
 	// scheduler_create_process("Shell", 0, NULL, sampleCodeModuleAddress, FOREGROUND, fd);
-	scheduler_create_process("p1", 0, NULL, p1, FOREGROUND, fd);
-	scheduler_create_process("p2", 0, NULL, p2, FOREGROUND, fd);
+	scheduler_create_process("p1", 0, NULL, p1, FOREGROUND);
+	scheduler_create_process("p2", 0, NULL, p2, FOREGROUND);
 	// scheduler_create_process("p3", 0, NULL, p3, FOREGROUND, fd);
 	// scheduler_create_process("p4", 0, NULL, p4, FOREGROUND, fd);
 	load_idt();

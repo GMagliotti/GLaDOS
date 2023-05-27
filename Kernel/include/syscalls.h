@@ -13,6 +13,9 @@
 #include <time.h>
 #include <soundDriver.h>
 #include <registers.h>
+// #include "../Scheduler/include/process.h"
+// #include "../Scheduler/include/roundRobin.h"
+#include "../Scheduler/include/scheduler.h"
 
 typedef struct time{
 	uint8_t seconds, minutes, hours;
@@ -44,13 +47,14 @@ void sys_setSize(int newSize);
 void sys_printRegisters();
 void * sys_malloc(size_t requestedSize);
 void sys_free(void * memptr);
-int sys_getpid();
-void sys_ps();
-void sys_loop(int pid, int ms);
+int sys_getpid(void);
+void sys_ps(void);
+void sys_loop(int pid, uint64_t ms);
 int sys_kill(int pid);
 int sys_nice(int pid, int priority);
-void sys_block(int pid);
-int sys_create_process(char* name);
+int sys_block(int pid);
+int sys_create_process(char* name, int argc, char** argv, void (*fn)(int, char **), int visibility);
 void sys_foreground(int pid);
+void sys_background(int pid);
 
 #endif

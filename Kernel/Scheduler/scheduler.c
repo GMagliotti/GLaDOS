@@ -16,6 +16,13 @@ process_ptr current_process(void) {
     return get_current_process(rr_scheduler);
 }
 
+int get_current_pid(void) {
+    process_ptr current_proc = current_process();
+    if(current_proc == NULL)
+        return ERROR;
+    return current_proc->pid;
+}
+
 bool initialized = false;
 
 // función que se llama cada vez que ocurre el timertick, o termina un proceso.
@@ -48,13 +55,32 @@ void * scheduler(void * rsp) {
 
 // Agregado de proceso al scheduler
 int scheduler_enqueue_process(process_ptr p) {
-    enqueue_process(rr_scheduler, p);
-    return 69;
+    if(enqueue_process(rr_scheduler, p) == NULL)
+        return ERROR;
+    return 1;
 }
 
-int scheduler_create_process(char* name, int argc, char** argv, void (*fn)(int, char **), int visibility, int fd[2]) {
-    scheduler_enqueue_process(create_process(name, argc, argv, fn, visibility, fd));
-    return 69;
+int scheduler_create_process(char* name, int argc, char** argv, void (*fn)(int, char **), int visibility) {
+    //must find fd's of parent process
+    process_ptr current_proc = current_process();
+    int fd[2];
+    if(current_proc == NULL) {
+        fd[0] = 0;
+        fd[1] = 1;
+    }
+    else {
+        fd[0] = current_proc->fd_r;
+        fd[1] = current_proc->fd_w;
+    }
+
+    process_ptr created_process = create_process(name, argc, argv, fn, visibility, fd);
+    if(created_process == NULL) {
+        return ERROR;
+    }
+    if(scheduler_enqueue_process(created_process) == NULL) {
+        return ERROR;
+    }
+    return 1;
 }
 
 

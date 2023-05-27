@@ -256,6 +256,12 @@ void foreground_process(int pid) {
     process_array[pid]->visibility = FOREGROUND;
 }
 
+void background_process(int pid) {
+    if(!process_exists(pid))
+        return;
+    process_array[pid]->visibility = BACKGROUND;
+}
+
 // void initialize_stack(process_ptr process, char** argv, int argc, void (*fn)(int, char **)) {
 //     registerBackup * stack = (registerBackup *) process->rsp; 
 
