@@ -3,18 +3,16 @@
 
 #include <stdbool.h>
 #include <stdlib.h>
-
 #include "circularDoubleLinkedList.h"
+#include "process.h"
+
 typedef struct round_robin_queue {
-    // DoubleLinkedListADT list;
     NodeType list;
-    // Node * current_node;
 } rr_queue;
 
 typedef rr_queue * rr_queue_ptr;
 
-#include "process.h"
-// #include "Scheduler.h"
+typedef process * process_ptr;
 
 rr_queue_ptr create_new_round_robin(process_ptr idle);
 NodeType enqueue_process(rr_queue_ptr queue, process *p);

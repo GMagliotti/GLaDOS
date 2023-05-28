@@ -40,13 +40,3 @@ int nice_process(void) {
 int block_process() {
     return call_to_block_process(call_to_getpid());
 }
-
-int to_background_process() {
-    call_to_background_process(call_to_getpid());
-    return 0;
-}
-
-int to_foreground_process() {
-    call_to_foreground_process(call_to_getpid());
-    return 0;
-}

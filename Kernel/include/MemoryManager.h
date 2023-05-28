@@ -12,7 +12,7 @@
 
 #include <stdlib.h>
 #include <bitmap.h>
-#include <lib.h>
+#include "lib.h"
 
 #include <stdlib.h>
 #include <stdint.h>

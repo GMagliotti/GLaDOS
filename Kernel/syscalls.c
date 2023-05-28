@@ -205,11 +205,3 @@ int sys_block(int pid) {
 int sys_create_process(char* name, int argc, char** argv, void (*fn)(int, char **), int visibility) {
     return scheduler_create_process(name, argc, argv, fn, visibility);
 }
-
-void sys_foreground(int pid) {
-    foreground_process(pid);
-}
-
-void sys_background(int pid) {
-    background_process(pid);
-}

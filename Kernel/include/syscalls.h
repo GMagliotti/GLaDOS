@@ -4,17 +4,16 @@
 #define STDERR 2
 
 #include <stdint.h>
-#include <textModeDriver.h>
-#include <textDriver.h>
-#include <videoDriver.h>
-#include <stdlib.h>
-#include <lib.h>
-#include <interrupts.h>
+#include "textModeDriver.h"
+#include "textDriver.h"
+#include "videoDriver.h"
+#include "lib.h"
+#include "interrupts.h"
 #include <time.h>
-#include <soundDriver.h>
-#include <registers.h>
-#include <MemoryManager.h>
+#include "soundDriver.h"
+#include "registers.h"
 #include "../Scheduler/include/scheduler.h"
+#include <MemoryManager.h>
 
 typedef struct time{
 	uint8_t seconds, minutes, hours;
@@ -55,7 +54,5 @@ int sys_kill(int pid);
 int sys_nice(int pid, int priority);
 int sys_block(int pid);
 int sys_create_process(char* name, int argc, char** argv, void (*fn)(int, char **), int visibility);
-void sys_foreground(int pid);
-void sys_background(int pid);
 
 #endif

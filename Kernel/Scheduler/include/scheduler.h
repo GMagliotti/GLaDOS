@@ -3,7 +3,7 @@
 
 #include "process.h"
 #include "roundRobin.h"
-#include <MemoryManager.h>                // la queue definida globalmente, para que las fuciones la puedan utilizar.
+#include <MemoryManager.h>
 
 rr_queue_ptr create_scheduler(void (*fn)(int, char **));
 process_ptr current_process(void);

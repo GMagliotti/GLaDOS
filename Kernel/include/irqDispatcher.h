@@ -1,7 +1,7 @@
 #ifndef _IRQDISPATCHER_H
 #define _IRQDISPATCHER_H
 
-#include <syscalls.h>
+#include "syscalls.h"
 #include <lib.h>
 #include <videoDriver.h>
 #include <stdarg.h>

@@ -1,4 +1,4 @@
-#include <shell.h>
+#include "include/shell.h"
 
 #define MAX_CHARS_PER_COMMAND 128
 
@@ -53,13 +53,11 @@ char* validProcessCommands[16][2] = {{"CREATE", "Creates a new process an sends 
 									{"PKILL", "Kills the current process"},
 									{"NICE", "Sets the process priority to 2"},
 									{"BLOCK", "Blocks the process"},
-									{"BACKGROUND", "Sends the current process to background"},
-									{"FOREGROUND", "Sends the current process to foreground"}
 									};
 
 void (*commandFunctions[16])(void) = {help, returnToShell, time, tron, printRegisters, test0Div, testInvalidExc};
 void (*commandFunctions2Args[16])(int) = {printMemoryAt, setSize, beeperSongs};
-int (*processFunctions[32])(void) = {create_process, getpid, ps, loop_process, pkill_process, nice_process, block_process, to_background_process, to_foreground_process};
+int (*processFunctions[32])(void) = {create_process, getpid, ps, loop_process, pkill_process, nice_process, block_process};
 
 
 void checkBuffer(){

@@ -4,9 +4,7 @@
 #include <stdint.h>
 
 #include <time.h>
-#include <interrupts.h>
-#include <textModeDriver.h>
-#include <videoDriver.h>
+#include "interrupts.h"
 
 #define RTCSECONDS      0x00
 #define RTCSECONDSALARM 0x01

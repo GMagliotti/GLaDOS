@@ -3,6 +3,8 @@
 
 #include <syscall.h>
 
+#include <stdint.h>
+
 typedef DoubleLinkedListCDT * DoubleLinkedListADT;
 
 /**

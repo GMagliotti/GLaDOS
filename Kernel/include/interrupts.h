@@ -8,8 +8,7 @@
 #ifndef INTERRUPS_H_
 #define INTERRUPS_H_
 
-#include <idtLoader.h>
-#include "../Scheduler/include/scheduler.h"
+#include <stdint.h>
 
 void _irq00Handler(void);
 void _irq01Handler(void);

@@ -3,11 +3,11 @@
 
 #include <stdio.h>
 #include <stdint.h>
-#include <user_syscalls.h>
-#include <tron.h>
-#include <time.h>
-#include <funclib.h>
-#include <tests.h>
+#include "user_syscalls.h"
+#include "tron.h"
+#include "time.h"
+#include "funclib.h"
+#include "tests.h"
 #include <beeper.h>
 #include "../programs/include/process_info.h"
 

@@ -1,5 +1,4 @@
 #include <videoDriver.h>
-#define NULL 0
 
 typedef int (*prueba)();
 

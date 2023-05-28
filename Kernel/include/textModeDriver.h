@@ -2,7 +2,7 @@
 #define _TEXTMODE_DRIVER_H
 
 #include <stdint.h>
-#include <lib.h>
+#include "lib.h"
 
 #define BLACK_LT        0x00
 #define BLUE_LT         0x01

@@ -127,12 +127,6 @@ uint64_t int_80(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t
 		case 28:
 			sys_create_process((char *) rsi, (int)rdx, (char**)rcx, (void *)r8, (int)r9);
 			break;
-		case 29:
-			sys_foreground((int) rsi);
-			break;
-		case 30:
-			sys_background((int) rsi);
-			break;
 		default:
 			return 0;
 			break;

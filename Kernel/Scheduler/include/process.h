@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include "../../include/lib.h"
+
 
 #define ERROR -1
 
@@ -49,9 +51,6 @@ typedef struct process {
 
 typedef process * process_ptr;
 
-#include <lib.h>
-
-
 
 process_ptr initialize_shell(void);
 process_ptr initialize_idle(void (*idle_fn)(int, char **));
@@ -65,8 +64,6 @@ int nice_process(int pid, int priority);
 int block_process(int pid);
 int unblock_process(int pid);
 process_ptr get_process(int pid);
-void foreground_process(int pid);
-void background_process(int pid);
 void copy_args(char** destination, char** source, int amount);
 void free_args(char** args, int argc);
 int process_exists(int pid);

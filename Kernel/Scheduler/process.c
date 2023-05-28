@@ -183,7 +183,11 @@ int free_process(int pid) {
     process_ptr proc = process_array[pid];
     //give parent process foreground:
     if (proc->visibility == FOREGROUND) {
-        foreground_process(proc->ppid);
+        process_ptr parent = get_process(proc->ppid);
+        if (parent != NULL) {
+            parent->visibility = FOREGROUND;
+            foreground_process_pid = parent->pid;
+        }
     }
     
     //set process as ZOMBIE
@@ -262,20 +266,6 @@ int get_free_pid(void) {
             return i;
     }
     return ERROR;
-}
-
-//gives a process foreground 
-void foreground_process(int pid) {
-    if(!process_exists(pid))
-        return;
-    process_array[pid]->visibility = FOREGROUND;
-    foreground_process_pid = pid;
-}
-
-void background_process(int pid) {
-    if(!process_exists(pid))
-        return;
-    process_array[pid]->visibility = BACKGROUND;
 }
 
 // void initialize_stack(process_ptr process, char** argv, int argc, void (*fn)(int, char **)) {
