@@ -11,15 +11,15 @@ int maxCharSize = 6;
 
 static char commandBuffer[256] = {0}; //buffer local en base al buffer 
 static int commandBufferPos = 0; 	  //current position de commandBuffer
-void saveChar(uint8_t c){
+void saveChar(char c){
 	//si tecla que recibo de kernel es un enter, chequeo lo que ya tenia, si es backspace borro ultimo char, si no lo guardo en buffer local
 	if(c == '\n'){
-		putc(c);
+		printf("\n");
 		checkBuffer();
 	} else if(c == '\b'){
 		if(commandBufferPos > 0 || (commandBufferPos == 0 && commandBuffer[commandBufferPos]=='>')) {
 			commandBuffer[--commandBufferPos] = 0;
-			putc(c);
+			printf("\b");
 		}
 	} else {
 		commandBuffer[commandBufferPos++] = c;
@@ -28,9 +28,7 @@ void saveChar(uint8_t c){
 
 	if(commandBufferPos>=MAX_CHARS_PER_COMMAND){
 		clearCommandBuffer();
-		putc('\n');
-		printf("Max command length reached. Type HELP to see available commands\n");
-		putc('>');
+		printf("\nMax command length reached. Type HELP to see available commands\n>");
 	}
 }
 
@@ -103,7 +101,7 @@ void checkBuffer(){
 		printf("Invalid option. Type HELP for more information.\n");
 	}
 
-	putc('>');
+	printf(">");
 	clearCommandBuffer();  //limpio el buffer local y seteo posicion de contador en 0
 	call_to_clearbuffer(); //limpio el buffer de kernel mediante syscall
 }
@@ -122,7 +120,6 @@ void shell(){
 		call_to_hlt();
 		char c = call_to_getchar();
 		if(c!=0){
-			//putc(c);
 			saveChar(c);
 		}
     }

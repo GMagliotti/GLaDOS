@@ -24,7 +24,6 @@ uint64_t int_20() {
 }
 
 uint64_t int_21() {
-	process_ptr proc = current_process();
 	static bool shiftPressed = false, tabPressed = false;
 	uint8_t keyScanCode = getKey();
 	if (keyScanCode == 0x0F) tabPressed = true;
@@ -33,10 +32,9 @@ uint64_t int_21() {
 	else if (keyScanCode == 0xAA) shiftPressed = false;
 	else {
 		int c = getCharacterFromKeyboardHex(keyScanCode);
-		if (c != 0 && proc->visibility != BACKGROUND) {
+		// if (c != 0 && proc->visibility != BACKGROUND)
 		//si estoy en bash imprimo el caracter y ademas lo guardo en buffer (para su posterior validacion de comando)
 		saveKey(c);
-		}
 	}
 	if (tabPressed && shiftPressed) return 1;
 	else return 0;

@@ -7,6 +7,7 @@
 #include <interrupts.h>
 #include <MemoryManager.h>
 #include "./Scheduler/include/scheduler.h"
+#include "include/lib.h"
 
 extern uint8_t text;
 extern uint8_t rodata;
@@ -113,8 +114,10 @@ int main()
 	hvdClear();
 	the_memory_manager = createMemoryManager((void *)0x50000, (void *)0x1000000);
 	the_scheduler = create_scheduler(idle);
-	// scheduler_create_process("Shell", 0, NULL, sampleCodeModuleAddress, BACKGROUND);
 	scheduler_create_process("Shell", 0, NULL, sampleCodeModuleAddress, FOREGROUND);
+	// RACE CONDITION!!! SI ESTA CORRIENDO EL IDLE NO SE IMPRIME EL MSJ INICIAL
+	
+	// scheduler_create_process("Shell", 0, NULL, sampleCodeModuleAddress, BACKGROUND);
 	// scheduler_create_process("p1", 0, NULL, p1, FOREGROUND);
 	// scheduler_create_process("p2", 0, NULL, p2, BACKGROUND);
 	// scheduler_create_process("p3", 0, NULL, p3, FOREGROUND);

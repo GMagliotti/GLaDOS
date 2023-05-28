@@ -1,7 +1,6 @@
 #ifndef SHELL_H
 #define SHELL_H
 
-#include <stdio.h>
 #include <stdint.h>
 #include "user_syscalls.h"
 #include "tron.h"
@@ -16,7 +15,7 @@
 
 void setTextBufferActive(int active);
 
-void saveChar(uint8_t c);
+void saveChar(char c);
 void checkBuffer();
 
 void shell();

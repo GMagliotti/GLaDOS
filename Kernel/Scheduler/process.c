@@ -260,6 +260,10 @@ int get_foreground_process() {
     return foreground_process_pid;
 }
 
+bool current_is_foreground() {
+    return get_process(current_pid)->visibility == FOREGROUND;
+}
+
 
 int process_exists(int pid) {
     return !(pid < 0 || pid >= MAX_PROCESS_AMOUNT || process_array[pid] == NULL);

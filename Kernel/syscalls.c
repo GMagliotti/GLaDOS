@@ -1,3 +1,4 @@
+#include "Scheduler/include/process.h"
 #include <syscalls.h>
 
 #define STDIN 0
@@ -24,8 +25,7 @@ void sys_write(char * string, int length, char fd) {
         printColorString(string, length, RED);
         break;
     case STDOUT:    ;
-        process_ptr proc = current_process();
-        if (proc->visibility == FOREGROUND){
+        if (current_is_foreground()){
             printString(string, length);
         }
         break;
@@ -86,12 +86,16 @@ void sys_putpixel(uint32_t x, uint32_t y, uint32_t color){
     indicate the opacity of that color (R red, G green, B blue).
 */
 void sys_fillrectangle(uint16_t x, uint16_t y, uint32_t color, uint16_t width, uint16_t height) {
-    fillrect(x, y, color, width, height);
+    if (current_is_foreground()){
+        fillrect(x, y, color, width, height);
+    }
     return;
 }
 
 void sys_setbash(){
-    setBash();
+    if(current_is_foreground()) {
+        setBash();
+    }
     return;
 }
 
@@ -103,20 +107,23 @@ void sys_sleep(uint32_t milliseconds){
 
 
 void sys_putchar(int c){
-    process_ptr proc = current_process();
-    if (proc->visibility == FOREGROUND){
+    if (current_is_foreground()){
         printChar(c);
     }
     return;
 }
 
 void sys_setptrx(int num){
-    setptrx(num);
+    if (current_is_foreground()) {
+        setptrx(num);
+    }
     return;
 }
 
 void sys_setptry(int num){
-    setptry(num);
+    if (current_is_foreground()) {
+        setptry(num);
+    }
     return;
 }
 
@@ -128,11 +135,16 @@ uint16_t sys_getvbewidth(){
 }
 
 char sys_getchar(){
-    return getChar();
+    if (current_is_foreground()){
+        return getChar();
+    }
+    return 0;
 }
 
 void sys_clearbuffer(){
-    clearBuffer();
+    if (current_is_foreground()) {
+        clearBuffer();
+    }
     return;
 }
 
@@ -163,11 +175,15 @@ uint8_t sys_memoryAt(int dir) {
 }
 
 void sys_setSize(int newSize) {
-    setFontSize(newSize);
+    if (current_is_foreground()){
+        setFontSize(newSize);
+    }
 }
 
 void sys_printRegisters() {
-    printCurrentRegisters(&registerDump);
+    if (current_is_foreground()) {
+        printCurrentRegisters(&registerDump);
+    }
 }
 
 void * sys_malloc(size_t requestedMemory) {
@@ -183,7 +199,9 @@ int sys_getpid() {
 }
 
 void sys_ps(void) {
-    ps();
+    if (current_is_foreground()) {
+        ps();
+    }
 }
 
 void sys_loop(int pid, int ms) {
