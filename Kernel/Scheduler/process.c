@@ -160,6 +160,8 @@ void loop_process(int pid, int ms) {
 
 //kill: sets process status to KILLED -> will be freed on next encounter with scheduler
 int kill_process(int pid) {
+    if (pid == 0 || pid == 1) return 0;
+
     if (!process_exists(pid)) return ERROR;
 
     process_array[pid]->status = KILLED;
@@ -225,8 +227,11 @@ int nice_process(int pid, int priority) {
 
 //block: cambia el estado de un proceso entre bloqueado y listo dado su pid
 int block_process(int pid) {
-    if(!process_exists(pid) || pid == 0)
+    if (pid == 0 || pid == 1) return 0;
+
+    if(!process_exists(pid))
         return ERROR;
+
     process_array[pid]->status = BLOCKED;
 
     //if the process blocked was the one running, force a timer tick
@@ -251,8 +256,8 @@ process_ptr get_process(int pid) {
     return process_array[pid];
 }
 
-process_ptr get_foreground_process() {
-    return process_array[foreground_process_pid];
+int get_foreground_process() {
+    return foreground_process_pid;
 }
 
 

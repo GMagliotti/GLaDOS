@@ -64,6 +64,7 @@ int nice_process(int pid, int priority);
 int block_process(int pid);
 int unblock_process(int pid);
 process_ptr get_process(int pid);
+int get_foreground_process(void);
 void copy_args(char** destination, char** source, int amount);
 void free_args(char** args, int argc);
 int process_exists(int pid);

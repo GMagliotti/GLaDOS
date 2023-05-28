@@ -1,16 +1,16 @@
 #ifndef PROCESS_INFO_H
 #define PROCESS_INFO_H
 
-#include "../include/user_syscalls.h"
+#include "../../include/user_syscalls.h"
 #include "../include/stdio.h"
 
-int create_process();
+void create_process();
 
-int getpid();
-int ps();
-int loop_process();
-int pkill_process();
-int nice_process();
-int block_process();
+void getpid();
+void ps();
+void loop_process();
+void kill_process(int pid);
+void nice_process(int pid);
+void block_process(int pid);
 
 #endif

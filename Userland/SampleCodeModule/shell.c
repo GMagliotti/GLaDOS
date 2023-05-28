@@ -1,4 +1,5 @@
 #include "include/shell.h"
+#include <stdbool.h>
 
 #define MAX_CHARS_PER_COMMAND 128
 
@@ -50,70 +51,58 @@ char* validProcessCommands[16][2] = {{"CREATE", "Creates a new process an sends 
 									{"GETPID", "Displays the current process ID"}, 
 									{"PS", "Prints the list of active processes"},
 									{"LOOP", "Loops the current process on a message"},
-									{"PKILL", "Kills the current process"},
-									{"NICE", "Sets the process priority to 2"},
-									{"BLOCK", "Blocks the process"},
 									};
+char* validProcessCommands2Args[16][2] = 	{{"PKILL", "Kills the process"},
+											{"NICE", "Sets the process priority to 2"},
+											{"BLOCK", "Blocks the process"},
+											};
 
 void (*commandFunctions[16])(void) = {help, returnToShell, time, tron, printRegisters, test0Div, testInvalidExc};
 void (*commandFunctions2Args[16])(int) = {printMemoryAt, setSize, beeperSongs};
-int (*processFunctions[32])(void) = {create_process, getpid, ps, loop_process, pkill_process, nice_process, block_process};
+void (*processFunctions[16])(void) = {create_process, getpid, ps, loop_process, /*kill_process, nice_process, block_process */};
+void (*processFunctions2Args[16])(int) = {kill_process, nice_process, block_process};
+
 
 
 void checkBuffer(){
 	int found = 0;
-	for(int i = 0; !found && validCommands[i][0] != 0; i++) {
-		if(stringEquals(commandBuffer, validCommands[i][0])) {
-			(*commandFunctions[i])();	 //en array paralelo tengo los punteros a las funciones, ejecuto funcion que ingresó user
-			found = 1;
-		}
-	}
-	for (int j = 0; !found && validCommands2Args[j][0]; j++) {
-		// beginsWith
-		int pos = beginsWith(commandBuffer, validCommands2Args[j][0]);
-		if (pos != -1) {
-			found = 1;
-			if (commandBuffer[pos] == 0) {
-				printf("Invalid number of arguments, %s <NUMBER>\n", validCommands2Args[j][0]);
-			} else if (commandBuffer[pos] == ' ') {				// tiene que haber por lo menos un espacio desp del arg
-				while (commandBuffer[pos] == ' ') {
-					pos++;
-				}
+	char * params[5] = {0, 0, 0, 0, 0};
+	get_params(commandBuffer, params, 5);
 
-				int argnum = -1;						
-				if (commandBuffer[pos] != 0 && checkNumWithBase(commandBuffer[pos], 10) != -1) {	// chequeo si es un arg valido (numero)
-					if (commandBuffer[pos] == '0' && commandBuffer[pos+1] == 'X'){	
-						argnum = toNumWithBase(commandBuffer, pos+2, 16);
-					} else if (commandBuffer[pos] == '0' && commandBuffer[pos+1] == 'B') {
-						argnum = toNumWithBase(commandBuffer, pos+2, 2);
-					} else {
-						argnum = toNumWithBase(commandBuffer, pos, 10);
-					}
-				}
-				if (argnum >= 0) {			// lo que quedaba era un numero, ejecuto la funcion
-					(*commandFunctions2Args[j])(argnum);	 //en array paralelo tengo los punteros a las funciones, ejecuto funcion que ingresó user
-				} else if (argnum == -2) {
-					printf("Invalid number of arguments, %s <NUMBER>\n", validCommands2Args[j][0]);
-				} else {
-					printf("Invalid argument, please enter a valid positive integer\n");
-				}
-			} else {
-				printf("No spaces between arguments\n");
+	found = find_command(params[0], validCommands, commandFunctions);
+
+	for (int j = 0; !found && validCommands2Args[j][0]; j++) {
+		if (stringEquals(params[0], validCommands2Args[j][0])) {
+			found = 1;
+			if (params[1] == NULL) printf("Invalid number of arguments, %s <NUMBER>\n", validCommands2Args[j][0]);
+			else {
+				int argnum = string_to_int(params[1]);		
+				if (argnum >= 0) { (*commandFunctions2Args[j])(argnum);
+				} else if (argnum == -1) printf("Invalid argument, please enter a valid positive integer\n");
 			}
 		}
 	}
-	for(int i = 0; !found && validProcessCommands[i][0] != 0; i++) {
-		if(stringEquals(commandBuffer, validProcessCommands[i][0])) {
-			(*processFunctions[i])();
-			found = 1;
-		}
-	}
-	
+
 	if(!found){
-		if (!commandBufferIsOnlySpaces()) {									// si el buffer no es espacios o vacio aclaramos
-			printf("Invalid option. Type HELP for more information.\n");
-		} 
+		found = find_command(params[0], validProcessCommands, processFunctions);
 	}
+
+	for (int j = 0; !found && validProcessCommands2Args[j][0]; j++) {
+		if (stringEquals(params[0], validProcessCommands2Args[j][0])) {
+			found = 1;
+			if (params[1] == NULL) printf("Invalid number of arguments, %s <NUMBER>\n", validProcessCommands2Args[j][0]);
+			else {
+				int argnum = string_to_int(params[1]);		
+				if (argnum >= 0) { (*processFunctions2Args[j])(argnum);
+				} else if (argnum == -1) printf("Invalid argument, please enter a valid positive integer\n");
+			}
+		}
+	}	
+
+	if(!found && !is_only_space(commandBuffer)){
+		printf("Invalid option. Type HELP for more information.\n");
+	}
+
 	putc('>');
 	clearCommandBuffer();  //limpio el buffer local y seteo posicion de contador en 0
 	call_to_clearbuffer(); //limpio el buffer de kernel mediante syscall
@@ -153,26 +142,29 @@ void time() {
 	printCurrentTime();
 }
 
+void print_valid_array(char * array[16][2]) {
+	if (array == NULL) return;
+	int i = 0;
+	while (array[i][0] != 0 && array[i][1] != 0) {
+		printf("\t%s - %s\n", array[i][0], array[i][1]);
+		i++;
+	}
+}
+
 void help() {
 	printf("The available commands are:\n\n");
+
 	printf("Functions that receive 1 arg, format: COMMAND\n");
-	int i = 1;
-	while (validCommands[i][0] != 0 && validCommands[i][1] != 0) {
-		printf("\t%s - %s\n", validCommands[i][0], validCommands[i][1]);
-		i++;
-	}
+	print_valid_array(validCommands);
+
 	printf("\nFunctions that receive 2 args, format: COMMAND <NUMBER>\n");
-	i = 0;
-	while (validCommands2Args[i][0] != 0 && validCommands2Args[i][1] != 0) {
-		printf("\t%s - %s\n", validCommands2Args[i][0], validCommands2Args[i][1]);
-		i++;
-	}
+	print_valid_array(validCommands2Args);
+
 	printf("\nProcess related functions, format: COMMAND\n");
-	i = 0;
-	while (validProcessCommands[i][0] != 0 && validProcessCommands[i][1] != 0) {
-		printf("\t%s - %s\n", validProcessCommands[i][0], validProcessCommands[i][1]);
-		i++;
-	}	
+	print_valid_array(validProcessCommands);
+
+	printf("\nProcessess that receive 2 args, format: COMMAND <PID>\n");
+	print_valid_array(validProcessCommands2Args);
 }
 
 void returnToShell(){
@@ -193,11 +185,81 @@ void setSize(int newSize) {
 	}
 }
 
-int commandBufferIsOnlySpaces() {
-	for (int i = 0; commandBuffer[i] != 0 ;i++) {
-		if (commandBuffer[i] != ' ') {
+
+bool is_space(char c) {
+    return c == ' ' || c == '\t' || c == '\n';
+}
+
+int is_only_space(char * str) {
+	for (int i = 0; str[i] != 0 ;i++) {
+		if (!is_space(str[i])) {
 			return 0;
 		}
 	}
 	return 1;
+}
+
+void get_params(char* str, char* params[], int max_params) {
+    if (str == NULL || params == NULL || max_params <= 0) {
+        return;
+    }
+
+    int count = 0;
+    int i = 0;
+    int param_index = 0;
+    bool inside_param = false;
+
+    while (str[i] != '\0') {
+        if (!inside_param && !is_space(str[i])) {
+            // Start of a new parameter
+            inside_param = true;
+            params[param_index] = str + i;
+            param_index++;
+
+            if (param_index == max_params) {
+                break; // Reached the maximum number of parameters
+            }
+        }
+        else if (inside_param && is_space(str[i])) {
+            // End of a parameter
+            inside_param = false;
+            str[i] = '\0';
+            count++;
+        }
+
+        i++;
+    }
+
+    if (param_index < max_params) {
+        // Fill the remaining slots with NULL
+        for (int j = param_index; j < max_params; j++) {
+            params[j] = NULL;
+        }
+    }
+}
+
+int string_to_int(char * str) {
+	int num = -1;
+	if ( str[0] == '0' ) {
+		if ( str[1] == 'X' ) {
+			num = toNumWithBase(str, 2, 16);
+		} else if ( str[1] == 'B' ) {
+			num = toNumWithBase(str, 2, 2);
+		} else {
+			num = toNumWithBase(str, 0, 10);
+		}
+	} else {
+		num = toNumWithBase(str, 0, 10);
+	}
+	return num;
+}
+
+int find_command(char * command, char * validCommands[16][2], void(*commandFunctions[16])(void)) {
+	for(int i = 0; validCommands[i][0] != 0; i++) {
+		if(stringEquals(command, validCommands[i][0])) {
+			(*commandFunctions[i])();	 //en array paralelo tengo los punteros a las funciones, ejecuto funcion que ingresó user
+			return 1;
+		}
+	}
+	return 0;
 }
