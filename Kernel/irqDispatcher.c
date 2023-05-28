@@ -1,3 +1,5 @@
+#include "Scheduler/include/process.h"
+#include "Scheduler/include/scheduler.h"
 #include <irqDispatcher.h>
 
 extern uint8_t getKey();
@@ -24,17 +26,39 @@ uint64_t int_20() {
 }
 
 uint64_t int_21() {
-	static bool shiftPressed = false, tabPressed = false;
+	process_ptr proc = current_process();
+	static bool shiftPressed = false, tabPressed = false, ctrlPressed = false;
 	uint8_t keyScanCode = getKey();
 	if (keyScanCode == 0x0F) tabPressed = true;
 	else if (keyScanCode == 0x8F) tabPressed = false;
 	else if (keyScanCode == 0x2A) shiftPressed = true;
 	else if (keyScanCode == 0xAA) shiftPressed = false;
+	else if (keyScanCode == 0x1D) ctrlPressed = true;
+	else if (keyScanCode == 0x9D) ctrlPressed = false;
 	else {
 		int c = getCharacterFromKeyboardHex(keyScanCode);
-		// if (c != 0 && proc->visibility != BACKGROUND)
-		//si estoy en bash imprimo el caracter y ademas lo guardo en buffer (para su posterior validacion de comando)
-		saveKey(c);
+		if (ctrlPressed && c == 'C') {
+			kill_process(get_foreground_process());
+			printChar('^');
+			printChar(c);
+			clearBuffer();
+			saveKey('\n');
+		} else if (ctrlPressed && c == 'Z') {
+			block_process(get_foreground_process());
+			printChar('^');
+			printChar(c);
+			clearBuffer();
+			saveKey('\n');
+		} else if (ctrlPressed && c == 'D') {
+			saveKey('\0');
+		} else if (shiftPressed && c == '7') {
+			saveKey('&');
+		} else if (shiftPressed && c == '\\') {
+			saveKey('|');
+		} else {
+			//si estoy en bash imprimo el caracter y ademas lo guardo en buffer (para su posterior validacion de comando)
+			saveKey(c);
+		}
 	}
 	if (tabPressed && shiftPressed) return 1;
 	else return 0;

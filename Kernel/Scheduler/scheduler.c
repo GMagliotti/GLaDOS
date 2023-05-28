@@ -1,12 +1,15 @@
 #include "include/scheduler.h"
+#include "include/process.h"
+#include "include/roundRobin.h"
 
 rr_queue_ptr rr_scheduler;  
 
 // newScheduler: crea un scheduler de tipo RoundRobinWithPriority
-rr_queue_ptr create_scheduler(void (*fn)(int, char **)) {
-    rr_scheduler = create_new_round_robin(initialize_idle(fn));
-    // scheduler_enqueue_process(initialize_shell());
-    
+rr_queue_ptr create_scheduler(void (*idle)(int, char **), void (*shell)(int, char **)) {
+    rr_scheduler = create_new_round_robin(initialize_idle(idle));
+	scheduler_create_process("Shell", 0, NULL, shell, FOREGROUND);
+    next_process(rr_scheduler);
+
     return rr_scheduler;
 }
 
@@ -67,6 +70,10 @@ int scheduler_create_process(char* name, int argc, char** argv, void (*fn)(int, 
     if(current_proc != NULL) {
         fd[0] = current_proc->fd_r;
         fd[1] = current_proc->fd_w;
+    }
+
+    if (visibility != FOREGROUND && visibility != BACKGROUND) {
+        visibility = FOREGROUND;
     }
 
     process_ptr created_process = create_process(name, argc, argv, fn, visibility, fd);

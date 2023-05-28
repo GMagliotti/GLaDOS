@@ -5,7 +5,7 @@
 #include "roundRobin.h"
 #include <MemoryManager.h>
 
-rr_queue_ptr create_scheduler(void (*fn)(int, char **));
+rr_queue_ptr create_scheduler(void (*idle)(int, char **), void (*shell)(int, char **));
 process_ptr current_process(void);
 void * scheduler(void * rsp);
 

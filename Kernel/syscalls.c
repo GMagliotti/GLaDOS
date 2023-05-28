@@ -74,7 +74,9 @@ void sys_read(uint8_t fd, char * toRet, int cantChars) {
 void sys_putpixel(uint32_t x, uint32_t y, uint32_t color){
     // When drawing graphics the text buffer becomes disabled
     //setTextBufferActive(false);
-    putpixel(x, y, color);
+    if (current_is_foreground()){
+        putpixel(x, y, color);
+    }
     return;
 }
 

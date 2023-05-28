@@ -2,7 +2,11 @@
 
 
 void bofa(int argc, char** argv) {
-    printf("Bofa deez nuts\n");
+    while(1){
+        printf("Bofa deez nuts\n");
+        // ps();
+        call_to_hlt();
+    }
 }
 
 void create_process(void) {
@@ -10,8 +14,8 @@ void create_process(void) {
     int argc = 0;
     char** argv = 0;
     // void (*fn)(int, char **) = 0;
-    int visibility = 1;
-    call_to_create_process(name, argc, argv, bofa, visibility);
+    int visibility = 0;
+    call_to_create_process(name, argc, NULL, bofa, visibility);
 }
 
 void getpid() {
@@ -23,7 +27,7 @@ void ps() {
 }
 
 void loop_process(void) {
-    call_to_loop_process(call_to_getpid(), 1000);
+    call_to_loop_process(call_to_getpid(), 500);
 }
 
 void kill_process(int pid) {

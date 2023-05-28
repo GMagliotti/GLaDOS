@@ -24,10 +24,6 @@ static void * const sampleCodeModuleAddress = (void*)0x400000;
 static void * const sampleDataModuleAddress = (void*)0x500000;
 
 void idle(int, char **);
-void p1(int, char **);
-void p2(int, char **);
-void p3(int, char **);
-void p4(int, char **);
 
 typedef int (*EntryPoint)();
 
@@ -113,20 +109,11 @@ int main()
 {	
 	hvdClear();
 	the_memory_manager = createMemoryManager((void *)0x50000, (void *)0x1000000);
-	the_scheduler = create_scheduler(idle);
-	scheduler_create_process("Shell", 0, NULL, sampleCodeModuleAddress, FOREGROUND);
-	// RACE CONDITION!!! SI ESTA CORRIENDO EL IDLE NO SE IMPRIME EL MSJ INICIAL
-	
-	// scheduler_create_process("Shell", 0, NULL, sampleCodeModuleAddress, BACKGROUND);
-	// scheduler_create_process("p1", 0, NULL, p1, FOREGROUND);
-	// scheduler_create_process("p2", 0, NULL, p2, BACKGROUND);
-	// scheduler_create_process("p3", 0, NULL, p3, FOREGROUND);
-	// scheduler_create_process("p4", 0, NULL, p4, FOREGROUND);
+	the_scheduler = create_scheduler(idle, sampleCodeModuleAddress);
 	load_idt();
-	// ((EntryPoint)sampleCodeModuleAddress)();
-	// printColorString("Scheduler creado", 0xFFFFFFFFFFFFFFFF, 0x00FF00);
+
 	while(1) {
-		printNumber(69, 10);
+		printString("Mistakes were made...", 30);
 		_hlt();
 	}
 	return 0;
@@ -135,38 +122,6 @@ int main()
 void idle(int argc, char ** argv) {
 	while (1) {
 		printColorString("This is truly a runescape crocodile moment", 0xFFFFFFFFFFFFFFFF, 0x0000FF);
-		printChar('\n');
-		_hlt();
-	}
-}
-
-void p1(int argc, char ** argv) {
-	while (1) {
-		printColorString("And a one ", 0xFFFFFFFFFFFFFFFF, 0xFFFFFF);
-		printChar('\n');
-		_hlt();
-	}
-}
-
-void p2(int argc, char ** argv) {
-	while (1) {
-		printColorString("And a two ", 0xFFFFFFFFFFFFFFFF, 0x0000FF);
-		printChar('\n');
-		_hlt();
-	}
-}
-
-void p3(int argc, char ** argv) {
-	while (1) {
-		printColorString("And a one, two, three, four ", 0xFFFFFFFFFFFFFFFF, 0x00FF00);
-		printChar('\n');
-		_hlt();
-	}
-}
-
-void p4(int argc, char ** argv) {
-	while (1) {
-		printColorString("I AM ROCK FUCKING HARD AAAAAAA", 0xFFFFFFFFFFFFFFFF, 0xFF0000);
 		printChar('\n');
 		_hlt();
 	}

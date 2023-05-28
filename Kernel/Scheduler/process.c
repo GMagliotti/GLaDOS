@@ -51,12 +51,12 @@ process_ptr create_process(char* name, int argc, char** argv, void (*fn)(int, ch
     }
 
     if( current_proc != NULL && visibility == FOREGROUND ) {
-        // if (current_proc->visibility == FOREGROUND) {            // mientras no tengamos todo en userland (asi hay mas de 1 proc en fg)
+        if (current_proc->visibility == FOREGROUND) {            // mientras no tengamos todo en userland (asi hay mas de 1 proc en fg)
             current_proc->visibility = BACKGROUND;
             foreground_process_pid = pid;
-        // } else {
-            // return NULL;
-        // }
+        } else {
+            return NULL;
+        }
     }
 
     process_ptr new_process = sys_malloc(sizeof(process) + STACK_SIZE);  //definir STACK SIZE !!
@@ -162,11 +162,12 @@ void loop_process(int pid, int ms) {
 int kill_process(int pid) {
     if (pid == 0 || pid == 1) return 0;
 
-    if (!process_exists(pid)) return ERROR;
+    if (!process_exists(pid)) {
+        return ERROR;
+    }
 
     process_array[pid]->status = KILLED;
-    process_ptr current_proc = get_process(current_pid);
-    if(current_proc != NULL && current_proc->pid == pid) {
+    if(current_pid == pid) {
         //forzar timer tick
         force_timer();
     }
@@ -234,9 +235,14 @@ int block_process(int pid) {
 
     process_array[pid]->status = BLOCKED;
 
+    if (foreground_process_pid == pid) {
+        process_array[pid]->visibility = BACKGROUND;
+        foreground_process_pid = process_array[pid]->ppid;
+        process_array[foreground_process_pid]->visibility = FOREGROUND;
+    }
+
     //if the process blocked was the one running, force a timer tick
-    process_ptr current_proc = get_process(current_pid);
-    if(current_proc != NULL && current_proc->pid == pid) {
+    if(current_pid == pid) {
         //forzar un timer tick
         // printf("Timer was forced\n");
         force_timer();
@@ -341,7 +347,7 @@ void set_current_process(int new_pid) {
 }
 
 bool wants_to_run(process_ptr process) {        // probs hayan otras condiciones a tener en cuenta
-    return (process->status == READY || process->status == ALIVE) && process->priority != -1;
+    return (process->status != BLOCKED ) && process->priority != -1;
 }
 
 void save_children(int pid) {
