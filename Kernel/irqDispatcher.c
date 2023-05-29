@@ -26,7 +26,6 @@ uint64_t int_20() {
 }
 
 uint64_t int_21() {
-	process_ptr proc = current_process();
 	static bool shiftPressed = false, tabPressed = false, ctrlPressed = false;
 	uint8_t keyScanCode = getKey();
 	if (keyScanCode == 0x0F) tabPressed = true;

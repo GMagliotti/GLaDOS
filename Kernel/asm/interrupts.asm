@@ -157,8 +157,9 @@ test:
 ; rsi = char** argv
 ; rdx = int argc 
 ; rcx = void (*fn)(int, char **)
+; r8 = void (*fn)(int, char **, void (*fn)(int, char **))
 initialize_stack:
-	;pop rbx			; Direccion de retorno a funcion create_process()
+	;pop rbx		; Direccion de retorno a funcion create_process()
 	;push rdx		; ARGC
 	;push rsi		; ARGV	
 	mov rax, 0h 
@@ -172,22 +173,21 @@ initialize_stack:
 	mov rax, 8h
 	mov [rdi+128], rax
 	;push QWORD 8h	; Code Segment (Hardcoded, cambiar)
-	mov [rdi+120], rcx
-	;push rcx		; Puntero a programa
+	mov [rdi+120], r8
+	;push rcx		; Puntero al init
 	;pushState		; El resto, porque popState se llama en int
 	mov [rdi+112], rax
 	;push QWORD 1h
 	mov [rdi+104], rbx
 	;push QWORD 2h
-	mov [rdi+96], rcx
+	mov [rdi+96], r8	; ip
 	;push QWORD 3h
-	mov [rdi+88], rdx
+	mov [rdi+88], rcx	; rdx - guardo el 3 arg
 	;push QWORD 4h
-	mov [rdi+80], rsi
+	mov [rdi+80], rsi 	; rbp - guardo el 2 arg
 	;push QWORD 5h
-	mov [rdi+72], rdi
+	mov [rdi+72], rdx	; rdi - guardo el 1 arg
 	;push QWORD 6h
-	mov rsi, 0h
 	mov [rdi+64], rsi
 	;push QWORD 7h
 	mov r8, 8h

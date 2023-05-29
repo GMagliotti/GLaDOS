@@ -1,4 +1,5 @@
 #include "include/process.h"
+#include <stdio.h>
 
 
 //array con todos los procesos (organizado por pid)
@@ -8,14 +9,10 @@ int foreground_process_pid = 0;
 int process_count = 0;
 int alive_process_count = 0;
 
-process_ptr initialize_shell(void) {
-    int fd[2] = { 0, 1 };
-    return create_process("Shell", 0, NULL, NULL, FOREGROUND, fd);
-}
-
 process_ptr initialize_idle(void (*idle_fn)(int, char **)) {
     int fd[2] = { 0, 1 };
-    process_ptr idle = create_process("Idle", 0, NULL, idle_fn, FOREGROUND, fd);
+    char *argv[2] = {"Idle", "I"};
+    process_ptr idle = create_process("Idle", 0, argv, idle_fn, FOREGROUND, fd);
     idle->priority = -1;
     return idle;
 }
@@ -59,13 +56,13 @@ process_ptr create_process(char* name, int argc, char** argv, void (*fn)(int, ch
         }
     }
 
-    process_ptr new_process = sys_malloc(sizeof(process) + STACK_SIZE);  //definir STACK SIZE !!
+    process_ptr new_process = (process_ptr)sys_malloc(sizeof(process) + STACK_SIZE);  //definir STACK SIZE !!
     if(new_process == NULL) {
         sys_free(new_process);
         return NULL;
     }
     //aloco espacio para los argumentos
-    char** args = sys_malloc(sizeof(char *) * argc);
+    char** args = (char **)sys_malloc(sizeof(char *) * argc);
     if(args == NULL) {
         sys_free(new_process);
         return NULL;
@@ -78,7 +75,7 @@ process_ptr create_process(char* name, int argc, char** argv, void (*fn)(int, ch
     }
     new_process->children_count = 0;
 
-    new_process->name = sys_malloc(strLength(name));
+    new_process->name = (char *)sys_malloc(strLength(name));
     if(new_process->name == NULL) {
         free_args(args, argc);
         sys_free(new_process);
@@ -93,14 +90,36 @@ process_ptr create_process(char* name, int argc, char** argv, void (*fn)(int, ch
     new_process->fd_r = fd[0];
     new_process->fd_w = fd[1];
     new_process->rbp = (uint64_t)new_process + sizeof(process) + STACK_SIZE - sizeof(uint64_t);
-    new_process->rsp = (uint64_t)(new_process->rbp - sizeof(registerBackup));
+    new_process->rsp = (uint64_t)(new_process->rbp - sizeof(registerBackup) - 0x100);
     new_process->pid = pid;
     new_process->status = ALIVE;
 
-    initialize_stack(new_process->rsp, args, argc, fn);
+    initialize_stack(new_process->rsp, args, argc, fn, init);
     process_array[pid] = new_process;
     process_count++;
     return new_process;
+}
+
+void init(int argc, char** argv, void (*fn)(int, char **)) {
+
+    process_ptr proc = get_process(current_pid);
+
+    if (stringEquals(argv[argc-1], "&")) {
+        proc->visibility = BACKGROUND;
+        process_array[proc->ppid] = FOREGROUND;
+        argv[argc-1] = NULL;
+        argc--;
+    }
+
+    fn(argc, argv);
+
+    proc->status = FINISHED;
+    force_timer();
+
+    while(1) {
+        // printString("P", 4);
+    }
+    return ;
 }
 
 //ps: imprime todos los procesos con sus propiedades (nombre, id, prioridad, SP, BP, foreground, etc)
@@ -322,9 +341,8 @@ int get_free_pid(void) {
  */
 void copy_args(char** destination, char** source, int amount) {
     for(int i = 0; i < amount; i++) {
-        if(destination[i] == NULL)
-            return; 
-        destination[i] = sys_malloc(sizeof(char) * (strLength(source[i] + 1)));
+        destination[i] = (char**)sys_malloc(sizeof(char) * (strLength(source[i]) + 1));
+        if(destination[i] == NULL) return; 
         // strCpy(destination[i], source[i], strLength(source[i]));
         strCpy(destination[i], source[i]);  
     }

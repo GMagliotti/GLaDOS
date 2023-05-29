@@ -7,7 +7,8 @@ rr_queue_ptr rr_scheduler;
 // newScheduler: crea un scheduler de tipo RoundRobinWithPriority
 rr_queue_ptr create_scheduler(void (*idle)(int, char **), void (*shell)(int, char **)) {
     rr_scheduler = create_new_round_robin(initialize_idle(idle));
-	scheduler_create_process("Shell", 0, NULL, shell, FOREGROUND);
+    char *argv[1] = {"Shell arg 1"};
+	scheduler_create_process("Shell", 1, argv, shell, FOREGROUND);
     next_process(rr_scheduler);
 
     return rr_scheduler;
@@ -33,8 +34,6 @@ void * scheduler(void * rsp) {
     
     process_ptr current_process = get_current_process(rr_scheduler);
 
-    set_current_process(current_process->pid);
-
     if (initialized) { save_rsp(current_process, rsp); } 
     else { initialized = true; }
 
@@ -53,6 +52,9 @@ void * scheduler(void * rsp) {
     } else {
         current_process = next_tick(rr_scheduler);
     }
+
+    set_current_process(current_process->pid);
+
     return (void *)context_switch(current_process);
 }
 
@@ -90,7 +92,7 @@ int scheduler_create_process(char* name, int argc, char** argv, void (*fn)(int, 
 // Borrado de proceso al scheduler (lo deberiamos de poder llamar nosotros) ¿que pasa cuando un proceso termina?
 int scheduler_dequeue_process(process_ptr p) {
     dequeue_process(rr_scheduler, p);
-    return 69;
+    return 1;
 }
 
 

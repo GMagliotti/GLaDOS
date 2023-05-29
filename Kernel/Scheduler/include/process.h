@@ -51,8 +51,6 @@ typedef struct process {
 
 typedef process * process_ptr;
 
-
-process_ptr initialize_shell(void);
 process_ptr initialize_idle(void (*idle_fn)(int, char **));
 void uninitialize(void);
 
@@ -80,6 +78,8 @@ void free_shell();
 void set_current_process(int new_pid);
 
 bool wants_to_run(process_ptr process);
-extern void initialize_stack(uint64_t new_program_stack, char** argv, int argc, void (*fn)(int, char **));
+extern void initialize_stack(uint64_t new_program_stack, char** argv, int argc, void (*fn)(int, char **), void (*init)(int, char **, void (*fn)(int, char **)));
+
+void init(int argc, char** argv, void (*fn)(int, char **));
 
 #endif

@@ -1,21 +1,22 @@
 #include "include/process_info.h"
 
+int count = 0;
 
 void bofa(int argc, char** argv) {
-    while(1){
-        printf("Bofa deez nuts\n");
-        // ps();
-        call_to_hlt();
+    printf("Arg count: %d\n", argc);
+    for (int i = 0; i < argc; i++) {
+        printf("Arg %d: %s\n", i, argv[i]);
     }
+    // ps();
 }
 
 void create_process(void) {
     char* name = "Bofa";
-    int argc = 0;
-    char** argv = 0;
+    int argc = 2;
+    char* argv[2] = {"Primer arg", "Segundo arg"};
     // void (*fn)(int, char **) = 0;
     int visibility = 0;
-    call_to_create_process(name, argc, NULL, bofa, visibility);
+    call_to_create_process(name, argc, argv, bofa, visibility);
 }
 
 void getpid() {
