@@ -7,12 +7,13 @@ enter_region:
     MOV  rax, QWORD 0x0
     XCHG rax, QWORD [rdi]
     CMP  rax, QWORD 0x0
-    JZ   .whiff
+    JZ   enter_region
     RET
 
 ; Si no llegamos en tiempo, comentar lo de abajo y 
 ; cambiar el JZ a enter_region
-; Bussy waitussy
+; Yes, that is busy waiting
+; If push comes to shove, fuck it
 
 .whiff:
     MOV r15, 0x2    ; Ver como "avisar" al timer tick que bloquee

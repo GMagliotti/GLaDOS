@@ -5,6 +5,7 @@ GLOBAL generateRandSeed
 GLOBAL inb
 GLOBAL outb
 GLOBAL memoryAt
+GLOBAL forceTimer
 
 section .text
 
@@ -108,3 +109,7 @@ memoryAt:			; Devuelve el contenido de la dir de memoria pasada como arg
     mov rsp, rbp
 	pop rbp
     ret
+
+forceTimer:
+	int 20h
+	ret

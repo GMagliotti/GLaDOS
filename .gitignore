@@ -6,6 +6,9 @@
 maker.sh
 /Userland/SampleCodeModule/tests/*
 
+### FELIX ###
+/docker_build_command.sh
+
 ### QEMU ###
 *.bin
 *.sys

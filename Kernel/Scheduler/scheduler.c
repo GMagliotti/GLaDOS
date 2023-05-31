@@ -44,7 +44,8 @@ void * scheduler(void * rsp) {
         if (current_process->pid != 0 && current_process->priority != -1) {
             process_ptr aux = current_process;
             scheduler_dequeue_process(current_process); 
-            free_process(aux->pid);
+            // free_process(aux->pid);
+            set_zombie(aux->pid);
             current_process = get_current_process(rr_scheduler);
 
         }

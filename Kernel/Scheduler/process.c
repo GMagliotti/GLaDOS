@@ -96,6 +96,7 @@ process_ptr create_process(char* name, int argc, char** argv, void (*fn)(int, ch
     new_process->rsp = (uint64_t)(new_process->rbp - sizeof(registerBackup));
     new_process->pid = pid;
     new_process->status = ALIVE;
+    new_process->done_sem = sem_init(0); //starting value of 0
 
     initialize_stack(new_process->rsp, args, argc, fn);
     process_array[pid] = new_process;
@@ -174,17 +175,15 @@ int kill_process(int pid) {
     return 1;
 }
 
-//removes process from list and frees its memory.
-int free_process(int pid) {
-
-    if(!process_exists(pid))
-        return -1;
-    // if (pid <= 1) return 0;
+//sets process status as zombie and posts the done_sem, will be freed once the parent executes waitpid
+int set_zombie(int pid) {
+    process_ptr proc = process_array[pid];
+    process_ptr current_proc = get_process(current_pid);
+    proc->status = ZOMBIE;
 
     save_children(pid);
 
-    process_ptr proc = process_array[pid];
-    //give parent process foreground:
+    //if killed process was in fg, give parent process fg:
     if (proc->visibility == FOREGROUND) {
         process_ptr parent = get_process(proc->ppid);
         if (parent != NULL) {
@@ -192,23 +191,53 @@ int free_process(int pid) {
             foreground_process_pid = parent->pid;
         }
     }
-    
-    //set process as ZOMBIE
-    proc->status = ZOMBIE;
 
-    //wait for parents to waitpid ......
+    //post done_sem so parent can collect my return value and i can be freed (parent was currently blocked at waitpid)
+    sem_post(proc->done_sem);
 
-    //parent has done waitpid for this process, can now be freed
-    process_count--;
-    process_array[pid] = NULL;
-    sys_free(proc->name);
-    registerBackup* stack = (registerBackup *) proc->rsp;
-    free_args((char **)stack->rsi, stack->rdi);
-
-    sys_free(proc);
-
+    //if i was the current process running, force a timer tick
+    //siempre retorna true por como esta diseñado -> si se llama esta funcion es porque justo antes seteamos el curr_proc a este proceso matado
+    if(current_proc != NULL && current_proc->pid == pid) {
+        force_timer();
+    }
     return 1;
 }
+
+//removes process from list and frees its memory.
+// int free_process(int pid) {
+
+//     if(!process_exists(pid))
+//         return -1;
+//     // if (pid <= 1) return 0;
+
+//     save_children(pid);
+
+//     process_ptr proc = process_array[pid];
+//     //give parent process foreground:
+//     if (proc->visibility == FOREGROUND) {
+//         process_ptr parent = get_process(proc->ppid);
+//         if (parent != NULL) {
+//             parent->visibility = FOREGROUND;
+//             foreground_process_pid = parent->pid;
+//         }
+//     }
+    
+//     //set process as ZOMBIE
+//     proc->status = ZOMBIE;
+
+//     //wait for parents to waitpid ......
+
+//     //parent has done waitpid for this process, can now be freed
+//     process_count--;
+//     process_array[pid] = NULL;
+//     sys_free(proc->name);
+//     registerBackup* stack = (registerBackup *) proc->rsp;
+//     free_args((char **)stack->rsi, stack->rdi);
+
+//     sys_free(proc);
+
+//     return 1;
+// }
 
 //nice: cambia la prioridad de un proceso dado su PID y una nueva prioridad
 int nice_process(int pid, int priority) {
@@ -339,7 +368,7 @@ void free_args(char** args, int argc) {
 }
 
 void force_timer(void) {
-    return;
+    forceTimer();
 }
 
 void set_current_process(int new_pid) {
@@ -391,4 +420,25 @@ char * get_process_status(int status) {
     if (status == KILLED) return "Killed";
 
     return "WOOOT??";
+}
+
+//will block parent till child finishes executing (or is killed), will then free the child process 
+int waitpid(int pid) {
+    if(pid == 0 || pid == 1 || !process_exists(pid)) {
+        return ERROR;
+    }
+
+    process_ptr proc = process_array[pid];
+
+    //block till child with id = pid is done executing (using semaphore the child has saved)
+    sem_wait(proc->done_sem);
+
+    //parent has done waitpid for this process, it can now be freed
+    process_count--;
+    process_array[pid] = NULL;
+    sys_free(proc->name);
+    registerBackup* stack = (registerBackup *) proc->rsp;
+    free_args((char **)stack->rsi, stack->rdi);
+
+    sys_free(proc);
 }

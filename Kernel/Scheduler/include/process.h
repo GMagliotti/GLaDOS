@@ -45,6 +45,8 @@ typedef struct process {
     int children[MAX_PROCESS_AMOUNT];
     int children_count;
 
+    int done_sem;
+
     uint64_t rsp;
     uint64_t rbp;
 } process;
@@ -71,11 +73,12 @@ void free_args(char** args, int argc);
 int process_exists(int pid);
 int get_free_pid(void);
 char * get_process_status(int status);
-void force_timer(void);
+extern void force_timer(void);
 
-int free_process(int pid);
+int set_zombie(int pid);
 void save_children(int pid);
 void free_shell();
+int waitpid(int pid);
 
 void set_current_process(int new_pid);
 
