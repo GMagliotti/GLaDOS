@@ -42,5 +42,6 @@ int call_to_block_process(int pid);
 int call_to_create_process(int argc, char** argv, void (*fn)(int, char **));
 void call_to_set_print_mode();
 
+int call_to_waitpid(int pid);
 
 #endif

@@ -135,16 +135,15 @@ void init(int argc, char** argv, void (*fn)(int, char **)) {
         argc--;
     }
 
-    // printNumber(proc->fd_r, 10);    
-    // printNumber(proc->fd_w, 10);
-
     fn(argc, argv);
 
     proc->status = FINISHED;
+    proc->ret_value = FINISHED;
+
     force_timer();
 
     while(1) {
-        // printString("P", 4);
+        printString("P", 4);
     }
     return ;
 }
@@ -204,6 +203,8 @@ int kill_process(int pid) {
     }
 
     process_array[pid]->status = KILLED;
+    process_array[pid]->ret_value = KILLED;
+
     if(current_pid == pid) {
         //forzar timer tick
         force_timer();
@@ -218,7 +219,7 @@ int free_process(int pid) {
         return -1;
     // if (pid <= 1) return 0;
 
-    save_children(pid);
+    // save_children(pid);
 
     process_ptr proc = process_array[pid];
     //give parent process foreground:
@@ -227,6 +228,7 @@ int free_process(int pid) {
         if (parent != NULL) {
             parent->visibility = FOREGROUND;
             foreground_process_pid = parent->pid;
+            proc->visibility = BACKGROUND;
         }
     }
     
@@ -236,13 +238,13 @@ int free_process(int pid) {
     //wait for parents to waitpid ......
 
     //parent has done waitpid for this process, can now be freed
-    process_count--;
-    process_array[pid] = NULL;
-    sys_free(proc->name);
-    registerBackup* stack = (registerBackup *) proc->rsp;
-    free_args((char **)stack->rsi, stack->rdi);
+    // process_count--;
+    // process_array[pid] = NULL;
+    // sys_free(proc->name);
+    // registerBackup* stack = (registerBackup *) proc->rsp;
+    // free_args((char **)stack->rsi, stack->rdi);
 
-    sys_free(proc);
+    // sys_free(proc);
 
     return 1;
 }
@@ -382,7 +384,7 @@ void free_args(char** args, int argc) {
 }
 
 void force_timer(void) {
-    return;
+    forceTimer();
 }
 
 void set_current_process(int new_pid) {
@@ -452,4 +454,97 @@ void set_print_mode() {
 
 bool on_print_mode() {
     return print_mode;
+}
+
+int waitpid(int pid) {
+    if(pid == 0 || pid == 1 || !process_exists(pid)) {
+        printString("ERROR: pid invalido\n", 50);
+        return ERROR;
+    }
+
+    process_ptr current_proc = get_process(current_pid);
+
+    current_proc->status = BLOCKED; 
+
+    process_ptr proc = process_array[pid];
+
+    while (proc->status == ALIVE || proc->status == READY || proc->status == BLOCKED) {     // simula un semaforo
+        proc = process_array[pid];
+        printString(".", 10);
+        printString(get_process_status(process_array[1]->status), 32);
+        sleepms(50);
+    }
+
+    //block till child with id = pid is done executing (using semaphore the child has saved)
+    // sem_wait(proc->done_sem);
+
+    int aux = proc->ret_value;
+
+    //parent has done waitpid for this process, it can now be freed
+    process_count--;
+    process_array[pid] = NULL;
+    sys_free(proc->name);
+    registerBackup* stack = (registerBackup *) proc->rsp;
+    free_args((char **)stack->rsi, stack->rdi);
+
+    sys_free(proc);
+
+    return aux;
+}
+
+//find all zombie processes that are children of shell, waitpid them
+void shell_waitpid() {
+    process_ptr shell = process_array[1];
+    int i = 0;
+    while(shell->children[i] != NULL) {
+        process_ptr child = process_array[shell->children[i]];
+        if(child != NULL && child->status == ZOMBIE) {
+            //despues pasar esto a waitpid para procesos que no son hijos de shell
+            process_ptr grandpa = get_process(child->ppid);
+            int found = 0;
+            for(int i = 0; !found && i < grandpa->children_count ; i++) {
+                if(grandpa->children[i] == child->pid) {
+                    grandpa->children[i] = grandpa->children[grandpa->children_count-1];
+                    grandpa->children[grandpa->children_count-1] = (uint64_t) NULL;
+                    grandpa->children_count--;
+                    found = 1;
+                }
+            }
+
+            waitpid(child->pid); //will not block because we know its a zombie process
+        }
+        i++;
+    }
+}
+
+//sets process status as zombie and posts the done_sem, will be freed once the parent executes waitpid
+void set_zombie(int pid) {
+    process_ptr proc = process_array[pid];
+    process_ptr current_proc = get_process(current_pid);        // es lo mismo
+
+    proc->status = ZOMBIE;
+
+    save_children(pid);
+
+    //if killed process was in fg, give parent process fg:
+    if (proc->visibility == FOREGROUND) {
+        proc->visibility = BACKGROUND;
+        process_ptr parent = get_process(proc->ppid);
+        if (parent != NULL) {
+            parent->visibility = FOREGROUND;
+            foreground_process_pid = parent->pid;
+        }
+    }
+
+    //post done_sem so parent can collect my return value and i can be freed (parent was currently blocked at waitpid)
+    
+    // sem_post(proc->done_sem);
+
+    process_array[proc->ppid]->status = ALIVE;
+
+    //if i was the current process running, force a timer tick
+    //siempre retorna true por como esta diseñado -> si se llama esta funcion es porque justo antes seteamos el curr_proc a este proceso matado
+    if(current_proc != NULL && current_proc->pid == pid) {
+        force_timer();
+    }
 }

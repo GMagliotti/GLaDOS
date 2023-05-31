@@ -81,6 +81,7 @@ int is_valid_command(char * command) {
 void checkBuffer(){
 	int found = 0;
 	int command_pos = -1;
+    int pid1 = -1;
 
 	char * params[MAX_PARAMS] = {NULL};
 
@@ -132,9 +133,14 @@ void checkBuffer(){
 
 	} else {
 		if ((command_pos = is_valid_command(params[0])) != -1) {
-    			call_to_create_process(argc, params, commandFunctions[command_pos]);
+    			pid1 = call_to_create_process(argc, params, commandFunctions[command_pos]);
 				found = 1;
 		}
+	}
+
+	if (pid1 > 0) {
+		int ret = call_to_waitpid(pid1);
+		printf("hola!! espere a mi hijo, devolvio %d\n", ret);
 	}
 
 	if(!found && !is_only_space(commandBuffer)){

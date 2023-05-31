@@ -44,6 +44,7 @@ typedef struct process {
     int fd_w; //write
     int children[MAX_PROCESS_AMOUNT];
     int children_count;
+    int ret_value;
 
     uint64_t rsp;
     uint64_t rbp;
@@ -76,6 +77,7 @@ void free_shell();
 
 void set_current_process(int new_pid);
 void print_current_process();
+extern void forceTimer(void);
 
 bool wants_to_run(process_ptr process);
 extern void initialize_stack(uint64_t new_program_stack, char** argv, int argc, void (*fn)(int, char **), void (*init)(int, char **, void (*fn)(int, char **)));
@@ -84,5 +86,9 @@ void init(int argc, char** argv, void (*fn)(int, char **));
 
 void set_print_mode();
 bool on_print_mode();
+
+int waitpid(int pid);
+void shell_waitpid();
+void set_zombie(int pid);
 
 #endif

@@ -38,17 +38,18 @@ uint64_t int_21() {
 	else {
 		int c = getCharacterFromKeyboardHex(keyScanCode);
 		if (ctrlPressed && c == 'C') {
+			printChar('^');
+			printChar(c);
+			clearBuffer();
+			saveKey('\n');
 			kill_process(get_foreground_process());
-			printChar('^');
-			printChar(c);
-			clearBuffer();
-			saveKey('\n');
+			
 		} else if (ctrlPressed && c == 'Z') {
-			block_process(get_foreground_process());
 			printChar('^');
 			printChar(c);
 			clearBuffer();
 			saveKey('\n');
+			block_process(get_foreground_process());
 		} else if (ctrlPressed && c == 'D') {
 			saveKey('\0');
 		} else if (shiftPressed && c == '7') {
@@ -147,7 +148,10 @@ uint64_t int_80(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t
 			return sys_block((int) rsi);
 			break;
 		case 28:
-			sys_create_process((int) rsi, (char**) rdx, (void *) rcx);
+			return sys_create_process((int) rsi, (char**) rdx, (void *) rcx);
+			break;
+		case 29:
+			return sys_waitpid((int) rsi);
 			break;
 		default:
 			return 0;

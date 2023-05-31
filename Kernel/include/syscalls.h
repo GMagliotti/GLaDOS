@@ -55,4 +55,6 @@ int sys_nice(int pid, int priority);
 int sys_block(int pid);
 int sys_create_process(int argc, char** argv, void (*fn)(int, char **));
 
+int sys_waitpid(int pid);
+
 #endif

@@ -45,7 +45,8 @@ void * scheduler(void * rsp) {
         if (current_process->pid != 0 && current_process->priority != -1) {
             process_ptr aux = current_process;
             scheduler_dequeue_process(current_process); 
-            free_process(aux->pid);
+            // free_process(aux->pid);
+            set_zombie(aux->pid);
             current_process = get_current_process(rr_scheduler);
 
         }
@@ -76,6 +77,9 @@ int scheduler_create_process(int argc, char** argv, void (*fn)(int, char **)) {
     if(scheduler_enqueue_process(created_process) == ERROR) {
         return ERROR;
     }
+    if (created_process != NULL) {
+        return created_process->pid;
+    }
     return 1;
 }
 
@@ -102,6 +106,9 @@ void free_scheduler(void) {
     free_round_robin(rr_scheduler);
 }
 
+int scheduler_waitpid(int pid) {
+    return waitpid(pid);
+}
 
 // #include <stdio.h>
 // #include <string.h>
