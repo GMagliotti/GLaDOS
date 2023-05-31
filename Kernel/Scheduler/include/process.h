@@ -56,7 +56,6 @@ void uninitialize(void);
 
 process_ptr create_process(int argc, char** argv, void (*fn)(int, char **));
 void ps(void);
-void loop_process(int pid, int ms);
 int kill_process(int pid);
 int nice_process(int pid, int priority);
 int block_process(int pid);
@@ -76,10 +75,14 @@ void save_children(int pid);
 void free_shell();
 
 void set_current_process(int new_pid);
+void print_current_process();
 
 bool wants_to_run(process_ptr process);
 extern void initialize_stack(uint64_t new_program_stack, char** argv, int argc, void (*fn)(int, char **), void (*init)(int, char **, void (*fn)(int, char **)));
 
 void init(int argc, char** argv, void (*fn)(int, char **));
+
+void set_print_mode();
+bool on_print_mode();
 
 #endif

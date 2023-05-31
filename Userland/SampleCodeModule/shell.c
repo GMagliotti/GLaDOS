@@ -1,4 +1,5 @@
 #include "include/shell.h"
+#include "include/user_syscalls.h"
 
 #define MAX_CHARS_PER_COMMAND 128
 
@@ -51,21 +52,88 @@ char* validCommands[32][2] = 	{{"HELP", "Provides a list of available programs"}
 								{"SHELL", "Creates a new shell!! (Limit testing)"},
 								{"CAT", "Prints the stdin it recieves"},
 								{"WC", "Counts the amount of words in input"},
-								{"FILTER", "Filters the vocals in the input"}
+								{"FILTER", "Filters the vocals in the input"},
+								{"PRINTSCHEDULER", "Sets the scheduler on print mode"}
 								};
 
 void (*commandFunctions[32])(int, char **) = {	help, returnToShell, time, tron, printRegisters, test0Div, testInvalidExc, printMemoryAt, setSize, beeperSongs, 
-												getpid, ps, loop_process, kill_process, nice_process, block_process, shell, cat, wc, filter};
+												getpid, ps, loop_process, kill_process, nice_process, block_process, shell, cat, wc, filter, call_to_set_print_mode};
+
+
+int find_pipe(char * params[], int argc){
+	for(int i = 0; i < argc; i++){
+		if(stringEquals(params[i], "|")){
+			return i;
+		}
+	}
+	return -1;
+}
+
+int is_valid_command(char * command) {
+	for(int i = 0; validCommands[i][0] != 0; i++) {
+		if(stringEquals(command, validCommands[i][0])) {
+			return i;
+		}
+	}
+	return -1;
+}
 
 void checkBuffer(){
 	int found = 0;
-	char * params[8] = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
-	int argc = get_params(commandBuffer, params, 8);
+	int command_pos = -1;
+
+	char * params[MAX_PARAMS] = {NULL};
+
+	int argc = get_params(commandBuffer, params, MAX_PARAMS);
  
-	for(int i = 0; validCommands[i][0] != 0; i++) {
-		if(stringEquals(commandBuffer, validCommands[i][0])) {
-    		call_to_create_process(argc, params, commandFunctions[i]);
-			found = 1;
+ 	int we_piping = find_pipe(params, argc);
+
+	if (we_piping == 0 || ( we_piping == argc -1 && argc > 1 )) {
+		printf("Invalid pipe position, %d, argc: %d\n", we_piping, argc);
+		found = 1;
+	} 
+
+	if (we_piping > 0 && we_piping < argc - 1) {
+		int found2 = 0;
+
+		int argc2 = argc - we_piping - 1;
+		argc = we_piping;
+
+		char * params2[MAX_PARAMS] = {NULL};
+
+		for (int i = 0; i < argc2; i++) {
+			params2[i] = params[we_piping + i + 1];
+		}
+
+        // int pipe_id = pipe_open("|");
+        // if (pipe_id == -1) printf("Error opening pipe");
+        // int fd[2] = {pipe_id, -1};		// -1 hereda del padre
+        // int pid1;
+
+		if ((command_pos = is_valid_command(params[we_piping+1])) != -1) {
+    			call_to_create_process(argc2, params2, commandFunctions[command_pos]);
+				found2 = 1;
+		}
+
+    	// fd[0] = -1;	// hereda del padre
+    	// fd[1] = pipe_id;
+
+		if ((command_pos = is_valid_command(params[0])) != -1 && found2) {
+    			call_to_create_process(argc, params, commandFunctions[command_pos]);
+				found = 1;
+		}
+
+		if (!found) {
+			// kill al proceso 2.
+			printf("Somos chicken\n");
+		}
+
+		// pipe close cuando??
+
+	} else {
+		if ((command_pos = is_valid_command(params[0])) != -1) {
+    			call_to_create_process(argc, params, commandFunctions[command_pos]);
+				found = 1;
 		}
 	}
 
@@ -74,6 +142,7 @@ void checkBuffer(){
 	}
 
 	// TODO waitpid !!
+
 	printf(">");
 
 	clearCommandBuffer();  //limpio el buffer local y seteo posicion de contador en 0

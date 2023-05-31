@@ -37,6 +37,8 @@ void * scheduler(void * rsp) {
     if (initialized) { save_rsp(current_process, rsp); } 
     else { initialized = true; }
 
+    if (on_print_mode()) { print_current_process(); }
+
     if (current_process->status == FINISHED || current_process->status == KILLED) {
         set_current_process(current_process->ppid);
 

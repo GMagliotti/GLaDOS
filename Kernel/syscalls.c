@@ -206,8 +206,8 @@ void sys_ps(void) {
     }
 }
 
-void sys_loop(int pid, int ms) {
-    loop_process(pid, ms);
+void sys_set_print_mode() {
+    set_print_mode();
 }
 
 int sys_kill(int pid) {

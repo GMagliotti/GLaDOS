@@ -36,11 +36,11 @@ void call_to_free(void * mem_ptr);
 
 int call_to_getpid();
 int call_to_ps();
-int call_to_loop_process(int pid, int ms);
 int call_to_pkill_process(int pid);
 int call_to_nice_process(int pid, int priority);
 int call_to_block_process(int pid);
 int call_to_create_process(int argc, char** argv, void (*fn)(int, char **));
+void call_to_set_print_mode();
 
 
 #endif

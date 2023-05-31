@@ -12,6 +12,7 @@
 #include "../programs/include/ipc_processes.h"
 #include <stdbool.h>
 
+#define MAX_PARAMS 8
 
 #define DEFAULT_TEXT_SIZE 2
 

@@ -22,7 +22,14 @@ void loop_process(int argc, char** argv) {
         return;
     }
 
-    call_to_loop_process(call_to_getpid(), ms);
+    int max_prints = 40;
+    int i = 0;
+
+    while( i < max_prints) {
+        printf("Hello there! My PID: %d\n", call_to_getpid());
+        sleepms(ms);
+        i++;
+    }
 }
 
 void kill_process(int argc, char** argv) {

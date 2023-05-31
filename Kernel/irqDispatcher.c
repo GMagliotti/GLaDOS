@@ -1,5 +1,6 @@
 #include "Scheduler/include/process.h"
 #include "Scheduler/include/scheduler.h"
+#include "include/syscalls.h"
 #include <irqDispatcher.h>
 
 extern uint8_t getKey();
@@ -134,7 +135,7 @@ uint64_t int_80(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t
 			sys_ps();
 			break;
 		case 24:
-			sys_loop((int) rsi, (int) rdx);
+			sys_set_print_mode();
 			break;
 		case 25:
 			return sys_kill((int) rsi);

@@ -1,13 +1,22 @@
 #include "include/process.h"
 #include <stdio.h>
 
-
 //array con todos los procesos (organizado por pid)
 process_ptr process_array[MAX_PROCESS_AMOUNT];
 int current_pid = 0;
 int foreground_process_pid = 0;
 int process_count = 0;
 int alive_process_count = 0;
+
+int print_mode = false;
+
+static const uint32_t colors[5] = {
+        0xFF0000,   // Red
+        0x00FF00,   // Green
+        0x0000FF,   // Blue
+        0xFFFF00,   // Yellow
+        0xFF00FF    // Magenta
+    };
 
 process_ptr initialize_idle(void (*idle_fn)(int, char **)) {
     char * argv[1] = { "Idle" };
@@ -148,22 +157,24 @@ void ps(void) {
         process_ptr current_process;
         if((current_process = process_array[i]) != NULL) {
             //con funciones de textDriver.c:
-            printString("|| Process Name: ", strLength("|| Process Name: "));
+            printColorString("\n|| ", strLength("\n||"), colors[i % 5]);
+            printColorString("Process Name: ", strLength("Process Name: "), colors[i%5]);
             printString(current_process->name, strLength(current_process->name)); 
-            printChar('\n');
-            printString("|| PID: ", strLength("|| PID: "));
+
+
+            printColorString("\n|| ", strLength("\n||"), colors[i%5]);
+            printColorString("PID: ", strLength("PID: "), colors[i%5]);
             printNumber(current_process->pid, 10); //base 10
-            printChar('\n');
-            printString("|| PPID: ", strLength("|| PPID: "));
+            printColorString("\t\t\t PPID: ", strLength("\t\t\t PPID: "), colors[i%5]);
             printNumber(current_process->ppid, 10); //base 10
-            printChar('\n');
-            printString("|| Priority: ", strLength("|| Priority: "));
+            printColorString("\t\t\t Priority: ", strLength("\t\t\t Priority: "), colors[i%5]);
             current_process->priority == -1? printString("-1", 2) : printNumber(current_process->priority, 10);
-            printChar('\n');
-            printString("|| Status: ", strLength("|| Status: "));
+
+
+            printColorString("\n|| ", strLength("\n||"), colors[i%5]);
+            printColorString("Status: ", strLength("Status: "), colors[i%5]);
             printString(get_process_status(current_process->status), strLength(get_process_status(current_process->status)));
-            printChar('\n');
-            printString("|| Visibility: ", strLength("|| Visibility: "));
+            printColorString("\t\t\t Visibility: ", strLength("\t\t\t Visibility: "), colors[i%5]);
             current_process->visibility == FOREGROUND? printString("Foreground", strLength("Foreground")) : printString("Background", strLength("Background"));
             printChar('\n');
             printChar('\n');
@@ -181,25 +192,11 @@ void ps(void) {
     }
 }
 
-//loop: imprime su pid con un saludo cada ms milisegundos 
-void loop_process(int pid, int ms) {
-    int max_prints = 40;
-    int i = 0;
-    int colors[3] = { 0x0000FF, 0x00FF00, 0xFF0000 };
-
-    while( i < max_prints) {
-        printColorString("Hello there! My PID:", 99, colors[pid%3]);
-        printNumber(pid, 10);
-        printChar('\n');
-        // printNumber(pid);
-
-        sleepms(ms);
-        i++;
-    }
-}
-
 //kill: sets process status to KILLED -> will be freed on next encounter with scheduler
 int kill_process(int pid) {
+
+    print_mode = false;
+
     if (pid == 0 || pid == 1) return 0;
 
     if (!process_exists(pid)) {
@@ -392,6 +389,16 @@ void set_current_process(int new_pid) {
     current_pid = new_pid;
 }
 
+void print_current_process() {
+    process_ptr proc = get_process(current_pid);
+
+    printColorString("Name: ", 32, colors[proc->pid % 5]); printString(proc->name, 16);
+    printColorString(" - PID: ", 32, colors[proc->pid % 5]); printNumber(proc->pid, 10);
+    printColorString(" - Prio: ", 32, colors[proc->pid % 5]); printNumber(proc->priority, 10);
+    printColorString(" - Remaining lives: ", 32, colors[proc->pid % 5]); printNumber(proc->currentLives-1, 10);
+    printString("\n", 2);
+}
+
 bool wants_to_run(process_ptr process) {        // probs hayan otras condiciones a tener en cuenta
     return (process->status != BLOCKED ) && process->priority != -1;
 }
@@ -437,4 +444,12 @@ char * get_process_status(int status) {
     if (status == KILLED) return "Killed";
 
     return "WOOOT??";
+}
+
+void set_print_mode() {
+    print_mode = true;
+}
+
+bool on_print_mode() {
+    return print_mode;
 }
