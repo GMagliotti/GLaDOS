@@ -1,6 +1,14 @@
 #include <beeper.h>
 
-void beeperSongs(int songNum) {
+void beeperSongs(int argc, char** argv) {
+
+    if (argc < 2) {
+        printf("Usage: SONGS <song number>\n");
+        return;
+    }
+
+    int songNum = string_to_int(argv[1]);
+
     switch (songNum) {
         case (1):
             zelda();
@@ -15,7 +23,7 @@ void beeperSongs(int songNum) {
             mortalKombat();
             break;
         default:
-            printf("Song available are between 1 and 4");
+            printf("Songs available are between 1 and 4\n");
             break;
     }
 }

@@ -185,11 +185,14 @@ void ps(void) {
 void loop_process(int pid, int ms) {
     int max_prints = 40;
     int i = 0;
+    int colors[3] = { 0x0000FF, 0x00FF00, 0xFF0000 };
+
     while( i < max_prints) {
-        printString("Hello there! General PID:", 99);
+        printColorString("Hello there! My PID:", 99, colors[pid%3]);
         printNumber(pid, 10);
         printChar('\n');
         // printNumber(pid);
+
         sleepms(ms);
         i++;
     }
@@ -270,12 +273,16 @@ int block_process(int pid) {
     if(!process_exists(pid))
         return ERROR;
 
-    process_array[pid]->status = BLOCKED;
+    if (process_array[pid]->status == BLOCKED) {
+        unblock_process(pid);
+    } else {
+        process_array[pid]->status = BLOCKED;
 
-    if (foreground_process_pid == pid) {
-        process_array[pid]->visibility = BACKGROUND;
-        foreground_process_pid = process_array[pid]->ppid;
-        process_array[foreground_process_pid]->visibility = FOREGROUND;
+        if (foreground_process_pid == pid) {
+            process_array[pid]->visibility = BACKGROUND;
+            foreground_process_pid = process_array[pid]->ppid;
+            process_array[foreground_process_pid]->visibility = FOREGROUND;
+        }
     }
 
     //if the process blocked was the one running, force a timer tick

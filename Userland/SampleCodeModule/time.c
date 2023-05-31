@@ -16,3 +16,7 @@ void printCurrentTime() {										// imprime la hora en Argentina
 	call_to_accessRTC(&myStruct);
 	printf("Current time: %d:%x:%x\n", myTimezoneHour(myStruct.hours, GMT_TO_ARG), myStruct.minutes, myStruct.seconds);
 }
+
+void time() {
+	printCurrentTime();
+}

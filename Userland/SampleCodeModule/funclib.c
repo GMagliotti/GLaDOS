@@ -79,6 +79,23 @@ int toNumWithBase(char * buffer, int from, int base) {
 	return toReturn;
 }
 
+int string_to_int(char * str) {
+	int num = -1;
+	if ( str[0] == '0' ) {
+		if ( str[1] == 'X' ) {
+			num = toNumWithBase(str, 2, 16);
+		} else if ( str[1] == 'B' ) {
+			num = toNumWithBase(str, 2, 2);
+		} else {
+			num = toNumWithBase(str, 0, 10);
+		}
+	} else {
+		num = toNumWithBase(str, 0, 10);
+	}
+	return num;
+}
+
+
 void sleeps(int seconds) {
     call_to_sleep(seconds * 1000);
 }
@@ -92,10 +109,31 @@ void sleepms(int milliseconds) {
 }
 
 
-void printMemoryAt(int dir) {
+bool is_space(char c) {
+    return c == ' ' || c == '\t' || c == '\n';
+}
 
-	if (dir < 0) {							// habria que poner un maximo?
-		printf("Invalid direction\n");
+int is_only_space(char * str) {
+	for (int i = 0; str[i] != 0 ;i++) {
+		if (!is_space(str[i])) {
+			return 0;
+		}
+	}
+	return 1;
+}
+
+
+void printMemoryAt(int argc, char** argv) {
+
+	if (argc <2) {
+		printf("Invalid arguments, usage: mem <direction>\n");
+		return;
+	}
+
+	int dir = string_to_int(argv[1]);
+
+	if (dir < 0) {		// habria que poner un maximo?
+		printf("Invalid direction format, accepted bases: 2, 10, 16\n");
 		return;
 	}
 

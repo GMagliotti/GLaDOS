@@ -3,14 +3,13 @@
 
 #include "../../include/user_syscalls.h"
 #include "../include/stdio.h"
-
-void create_process();
+#include <funclib.h>
 
 void getpid();
 void ps();
-void loop_process();
-void kill_process(int pid);
-void nice_process(int pid);
-void block_process(int pid);
+void loop_process(int argc, char** argv);
+void kill_process(int argc, char** argv);
+void nice_process(int argc, char** argv);
+void block_process(int argc, char** argv);
 
 #endif

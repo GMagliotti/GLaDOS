@@ -7,7 +7,7 @@
 void beepSample();
 void bootSound();
 void victory();
-void beeperSongs(int songNum);
+void beeperSongs(int argc, char** argv);
 void zelda();
 void FFVTheme();
 void tetrisIntro();

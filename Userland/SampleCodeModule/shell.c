@@ -33,75 +33,47 @@ void saveChar(char c){
 }
 
 //chequea si lo que esta en el buffer antes del \n es un comando correcto, y ademas limpia el buffer
-char* validCommands[16][2] = 	{{"HELP", "Provides a list of available programs"}, 
+char* validCommands[32][2] = 	{{"HELP", "Provides a list of available programs"}, 
 								{"CLEAR", "Clears the screen"}, 
 								{"TIME", "Shows current system time (GMT-3)"}, 
 								{"TRON", "Runs Tron game"}, 
-								{"REGISTERS", "Prints value of all the registers"}, 
+								{"REGISTERS", "Prints value of all the registers (SHIFT + TAB)"}, 
 								{"TEST0DIV", "Tests the division by 0 exception"},
-								{"TESTINVALIDEXC", "Tests an invalid exception"}
+								{"TESTINVALIDEXC", "Tests an invalid exception"},
+								{"MEMORYAT", "Displays the content at the desired location"}, 
+								{"SETSIZE", "Sets the letter size (Default 2)"},
+								{"SONGS", "Choose from a variety of available songs"},
+								{"GETPID", "Displays the current process ID"}, 
+								{"PS", "Prints the list of active processes"},
+								{"LOOP", "Loops a new process printing its pid"},
+								{"PKILL", "Kills a valid process"},
+								{"NICE", "Changes the priority of a process"},
+								{"BLOCK", "Block / Unblock a process (YMMV)"},
+								{"SHELL", "Creates a new shell!! (Limit testing)"}
 								};
-char* validCommands2Args[16][2] = 	{{"MEMORYAT", "Displays the content at the desired location"}, 
-									{"SETSIZE", "Sets the letter size (Default 2)"},
-									{"SONGS", "Choose from a variety of available songs"}
-									};
-char* validProcessCommands[16][2] = {{"CREATE", "Creates a new process an sends it to foreground"}, 
-									{"GETPID", "Displays the current process ID"}, 
-									{"PS", "Prints the list of active processes"},
-									{"LOOP", "Loops the current process on a message"},
-									};
-char* validProcessCommands2Args[16][2] = 	{{"PKILL", "Kills the process"},
-											{"NICE", "Sets the process priority to 2"},
-											{"BLOCK", "Blocks the process"},
-											};
 
-void (*commandFunctions[16])(void) = {help, returnToShell, time, tron, printRegisters, test0Div, testInvalidExc};
-void (*commandFunctions2Args[16])(int) = {printMemoryAt, setSize, beeperSongs};
-void (*processFunctions[16])(void) = {create_process, getpid, ps, loop_process, /*kill_process, nice_process, block_process */};
-void (*processFunctions2Args[16])(int) = {kill_process, nice_process, block_process};
-
-
+void (*commandFunctions[32])(int, char **) = {	help, returnToShell, time, tron, printRegisters, test0Div, testInvalidExc, printMemoryAt, setSize, beeperSongs, 
+												getpid, ps, loop_process, kill_process, nice_process, block_process, shell};
 
 void checkBuffer(){
 	int found = 0;
-	char * params[5] = {0, 0, 0, 0, 0};
-	get_params(commandBuffer, params, 5);
-
-	found = find_command(params[0], validCommands, commandFunctions);
-
-	for (int j = 0; !found && validCommands2Args[j][0]; j++) {
-		if (stringEquals(params[0], validCommands2Args[j][0])) {
+	char * params[8] = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+	int argc = get_params(commandBuffer, params, 8);
+ 
+	for(int i = 0; validCommands[i][0] != 0; i++) {
+		if(stringEquals(commandBuffer, validCommands[i][0])) {
+    		call_to_create_process(argc, params, commandFunctions[i]);
 			found = 1;
-			if (params[1] == NULL) printf("Invalid number of arguments, %s <NUMBER>\n", validCommands2Args[j][0]);
-			else {
-				int argnum = string_to_int(params[1]);		
-				if (argnum >= 0) { (*commandFunctions2Args[j])(argnum);
-				} else if (argnum == -1) printf("Invalid argument, please enter a valid positive integer\n");
-			}
 		}
 	}
-
-	if(!found){
-		found = find_command(params[0], validProcessCommands, processFunctions);
-	}
-
-	for (int j = 0; !found && validProcessCommands2Args[j][0]; j++) {
-		if (stringEquals(params[0], validProcessCommands2Args[j][0])) {
-			found = 1;
-			if (params[1] == NULL) printf("Invalid number of arguments, %s <NUMBER>\n", validProcessCommands2Args[j][0]);
-			else {
-				int argnum = string_to_int(params[1]);		
-				if (argnum >= 0) { (*processFunctions2Args[j])(argnum);
-				} else if (argnum == -1) printf("Invalid argument, please enter a valid positive integer\n");
-			}
-		}
-	}	
 
 	if(!found && !is_only_space(commandBuffer)){
 		printf("Invalid option. Type HELP for more information.\n");
 	}
 
+	// TODO waitpid !!
 	printf(">");
+
 	clearCommandBuffer();  //limpio el buffer local y seteo posicion de contador en 0
 	call_to_clearbuffer(); //limpio el buffer de kernel mediante syscall
 }
@@ -135,33 +107,15 @@ void hvdClear() {
 	setBash();
 }
 
-void time() {
-	printCurrentTime();
-}
-
-void print_valid_array(char * array[16][2]) {
-	if (array == NULL) return;
-	int i = 0;
-	while (array[i][0] != 0 && array[i][1] != 0) {
-		printf("\t%s - %s\n", array[i][0], array[i][1]);
-		i++;
-	}
-}
 
 void help() {
+	
 	printf("The available commands are:\n\n");
 
-	printf("Functions that receive 1 arg, format: COMMAND\n");
-	print_valid_array(validCommands);
-
-	printf("\nFunctions that receive 2 args, format: COMMAND <NUMBER>\n");
-	print_valid_array(validCommands2Args);
-
-	printf("\nProcess related functions, format: COMMAND\n");
-	print_valid_array(validProcessCommands);
-
-	printf("\nProcessess that receive 2 args, format: COMMAND <PID>\n");
-	print_valid_array(validProcessCommands2Args);
+	for (int i = 0; validCommands[i][0] != 0 && validCommands[i][1] != 0; i++) {
+		printf("\t%s - %s\n", validCommands[i][0], validCommands[i][1]);
+		if (i == 9) printf("\n");
+	}
 }
 
 void returnToShell(){
@@ -172,9 +126,17 @@ void printRegisters() {
 	call_to_printRegisters();
 }
 
-void setSize(int newSize) {
+void setSize(int argc, char ** argv) {
+
+	if (argc < 2) {
+		printf("Usage: SETSIZE <size>\n");
+		return;
+	}
+
+	int newSize = string_to_int(argv[1]);
+
 	if (newSize < minCharSize || newSize > maxCharSize) {
-		printf("size must be between %d and %d\n", minCharSize, maxCharSize);	
+		printf("Size must be between %d and %d\n", minCharSize, maxCharSize);	
 	} else {
 		call_to_setSize(newSize);
 		hvdClear();
@@ -182,23 +144,9 @@ void setSize(int newSize) {
 	}
 }
 
-
-bool is_space(char c) {
-    return c == ' ' || c == '\t' || c == '\n';
-}
-
-int is_only_space(char * str) {
-	for (int i = 0; str[i] != 0 ;i++) {
-		if (!is_space(str[i])) {
-			return 0;
-		}
-	}
-	return 1;
-}
-
-void get_params(char* str, char* params[], int max_params) {
+int get_params(char* str, char* params[], int max_params) {
     if (str == NULL || params == NULL || max_params <= 0) {
-        return;
+        return 0;
     }
 
     int count = 0;
@@ -233,30 +181,7 @@ void get_params(char* str, char* params[], int max_params) {
             params[j] = NULL;
         }
     }
+
+	return param_index;
 }
 
-int string_to_int(char * str) {
-	int num = -1;
-	if ( str[0] == '0' ) {
-		if ( str[1] == 'X' ) {
-			num = toNumWithBase(str, 2, 16);
-		} else if ( str[1] == 'B' ) {
-			num = toNumWithBase(str, 2, 2);
-		} else {
-			num = toNumWithBase(str, 0, 10);
-		}
-	} else {
-		num = toNumWithBase(str, 0, 10);
-	}
-	return num;
-}
-
-int find_command(char * command, char * validCommands[16][2], void(*commandFunctions[16])(void)) {
-	for(int i = 0; validCommands[i][0] != 0; i++) {
-		if(stringEquals(command, validCommands[i][0])) {
-			(*commandFunctions[i])();	 //en array paralelo tengo los punteros a las funciones, ejecuto funcion que ingresó user
-			return 1;
-		}
-	}
-	return 0;
-}

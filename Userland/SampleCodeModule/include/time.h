@@ -5,6 +5,6 @@
 #include <stdio.h>
 #include <user_syscalls.h>
 
-void printCurrentTime();
+void time();
 
 #endif
