@@ -11,12 +11,10 @@ void bofa(int argc, char** argv) {
 }
 
 void create_process(void) {
-    char* name = "Bofa";
     int argc = 2;
-    char* argv[2] = {"Primer arg", "Segundo arg"};
+    char* argv[2] = {"Bofa!!", "Segundo arg"};
     // void (*fn)(int, char **) = 0;
-    int visibility = 0;
-    call_to_create_process(name, argc, argv, bofa, visibility);
+    call_to_create_process(argc, argv, bofa);
 }
 
 void getpid() {

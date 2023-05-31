@@ -222,6 +222,6 @@ int sys_block(int pid) {
     return block_process(pid);
 }
 
-int sys_create_process(char* name, int argc, char** argv, void (*fn)(int, char **), int visibility) {
-    return scheduler_create_process(name, argc, argv, fn, visibility);
+int sys_create_process(int argc, char** argv, void (*fn)(int, char **)) {
+    return scheduler_create_process(argc, argv, fn);
 }

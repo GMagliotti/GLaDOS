@@ -10,9 +10,8 @@ int process_count = 0;
 int alive_process_count = 0;
 
 process_ptr initialize_idle(void (*idle_fn)(int, char **)) {
-    int fd[2] = { 0, 1 };
-    char *argv[2] = {"Idle", "I"};
-    process_ptr idle = create_process("Idle", 0, argv, idle_fn, FOREGROUND, fd);
+    char * argv[1] = { "Idle" };
+    process_ptr idle = create_process(1, argv, idle_fn);
     idle->priority = -1;
     return idle;
 }
@@ -29,15 +28,12 @@ void uninitialize(void) {
 /**
  * @brief Create a process object
  * 
- * @param name process name
  * @param argc number of arguments the process must receive
  * @param argv array of arguments the process receives
  * @param fn process' function that receives argc and argv
- * @param visibility foreground or background
- * @param fd the 2 file descriptors the process has
  * @return process_ptr: returns the created process, or NULL if unsuccessful
  */
-process_ptr create_process(char* name, int argc, char** argv, void (*fn)(int, char **), int visibility, int fd[2]) {
+process_ptr create_process(int argc, char** argv, void (*fn)(int, char **)) {
     //if current process (father) is in bg, cant create fg process ()
 
     process_ptr current_proc = get_process(current_pid);
@@ -47,22 +43,15 @@ process_ptr create_process(char* name, int argc, char** argv, void (*fn)(int, ch
         return NULL;
     }
 
-    if( current_proc != NULL && visibility == FOREGROUND ) {
-        if (current_proc->visibility == FOREGROUND) {            // mientras no tengamos todo en userland (asi hay mas de 1 proc en fg)
-            current_proc->visibility = BACKGROUND;
-            foreground_process_pid = pid;
-        } else {
-            return NULL;
-        }
-    }
-
     process_ptr new_process = (process_ptr)sys_malloc(sizeof(process) + STACK_SIZE);  //definir STACK SIZE !!
     if(new_process == NULL) {
         sys_free(new_process);
         return NULL;
     }
+
     //aloco espacio para los argumentos
     char** args = (char **)sys_malloc(sizeof(char *) * argc);
+
     if(args == NULL) {
         sys_free(new_process);
         return NULL;
@@ -75,24 +64,38 @@ process_ptr create_process(char* name, int argc, char** argv, void (*fn)(int, ch
     }
     new_process->children_count = 0;
 
-    new_process->name = (char *)sys_malloc(strLength(name));
+    new_process->name = (char *)sys_malloc(strLength(argv[0]));
     if(new_process->name == NULL) {
         free_args(args, argc);
         sys_free(new_process);
         return NULL;
     }
 
-    strCpy(new_process->name, name);
+    strCpy(new_process->name, argv[0]);
 
-    new_process->visibility = visibility;
+
+    if (current_proc == NULL) {
+        new_process->visibility = FOREGROUND;
+        foreground_process_pid = pid;
+    } else {
+        new_process->visibility = BACKGROUND;
+    }
+
     new_process->priority = 1;
     new_process->ppid = current_pid;  
-    new_process->fd_r = fd[0];
-    new_process->fd_w = fd[1];
+
     new_process->rbp = (uint64_t)new_process + sizeof(process) + STACK_SIZE - sizeof(uint64_t);
     new_process->rsp = (uint64_t)(new_process->rbp - sizeof(registerBackup) - 0x100);
     new_process->pid = pid;
     new_process->status = ALIVE;
+
+    if(current_proc != NULL) {
+        new_process->fd_r = current_proc->fd_r;
+        new_process->fd_w = current_proc->fd_w;
+    } else {
+        new_process->fd_r = 0;
+        new_process->fd_w = 1;
+    }
 
     initialize_stack(new_process->rsp, args, argc, fn, init);
     process_array[pid] = new_process;
@@ -104,12 +107,27 @@ void init(int argc, char** argv, void (*fn)(int, char **)) {
 
     process_ptr proc = get_process(current_pid);
 
-    if (stringEquals(argv[argc-1], "&")) {
-        proc->visibility = BACKGROUND;
-        process_array[proc->ppid] = FOREGROUND;
+    int amp_found = stringEquals(argv[argc-1], "&");
+
+    if (process_array[proc->ppid]->visibility == FOREGROUND) {
+        if (amp_found) {
+            proc->visibility = BACKGROUND;
+            process_array[proc->ppid]->visibility = FOREGROUND;
+            foreground_process_pid = proc->ppid;
+        } else {
+            proc->visibility = FOREGROUND;
+            process_array[proc->ppid]->visibility = BACKGROUND;
+            foreground_process_pid = current_pid;
+        }
+    }
+
+    if (amp_found) {
         argv[argc-1] = NULL;
         argc--;
     }
+
+    // printNumber(proc->fd_r, 10);    
+    // printNumber(proc->fd_w, 10);
 
     fn(argc, argv);
 
@@ -340,6 +358,9 @@ int get_free_pid(void) {
  * @param amount amount of arguments to be copied
  */
 void copy_args(char** destination, char** source, int amount) {
+
+    if (destination == NULL || source == NULL || amount <= 0) return;
+
     for(int i = 0; i < amount; i++) {
         destination[i] = (char**)sys_malloc(sizeof(char) * (strLength(source[i]) + 1));
         if(destination[i] == NULL) return; 

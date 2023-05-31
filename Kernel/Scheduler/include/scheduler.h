@@ -10,7 +10,7 @@ process_ptr current_process(void);
 void * scheduler(void * rsp);
 
 int scheduler_enqueue_process(process_ptr p);
-int scheduler_create_process(char* name, int argc, char** argv, void (*fn)(int, char **), int visibility);
+int scheduler_create_process(int argc, char** argv, void (*fn)(int, char **));
 int scheduler_dequeue_process(process_ptr p);
 
 

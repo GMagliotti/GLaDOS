@@ -7,8 +7,8 @@ rr_queue_ptr rr_scheduler;
 // newScheduler: crea un scheduler de tipo RoundRobinWithPriority
 rr_queue_ptr create_scheduler(void (*idle)(int, char **), void (*shell)(int, char **)) {
     rr_scheduler = create_new_round_robin(initialize_idle(idle));
-    char *argv[1] = {"Shell arg 1"};
-	scheduler_create_process("Shell", 1, argv, shell, FOREGROUND);
+    char *argv[1] = {"Shell"};
+	scheduler_create_process(1, argv, shell);
     next_process(rr_scheduler);
 
     return rr_scheduler;
@@ -65,20 +65,9 @@ int scheduler_enqueue_process(process_ptr p) {
     return 1;
 }
 
-int scheduler_create_process(char* name, int argc, char** argv, void (*fn)(int, char **), int visibility) {
-    //must find fd's of parent process
-    process_ptr current_proc = current_process();
-    int fd[2] = {0, 1};
-    if(current_proc != NULL) {
-        fd[0] = current_proc->fd_r;
-        fd[1] = current_proc->fd_w;
-    }
-
-    if (visibility != FOREGROUND && visibility != BACKGROUND) {
-        visibility = FOREGROUND;
-    }
-
-    process_ptr created_process = create_process(name, argc, argv, fn, visibility, fd);
+int scheduler_create_process(int argc, char** argv, void (*fn)(int, char **)) {
+        
+    process_ptr created_process = create_process(argc, argv, fn);
     if(created_process == NULL) {
         return ERROR;
     }

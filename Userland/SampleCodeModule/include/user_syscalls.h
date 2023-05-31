@@ -40,7 +40,7 @@ int call_to_loop_process(int pid, int ms);
 int call_to_pkill_process(int pid);
 int call_to_nice_process(int pid, int priority);
 int call_to_block_process(int pid);
-int call_to_create_process(char* name, int argc, char** argv, void (*fn)(int, char **), int visibility);
+int call_to_create_process(int argc, char** argv, void (*fn)(int, char **));
 
 
 #endif

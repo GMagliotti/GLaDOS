@@ -146,7 +146,7 @@ uint64_t int_80(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t
 			return sys_block((int) rsi);
 			break;
 		case 28:
-			sys_create_process((char *) rsi, (int)rdx, (char**)rcx, (void *)r8, (int)r9);
+			sys_create_process((int) rsi, (char**) rdx, (void *) rcx);
 			break;
 		default:
 			return 0;
