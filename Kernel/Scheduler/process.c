@@ -1,3 +1,4 @@
+#include "../Semaphore/include/semaphore.h"
 #include "include/process.h"
 
 
@@ -23,7 +24,7 @@ process_ptr initialize_idle(void (*idle_fn)(int, char **)) {
 //free de shell y idle
 void uninitialize(void) {
     for(int i = 1; i < MAX_PROCESS_AMOUNT; i++) {
-        free_process(i);
+        set_zombie(i);
     }
     free_shell();
 }
@@ -96,7 +97,7 @@ process_ptr create_process(char* name, int argc, char** argv, void (*fn)(int, ch
     new_process->rsp = (uint64_t)(new_process->rbp - sizeof(registerBackup));
     new_process->pid = pid;
     new_process->status = ALIVE;
-    new_process->done_sem = sem_init(0); //starting value of 0
+    new_process->done_sem = create_sem(0, strCat("sem_", name)); //starting value of 0
 
     initialize_stack(new_process->rsp, args, argc, fn);
     process_array[pid] = new_process;
@@ -441,4 +442,17 @@ int waitpid(int pid) {
     free_args((char **)stack->rsi, stack->rdi);
 
     sys_free(proc);
+}
+
+//find all zombie processes that are children of shell, waitpid them
+void shell_waitpid() {
+    process_ptr shell = process_array[0];
+    int i = 0, waited = 0;
+    while(shell->children[i] != NULL && waited < shell->children_count) {
+        process_ptr child = process_array[shell->children[i]];
+        if(child != NULL && child->status == ZOMBIE) {
+            waitpid(child->pid); //will not block because we know its a zombie process
+            waited++;
+        }
+    }
 }

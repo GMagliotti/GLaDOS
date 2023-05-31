@@ -11,12 +11,12 @@ int maxCharSize = 6;
 
 static char commandBuffer[256] = {0}; //buffer local en base al buffer 
 static int commandBufferPos = 0; 	  //current position de commandBuffer
-void saveChar(char c){
+void saveChar(char c) {
 	//si tecla que recibo de kernel es un enter, chequeo lo que ya tenia, si es backspace borro ultimo char, si no lo guardo en buffer local
-	if(c == '\n'){
+	if(c == '\n') {
 		printf("\n");
 		checkBuffer();
-	} else if(c == '\b'){
+	} else if(c == '\b') {
 		if(commandBufferPos > 0 || (commandBufferPos == 0 && commandBuffer[commandBufferPos]=='>')) {
 			commandBuffer[--commandBufferPos] = 0;
 			printf("\b");
@@ -62,7 +62,7 @@ void (*processFunctions2Args[16])(int) = {kill_process, nice_process, block_proc
 
 
 
-void checkBuffer(){
+void checkBuffer() {
 	int found = 0;
 	char * params[5] = {0, 0, 0, 0, 0};
 	get_params(commandBuffer, params, 5);
@@ -81,7 +81,7 @@ void checkBuffer(){
 		}
 	}
 
-	if(!found){
+	if(!found) {
 		found = find_command(params[0], validProcessCommands, processFunctions);
 	}
 
@@ -97,7 +97,7 @@ void checkBuffer(){
 		}
 	}	
 
-	if(!found && !is_only_space(commandBuffer)){
+	if(!found && !is_only_space(commandBuffer)) {
 		printf("Invalid option. Type HELP for more information.\n");
 	}
 
@@ -106,26 +106,26 @@ void checkBuffer(){
 	call_to_clearbuffer(); //limpio el buffer de kernel mediante syscall
 }
 
-void clearCommandBuffer(){
+void clearCommandBuffer() {
 	for(int i=0; i<256;i++)
 		commandBuffer[i]=0;
 	commandBufferPos=0;
 }
 
-void shell(){
+void shell() {
 	call_to_setSize(DEFAULT_TEXT_SIZE);
 	printf("Welcome to the command line! Type HELP for more information.\n");
     putc('>');
-    while(1){
+    while(1) {
 		call_to_hlt();
 		char c = call_to_getchar();
-		if(c!=0){
+		if(c!=0) {
 			saveChar(c);
 		}
     }
 }
 
-void setBash(){
+void setBash() {
     call_to_setptrx(0);
     call_to_setptry(0);
 }
@@ -164,7 +164,7 @@ void help() {
 	print_valid_array(validProcessCommands2Args);
 }
 
-void returnToShell(){
+void returnToShell() {
     hvdClear();				 //limpio pantalla
 }
 

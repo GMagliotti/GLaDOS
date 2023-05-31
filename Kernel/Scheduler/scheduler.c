@@ -3,6 +3,7 @@
 #include "include/roundRobin.h"
 
 rr_queue_ptr rr_scheduler;  
+int shell_zombies = 0; //amount of shell-children that are zombies and are waiting for a shell waitpid
 
 // newScheduler: crea un scheduler de tipo RoundRobinWithPriority
 rr_queue_ptr create_scheduler(void (*idle)(int, char **), void (*shell)(int, char **)) {
@@ -38,14 +39,21 @@ void * scheduler(void * rsp) {
     if (initialized) { save_rsp(current_process, rsp); } 
     else { initialized = true; }
 
+    //si la shell tiene hijos que son zombies, hacerles waitpid 
+    if(shell_zombies > 0) {
+        shell_waitpid();
+    }
+
     if (current_process->status == FINISHED || current_process->status == KILLED) {
         set_current_process(current_process->ppid);
 
         if (current_process->pid != 0 && current_process->priority != -1) {
             process_ptr aux = current_process;
             scheduler_dequeue_process(current_process); 
-            // free_process(aux->pid);
             set_zombie(aux->pid);
+            if(aux->ppid == 0) { //si el padre es shell, debemos avisar que tiene hijos esperando waitpid
+                shell_zombies++;
+            }
             current_process = get_current_process(rr_scheduler);
 
         }

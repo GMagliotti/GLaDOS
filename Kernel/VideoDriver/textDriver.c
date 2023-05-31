@@ -120,6 +120,49 @@ void strCpy(char* dest, char* src) {
     dest[i] = '\0'; // Don't forget to add the null terminator at the end
 }
 
+char* strCat(char* destination, const char* source) {
+    char* ptr = destination + strLength(destination);
+    while (*source != '\0') {
+        *ptr++ = *source++;
+    }
+    *ptr = '\0';
+    return destination;
+}
+
+void reverse(char str[], int length) {
+    int start = 0;
+    int end = length - 1;
+    while (start < end) {
+        char temp = str[start];
+        str[start] = str[end];
+        str[end] = temp;
+        end--;
+        start++;
+    }
+}
+
+char* citoa(int num, char* str, int base) {
+    int i = 0;
+
+    if (num == 0) {
+        str[i++] = '0';
+        str[i] = '\0';
+        return str;
+    }
+ 
+    // Process individual digits
+    while (num != 0) {
+        int rem = num % base;
+        str[i++] = (rem > 9) ? (rem - 10) + 'a' : rem + '0';
+        num = num / base;
+    }
+ 
+    str[i] = '\0'; 
+
+    reverse(str, i);
+    return str;
+}
+
 /* -------------------------------- GUARDADO DE KEY INTERRUPTS --------------------------------*/
 static char keyBuffer[256] = {0};
 static int keyBufferPos = 0;

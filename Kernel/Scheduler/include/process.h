@@ -83,6 +83,8 @@ int waitpid(int pid);
 void set_current_process(int new_pid);
 
 bool wants_to_run(process_ptr process);
+void shell_waitpid();
+
 extern void initialize_stack(uint64_t new_program_stack, char** argv, int argc, void (*fn)(int, char **));
 
 #endif

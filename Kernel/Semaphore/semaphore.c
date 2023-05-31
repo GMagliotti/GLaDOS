@@ -107,7 +107,7 @@ int sem_enqueue_process(int sem_index, int pid) {
     }
     sem_t sem = sem_space.sem;
 
-    sem_process_t * created_process = malloc(sizeof(sem_process_t));
+    sem_process_t * created_process = sys_malloc(sizeof(sem_process_t));
     if(created_process == NULL) {
         return -1;
     }

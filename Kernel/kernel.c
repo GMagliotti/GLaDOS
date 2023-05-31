@@ -28,14 +28,12 @@ void idle(int, char **);
 typedef int (*EntryPoint)();
 
 
-void clearBSS(void * bssAddress, uint64_t bssSize)
-{
+void clearBSS(void * bssAddress, uint64_t bssSize) {
 	memset(bssAddress, 0, bssSize);
 	// memset(&bss, 0, &endOfBinary - &bss);
 }
 
-void * getStackBase()
-{
+void * getStackBase() {
 	return (void*)(
 		(uint64_t)&endOfKernel
 		+ PageSize * 8				//The size of the stack itself, 32KiB
@@ -43,8 +41,7 @@ void * getStackBase()
 	);
 }
 
-void * initializeKernelBinary()
-{
+void * initializeKernelBinary() {
 	char buffer[10];
 
 	
@@ -104,13 +101,17 @@ void * initializeKernelBinary()
 }
 
 extern void testInvalidExc();
+uint64_t test_sync(uint64_t argc, char* argv[]);
 
-int main()
-{	
+
+int main() {	
 	hvdClear();
 	the_memory_manager = createMemoryManager((void *)0x50000, (void *)0x1000000);
 	the_scheduler = create_scheduler(idle, sampleCodeModuleAddress);
+	scheduler_create_process("test", 0, NULL, test_sync, FOREGROUND);
 	load_idt();
+
+	char * arr[3] = {"1", "2", "3"};
 
 	while(1) {
 		printString("Mistakes were made...", 30);
@@ -125,4 +126,92 @@ void idle(int argc, char ** argv) {
 		printChar('\n');
 		_hlt();
 	}
+}
+
+// /*** TESTING AREA ***/
+
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include "Semaphore/include/semaphore.h"
+
+#define SEM_ID "sem"
+#define TOTAL_PAIR_PROCESSES 2
+
+int64_t global; // shared memory
+
+void slowInc(int64_t *p, int64_t inc) {
+  uint64_t aux = *p;
+  sleep(1);
+  // my_yield(); // This makes the race condition highly probable
+  aux += inc;
+  *p = aux;
+}
+
+uint64_t my_process_inc(uint64_t argc, char *argv[]) {
+  uint64_t n = 100;
+  int8_t inc = 1;
+  int8_t use_sem = create_sem(1, "thesem");
+
+  if (argc != 3)
+    return -1;
+
+//   if ((n = satoi(argv[0])) <= 0)
+//     return -1;
+//   if ((inc = satoi(argv[1])) == 0)
+//     return -1;
+//   if ((use_sem = satoi(argv[2])) < 0)
+//     return -1;
+
+  if (use_sem)
+    if (!sem_open(SEM_ID)) {
+      printColorString("test_sync: ERROR opening semaphore\n", 0xFFFFF, 0xFFFFFF);
+      return -1;
+    }
+
+  uint64_t i;
+  for (i = 0; i < n; i++) {
+    if (use_sem)
+      sem_wait(SEM_ID);
+	  printColorString("I'm in", 7, 0xFF0000);
+	  printChar('\n');
+    slowInc(&global, inc);
+    if (use_sem)
+	  printColorString("I'm out", 7, 0x00FF00);
+	  printChar('\n');
+      sem_post(SEM_ID);
+  }
+
+  if (use_sem)
+    sem_close(SEM_ID);
+
+  return 0;
+}
+
+uint64_t test_sync(uint64_t argc, char *argv[]) { //{n, use_sem, 0}
+  uint64_t pids[2 * TOTAL_PAIR_PROCESSES];
+
+  if (argc != 2)
+    return -1;
+
+  char *argvDec[] = {argv[0], "-1", argv[1], NULL};
+  char *argvInc[] = {argv[0], "1", argv[1], NULL};
+
+  global = 0;
+
+  uint64_t i;
+  for (i = 0; i < TOTAL_PAIR_PROCESSES; i++) {
+    int fd[2] = {0, 1};
+    pids[i] = create_process("my_process_inc", 3, argvDec, my_process_inc , FOREGROUND, fd);
+    pids[i + TOTAL_PAIR_PROCESSES] = create_process("my_process_inc", 3, argvInc, my_process_inc, FOREGROUND, fd);
+  }
+
+//   for (i = 0; i < TOTAL_PAIR_PROCESSES; i++) {
+//     my_wait(pids[i]);
+//     my_wait(pids[i + TOTAL_PAIR_PROCESSES]);
+//   }
+
+  while(1);
+
+  return 0;
 }

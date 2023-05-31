@@ -1,6 +1,9 @@
 #ifndef SEMAPHORE_H
 #define SEMAPHORE_H
 
+#include <stdint.h>
+#include <syscalls.h>
+
 #define MAX_NAME 15
 #define MAX_SEM 30
 

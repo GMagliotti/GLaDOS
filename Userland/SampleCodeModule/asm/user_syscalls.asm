@@ -27,6 +27,7 @@ GLOBAL call_to_pkill_process
 GLOBAL call_to_nice_process
 GLOBAL call_to_block_process
 GLOBAL call_to_create_process
+GLOBAL call_to_waitpid
 
 %macro call_to_handler 1
     push rbp
@@ -123,3 +124,6 @@ call_to_block_process:
 
 call_to_create_process:
     call_to_handler 28
+
+call_to_waitpid:
+    call_to_handler 29
