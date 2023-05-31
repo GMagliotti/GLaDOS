@@ -9,6 +9,9 @@
 #include "tests.h"
 #include <beeper.h>
 #include "../programs/include/process_info.h"
+#include "../programs/include/ipc_processes.h"
+#include <stdbool.h>
+
 
 #define DEFAULT_TEXT_SIZE 2
 

@@ -1,5 +1,4 @@
 #include "include/shell.h"
-#include <stdbool.h>
 
 #define MAX_CHARS_PER_COMMAND 128
 
@@ -49,11 +48,14 @@ char* validCommands[32][2] = 	{{"HELP", "Provides a list of available programs"}
 								{"PKILL", "Kills a valid process"},
 								{"NICE", "Changes the priority of a process"},
 								{"BLOCK", "Block / Unblock a process (YMMV)"},
-								{"SHELL", "Creates a new shell!! (Limit testing)"}
+								{"SHELL", "Creates a new shell!! (Limit testing)"},
+								{"CAT", "Prints the stdin it recieves"},
+								{"WC", "Counts the amount of words in input"},
+								{"FILTER", "Filters the vocals in the input"}
 								};
 
 void (*commandFunctions[32])(int, char **) = {	help, returnToShell, time, tron, printRegisters, test0Div, testInvalidExc, printMemoryAt, setSize, beeperSongs, 
-												getpid, ps, loop_process, kill_process, nice_process, block_process, shell};
+												getpid, ps, loop_process, kill_process, nice_process, block_process, shell, cat, wc, filter};
 
 void checkBuffer(){
 	int found = 0;
