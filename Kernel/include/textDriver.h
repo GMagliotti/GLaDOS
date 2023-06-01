@@ -32,4 +32,8 @@ int getBufferPos();
 char bufferAt(int n);
 
 void checkAndScroll();
+
+char* strCat(char* destination, const char* source);
+char* int_to_string(int num, char* str, int base);
+
 #endif

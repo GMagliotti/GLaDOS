@@ -43,7 +43,6 @@ void uninitialize(void) {
  * @return process_ptr: returns the created process, or NULL if unsuccessful
  */
 process_ptr create_process(int argc, char** argv, void (*fn)(int, char **)) {
-    //if current process (father) is in bg, cant create fg process ()
 
     process_ptr current_proc = get_process(current_pid);
 
@@ -110,6 +109,11 @@ process_ptr create_process(int argc, char** argv, void (*fn)(int, char **)) {
     initialize_stack(new_process->rsp, args, argc, fn, init);
     process_array[pid] = new_process;
     process_count++;
+
+    char pid_string[4] = { 0 };
+    strCpy(pid_string, int_to_string(new_process->pid, 10));
+    new_process->done_sem = create_sem(0, strCat("sem_", pid_string));
+
     return new_process;
 }
 
@@ -418,14 +422,14 @@ int waitpid(int pid) {
 
     process_ptr proc = process_array[pid];
 
-    while (proc->status == ALIVE || proc->status == READY || proc->status == BLOCKED) {     // simula un semaforo
-        proc = process_array[pid];
-        printString(".", 10);
-        sleepms(50);
-    }
+    // while (proc->status == ALIVE || proc->status == READY || proc->status == BLOCKED) {     // simula un semaforo
+    //     proc = process_array[pid];
+    //     printString(".", 10);
+    //     sleepms(50);
+    // }
 
     //block till child with id = pid is done executing (using semaphore the child has saved)
-    // sem_wait(proc->done_sem);
+    sem_wait(proc->done_sem);
 
     int aux = proc->ret_value;
 
@@ -464,8 +468,7 @@ void set_zombie(int pid) {
     }
 
     //post done_sem so parent can collect my return value and i can be freed (parent was currently blocked at waitpid)
-    
-    // sem_post(proc->done_sem);
+    sem_post(process_array[proc->ppid]->done_sem);
 
     process_array[proc->ppid]->status = ALIVE;
 }

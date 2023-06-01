@@ -148,3 +148,46 @@ char bufferAt(int n){
 		return 0;
 	return keyBuffer[n];
 }
+
+char* strCat(char* destination, const char* source) {
+    char* ptr = destination + strLength(destination);
+    while (*source != '\0') {
+        *ptr++ = *source++;
+    }
+    *ptr = '\0';
+    return destination;
+}
+
+void reverse(char str[], int length) {
+    int start = 0;
+    int end = length - 1;
+    while (start < end) {
+        char temp = str[start];
+        str[start] = str[end];
+        str[end] = temp;
+        end--;
+        start++;
+    }
+}
+
+char* int_to_string(int num, char* str, int base) {
+    int i = 0;
+
+    if (num == 0) {
+        str[i++] = '0';
+        str[i] = '\0';
+        return str;
+    }
+ 
+    // Process individual digits
+    while (num != 0) {
+        int rem = num % base;
+        str[i++] = (rem > 9) ? (rem - 10) + 'a' : rem + '0';
+        num = num / base;
+    }
+ 
+    str[i] = '\0'; 
+
+    reverse(str, i);
+    return str;
+}

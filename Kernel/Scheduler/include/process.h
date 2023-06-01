@@ -5,6 +5,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "../../include/lib.h"
+#include "../../Semaphore/include/semaphore.h"
+#include <textDriver.h>
 
 
 #define ERROR -1
@@ -46,6 +48,7 @@ typedef struct process {
     int children_count;
     int ret_value;
     bool adopted;
+    int done_sem;
 
     uint64_t rsp;
     uint64_t rbp;

@@ -2,13 +2,13 @@ include Makefile.inc
 
 KERNEL=kernel.bin
 # SOURCES=$(wildcard *.c) $(wildcard VideoDriver/*.c) $(wildcard MemoryManager/*.c) 
-SOURCES_ASM=$(wildcard asm/*.asm)
+SOURCES_ASM=$(wildcard asm/*.asm) $(wildcard Semaphore/*.asm)
 
 ifdef enable_buddy
-	SOURCES := $(wildcard *.c) $(wildcard VideoDriver/*.c) $(wildcard MemoryManager/Buddy.c) $(wildcard Scheduler/*.c)
+	SOURCES := $(wildcard *.c) $(wildcard VideoDriver/*.c) $(wildcard MemoryManager/Buddy.c) $(wildcard Scheduler/*.c) $(wildcard Semaphore/*.c)
 	MEMORY_MANAGER_FLAGS := -DIS_BUDDY
 else
-	SOURCES := $(wildcard *.c) $(wildcard VideoDriver/*.c) $(wildcard MemoryManager/MemoryManager.c) $(wildcard MemoryManager/Bitmap.c) $(wildcard Scheduler/*.c)
+	SOURCES := $(wildcard *.c) $(wildcard VideoDriver/*.c) $(wildcard MemoryManager/MemoryManager.c) $(wildcard MemoryManager/Bitmap.c) $(wildcard Scheduler/*.c) $(wildcard Semaphore/*.c)
 endif
 
 OBJECTS=$(SOURCES:.c=.o)
