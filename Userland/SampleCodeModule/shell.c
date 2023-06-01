@@ -82,6 +82,7 @@ void checkBuffer(){
 	int found = 0;
 	int command_pos = -1;
     int pid1 = -1;
+	int visibility = FOREGROUND;
 
 	char * params[MAX_PARAMS] = {NULL};
 
@@ -111,21 +112,21 @@ void checkBuffer(){
         // int fd[2] = {pipe_id, -1};		// -1 hereda del padre
         // int pid1;
 
-		if ((command_pos = is_valid_command(params[we_piping+1])) != -1) {
-    			call_to_create_process(argc2, params2, commandFunctions[command_pos]);
-				found2 = 1;
-		}
-
-    	// fd[0] = -1;	// hereda del padre
-    	// fd[1] = pipe_id;
-
 		if ((command_pos = is_valid_command(params[0])) != -1 && found2) {
     			call_to_create_process(argc, params, commandFunctions[command_pos]);
 				found = 1;
 		}
 
+    	// fd[0] = -1;	// hereda del padre
+    	// fd[1] = pipe_id;
+
+		if ((command_pos = is_valid_command(params[we_piping+1])) != -1) {
+    			call_to_create_process(argc2, params2, commandFunctions[command_pos]);
+				found2 = 1;
+		}
+
 		if (!found) {
-			// kill al proceso 2.
+			// kill al proceso 1.
 			printf("Somos chicken\n");
 		}
 
@@ -138,7 +139,7 @@ void checkBuffer(){
 		}
 	}
 
-	if (pid1 > 0) {
+	if (pid1 > 0 && visibility == FOREGROUND) {
 		int ret = call_to_waitpid(pid1);
 		printf("hola!! espere a mi hijo, devolvio %d\n", ret);
 	}
@@ -146,8 +147,6 @@ void checkBuffer(){
 	if(!found && !is_only_space(commandBuffer)){
 		printf("Invalid option. Type HELP for more information.\n");
 	}
-
-	// TODO waitpid !!
 
 	printf(">");
 

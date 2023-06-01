@@ -4,6 +4,7 @@
 
 rr_queue_ptr rr_scheduler;  
 
+
 // newScheduler: crea un scheduler de tipo RoundRobinWithPriority
 rr_queue_ptr create_scheduler(void (*idle)(int, char **), void (*shell)(int, char **)) {
     rr_scheduler = create_new_round_robin(initialize_idle(idle));
@@ -38,6 +39,8 @@ void * scheduler(void * rsp) {
     else { initialized = true; }
 
     if (on_print_mode()) { print_current_process(); }
+
+    free_adopted_zombies(current_process->pid);
 
     if (current_process->status == FINISHED || current_process->status == KILLED) {
         set_current_process(current_process->ppid);

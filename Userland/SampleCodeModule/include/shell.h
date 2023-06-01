@@ -16,6 +16,9 @@
 
 #define DEFAULT_TEXT_SIZE 2
 
+#define FOREGROUND 0
+#define BACKGROUND 1
+
 void setTextBufferActive(int active);
 
 void saveChar(char c);

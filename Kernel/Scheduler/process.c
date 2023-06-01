@@ -97,6 +97,7 @@ process_ptr create_process(int argc, char** argv, void (*fn)(int, char **)) {
     new_process->rsp = (uint64_t)(new_process->rbp - sizeof(registerBackup) - 0x100);
     new_process->pid = pid;
     new_process->status = ALIVE;
+    new_process->adopted = false;
 
     if(current_proc != NULL) {
         new_process->fd_r = current_proc->fd_r;
@@ -372,6 +373,7 @@ void save_children(int pid) {
         child->ppid = proc->ppid;
         grandpa->children_count++;
         grandpa->children[grandpa->children_count-1] = child->pid;
+        child->adopted = true;
     }
 
     return;
@@ -433,28 +435,13 @@ int waitpid(int pid) {
     return aux;
 }
 
-//find all zombie processes that are children of shell, waitpid them
-void shell_waitpid() {
-    process_ptr shell = process_array[1];
-    int i = 0;
-    while(shell->children[i] != NULL) {
-        process_ptr child = process_array[shell->children[i]];
-        if(child != NULL && child->status == ZOMBIE) {
-            //despues pasar esto a waitpid para procesos que no son hijos de shell
-            process_ptr grandpa = get_process(child->ppid);
-            int found = 0;
-            for(int i = 0; !found && i < grandpa->children_count ; i++) {
-                if(grandpa->children[i] == child->pid) {
-                    grandpa->children[i] = grandpa->children[grandpa->children_count-1];
-                    grandpa->children[grandpa->children_count-1] = (uint64_t) NULL;
-                    grandpa->children_count--;
-                    found = 1;
-                }
-            }
-
-            waitpid(child->pid); //will not block because we know its a zombie process
+//waitpid for orphan processes it has inherited (receives parent pid)
+void free_adopted_zombies(int pid) {
+    for (int i = 0; process_array[pid]->children[i] != NULL; i++) {
+        process_ptr child = process_array[process_array[pid]->children[i]];
+        if (child->status == ZOMBIE && child->adopted == true) {
+            waitpid(child->pid);
         }
-        i++;
     }
 }
 
