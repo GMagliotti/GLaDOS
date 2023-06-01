@@ -48,6 +48,11 @@ uint64_t create_sem(uint64_t initial_value, char * name) {
 
 //sets available condition of semaphore to true
 void destroy_sem(int sem_index) {
+    if (sem_index <= 0 || sem_index >= MAX_SEM) return 1;
+    sem_t the_sem = sem_spaces[sem_index].sem;
+    while(the_sem.size_list > 0) {
+        sem_dequeue_process(sem_index);
+    }
     sem_spaces[sem_index].available = TRUE;
 }
 
@@ -58,9 +63,15 @@ void destroy_sem(int sem_index) {
 */
 uint64_t sem_post(uint64_t sem_idx) {
     if (sem_idx <= 0 || sem_idx >= MAX_SEM) return 1;
-    uint64_t * lock_addr = &(sem_spaces[sem_idx].sem.lock);
-    if (sem_spaces[sem_idx].sem.value != 0) enter_region(lock_addr);
-    sem_spaces[sem_idx].sem.value++;
+    sem_t the_sem = sem_spaces[sem_idx].sem;
+    uint64_t * lock_addr = &(the_sem.lock);
+    if (the_sem.value != 0) enter_region(lock_addr);
+    the_sem.value++;
+    if(the_sem.size_list > 0) {
+        //wake up and dequeue the first process in line blocked 
+        int pid = sem_dequeue_process(sem_idx);
+        scheduler_revive_process(pid);
+    }
     leave_region(lock_addr);
     return 0;
 }
@@ -73,7 +84,7 @@ uint64_t sem_post(uint64_t sem_idx) {
 uint64_t sem_wait(uint64_t sem_idx) {
     if (sem_idx <= 0 || sem_idx >= MAX_SEM) return 0xFFFFFFFFFFFFFFFF;
     uint64_t * lock_addr = &(sem_spaces[sem_idx].sem.lock);
-    enter_region(lock_addr);
+    enter_region(lock_addr); //will call sem_whiff -> enqueues and blocks process if sem value is 0
     sem_spaces[sem_idx].sem.value--;
     if (sem_spaces[sem_idx].sem.value != 0) leave_region(lock_addr);
     return 0;
@@ -98,6 +109,8 @@ int sem_dequeue_process(int sem_index) {
         sem.last_process == NULL;
     }
     sem.size_list--;
+    //free the sem_process (not the actual process)
+    sys_free(current_process);
 
     return current_pid; 
 }
@@ -154,6 +167,14 @@ int sem_close(char *name) {
     while(sem.value > 0);
     destroy_sem(sem_index);
     return 0;
+}
+
+//gets called when waiting for a semaphore -> enqueues and blocks process
+void sem_whiff(uint64_t sem_index) {
+    int current_pid = scheduler_block_current_process();
+    if(current_pid != -1) {
+        sem_enqueue_process(sem_index, current_pid);
+    }
 }
 
 //TODO: hacer que el dequeue de un proceso chequee si contiene un sem -> si tiene uno y es el unico que lo accede -> destroy_sem
