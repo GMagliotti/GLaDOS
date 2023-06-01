@@ -177,14 +177,6 @@ void ps(void) {
             current_process->visibility == FOREGROUND? printString("Foreground", strLength("Foreground")) : printString("Background", strLength("Background"));
             printChar('\n');
             printChar('\n');
-
-            // printf("|| Process Name: %s\n", current_process->name);
-            // printf("||\tPID: %d\n", current_process->pid);
-            // printf("||\tPPID: %d\n", current_process->ppid);
-            // printf("||\tPriority: %d\n", current_process->priority);
-            // printf("||\tStatus: %d\n", current_process->status);
-            // printf("||\tVisibility: %s\n", current_process->visibility == FOREGROUND? "Foreground" : "Background");
-            // printf("||\t\tSP: %lx \n||\t\tBP: %lx \n\n", current_process->rsp, current_process->rbp);
             
             printed_count++;
         }
@@ -219,32 +211,26 @@ int free_process(int pid) {
         return -1;
     // if (pid <= 1) return 0;
 
-    // save_children(pid);
+    process_ptr proc = get_process(pid);
+    process_ptr grandpa = get_process(proc->ppid);
 
-    process_ptr proc = process_array[pid];
-    //give parent process foreground:
-    if (proc->visibility == FOREGROUND) {
-        process_ptr parent = get_process(proc->ppid);
-        if (parent != NULL) {
-            parent->visibility = FOREGROUND;
-            foreground_process_pid = parent->pid;
-            proc->visibility = BACKGROUND;
+    int found = 0;
+    for(int i = 0; !found && i < grandpa->children_count ; i++) {
+        if(grandpa->children[i] == pid) {
+            grandpa->children[i] = grandpa->children[grandpa->children_count-1];
+            grandpa->children[grandpa->children_count-1] = (uint64_t) NULL;
+            grandpa->children_count--;
+            found = 1;
         }
     }
-    
-    //set process as ZOMBIE
-    proc->status = ZOMBIE;
 
-    //wait for parents to waitpid ......
+    process_count--;
+    process_array[pid] = NULL;
+    sys_free(proc->name);
+    registerBackup* stack = (registerBackup *) proc->rsp;
+    free_args((char **)stack->rsi, stack->rdi);
 
-    //parent has done waitpid for this process, can now be freed
-    // process_count--;
-    // process_array[pid] = NULL;
-    // sys_free(proc->name);
-    // registerBackup* stack = (registerBackup *) proc->rsp;
-    // free_args((char **)stack->rsi, stack->rdi);
-
-    // sys_free(proc);
+    sys_free(proc);
 
     return 1;
 }
@@ -326,34 +312,6 @@ int get_free_pid(void) {
     return ERROR;
 }
 
-// void initialize_stack(process_ptr process, char** argv, int argc, void (*fn)(int, char **)) {
-//     registerBackup * stack = (registerBackup *) process->rsp; 
-
-//     stack->r15  = 0x001;
-//     stack->r14  = 0x002;
-//     stack->r13  = 0x003;
-//     stack->r12  = 0x004;
-//     stack->r11  = 0x005;
-//     stack->r10  = 0x006;
-//     stack->r9   = 0x007;
-//     stack->r8   = 0x008;
-
-//     //info necesaria
-//     stack->rsi  = (uint64_t) argv;
-
-//     stack->rdi  = argc;
-//     stack->rbp  = process->rbp; //para testeo
-//     stack->rdx  = 0;
-//     stack->rcx  = 0;
-//     stack->rbx  = 0;
-//     stack->rax  = 0;
-//     stack->rip  = fn;
-//     stack->cs   = 0x8;
-//     stack->rflags = 0x202;
-//     stack->rsp = process->rsp; //para testeo
-//     stack->ss = 0x0;
-// }
-
 /**
  * @brief 
  * 
@@ -409,16 +367,6 @@ void save_children(int pid) {
     process_ptr proc = get_process(pid);
     process_ptr grandpa = get_process(proc->ppid);
 
-    int found = 0;
-    for(int i = 0; !found && i < grandpa->children_count ; i++) {
-        if(grandpa->children[i] == pid) {
-            grandpa->children[i] = grandpa->children[grandpa->children_count-1];
-            grandpa->children[grandpa->children_count-1] = (uint64_t) NULL;
-            grandpa->children_count--;
-            found = 1;
-        }
-    }
-
     for(int i = 0; i < proc->children_count; i++) {
         process_ptr child = process_array[proc->children[i]];
         child->ppid = proc->ppid;
@@ -471,7 +419,6 @@ int waitpid(int pid) {
     while (proc->status == ALIVE || proc->status == READY || proc->status == BLOCKED) {     // simula un semaforo
         proc = process_array[pid];
         printString(".", 10);
-        printString(get_process_status(process_array[1]->status), 32);
         sleepms(50);
     }
 
@@ -481,13 +428,7 @@ int waitpid(int pid) {
     int aux = proc->ret_value;
 
     //parent has done waitpid for this process, it can now be freed
-    process_count--;
-    process_array[pid] = NULL;
-    sys_free(proc->name);
-    registerBackup* stack = (registerBackup *) proc->rsp;
-    free_args((char **)stack->rsi, stack->rdi);
-
-    sys_free(proc);
+    free_process(pid);
 
     return aux;
 }
@@ -520,7 +461,6 @@ void shell_waitpid() {
 //sets process status as zombie and posts the done_sem, will be freed once the parent executes waitpid
 void set_zombie(int pid) {
     process_ptr proc = process_array[pid];
-    process_ptr current_proc = get_process(current_pid);        // es lo mismo
 
     proc->status = ZOMBIE;
 
@@ -541,10 +481,4 @@ void set_zombie(int pid) {
     // sem_post(proc->done_sem);
 
     process_array[proc->ppid]->status = ALIVE;
-
-    //if i was the current process running, force a timer tick
-    //siempre retorna true por como esta diseñado -> si se llama esta funcion es porque justo antes seteamos el curr_proc a este proceso matado
-    if(current_proc != NULL && current_proc->pid == pid) {
-        force_timer();
-    }
 }
