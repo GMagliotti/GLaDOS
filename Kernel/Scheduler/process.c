@@ -121,7 +121,9 @@ void init(int argc, char** argv, void (*fn)(int, char **)) {
 
     process_ptr proc = get_process(current_pid);
 
-    int amp_found = stringEquals(argv[argc-1], "&");
+    char arr[0];
+    arr[0] = '&';
+    int amp_found = stringEquals(argv[argc-1], arr);
 
     if (process_array[proc->ppid]->visibility == FOREGROUND) {
         if (amp_found) {
@@ -422,16 +424,16 @@ int waitpid(int pid) {
 
     process_ptr proc = process_array[pid];
 
-    // while (proc->status == ALIVE || proc->status == READY || proc->status == BLOCKED) {     // simula un semaforo
-    //     proc = process_array[pid];
-    //     printString(".", 10);
-    //     sleepms(1);
-    // }
+    while (proc->status == ALIVE || proc->status == READY || proc->status == BLOCKED) {     // simula un semaforo
+        proc = process_array[pid];
+        printString(".", 10);
+        sleepms(1);
+    }
 
-    // TODO: Find out why this sleep seemingly fixes everything
-    sleepms(1);
-    //block till child with id = pid is done executing (using semaphore the child has saved)
-    sem_wait(proc->done_sem);
+    // // TODO: Find out why this sleep seemingly fixes everything
+    // sleepms(1);
+    // //block till child with id = pid is done executing (using semaphore the child has saved)
+    // sem_wait(proc->done_sem);
 
     int aux = proc->ret_value;
 
@@ -459,8 +461,6 @@ void set_zombie(int pid) {
 
     save_children(pid);
 
-    printString("converting to zombie", 30);
-
     //if killed process was in fg, give parent process fg:
     if (proc->visibility == FOREGROUND) {
         proc->visibility = BACKGROUND;
@@ -470,9 +470,6 @@ void set_zombie(int pid) {
             foreground_process_pid = parent->pid;
         }
     }
-
-        printString("converting to zombie", 30);
-
     
     //post done_sem so parent can collect my return value and i can be freed (parent was currently blocked at waitpid)
     sem_post(process_array[proc->ppid]->done_sem);

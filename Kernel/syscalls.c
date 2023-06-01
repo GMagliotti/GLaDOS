@@ -1,4 +1,3 @@
-#include "Scheduler/include/process.h"
 #include <syscalls.h>
 
 #define STDIN 0
@@ -8,6 +7,13 @@
 extern uint8_t memoryAt(int dir); 
 
 extern MemoryManagerADT the_memory_manager;
+
+int r_w_sem_id = 10;
+
+void initialize_sys_blocking_sem() {
+    r_w_sem_id = create_sem(0, R_W_SEMNAME);
+}
+
 
 void sys_exit() {
     hvdClear();
@@ -137,6 +143,9 @@ uint16_t sys_getvbewidth(){
 }
 
 char sys_getchar(){
+    // printString("w", 2);
+    sem_wait(r_w_sem_id);
+    // printString("r\n", 4);
     if (current_is_foreground()){
         return getChar();
     }

@@ -6,7 +6,7 @@
 #include <stdbool.h>
 #include "../../include/lib.h"
 #include "../../Semaphore/include/semaphore.h"
-#include <textDriver.h>
+#include "../../include/textDriver.h"
 
 
 #define ERROR -1

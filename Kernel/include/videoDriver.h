@@ -12,8 +12,6 @@
 #include <time.h>
 // #include <syscalls.h>
 
-extern uint8_t getKey();
-
 void setTextBufferActive(bool active);
 
 void debugPrintGrid();
@@ -22,7 +20,6 @@ uint8_t scrollIfFullScreen(int penPTRY);
 void hvdClear();
 char getChar();
 void clearBuffer();
-void saveKey(uint8_t c);
 
 void setBash();
 

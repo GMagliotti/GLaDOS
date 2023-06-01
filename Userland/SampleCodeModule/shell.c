@@ -109,25 +109,26 @@ void checkBuffer(){
 
         // int pipe_id = pipe_open("|");
         // if (pipe_id == -1) printf("Error opening pipe");
-        // int fd[2] = {pipe_id, -1};		// -1 hereda del padre
+        // int fd[2] = {pipe_id, 1};
         // int pid1;
 
-		if ((command_pos = is_valid_command(params[0])) != -1 && found2) {
-    			call_to_create_process(argc, params, commandFunctions[command_pos]);
+		if ((command_pos = is_valid_command(params[0])) != -1) {
+    			pid1 = call_to_create_process(argc, params, commandFunctions[command_pos]);
 				found = 1;
 		}
 
-    	// fd[0] = -1;	// hereda del padre
+    	// fd[0] = 0;
     	// fd[1] = pipe_id;
 
-		if ((command_pos = is_valid_command(params[we_piping+1])) != -1) {
+		if ((command_pos = is_valid_command(params[we_piping+1])) != -1 && found) {
+				params2[argc2++] = "&";
     			call_to_create_process(argc2, params2, commandFunctions[command_pos]);
 				found2 = 1;
 		}
 
-		if (!found) {
-			// kill al proceso 1.
-			printf("Somos chicken\n");
+		if (!found2) {
+			call_to_pkill_process(pid1);
+			printf("Cmd 2 not found, matando 1\n");
 		}
 
 		// pipe close cuando??
@@ -139,7 +140,7 @@ void checkBuffer(){
 		}
 	}
 
-	if (pid1 > 0 && visibility == FOREGROUND) {
+	if (pid1 > 0 && !stringEquals(params[argc-1], "&")) {
 		int ret = call_to_waitpid(pid1);
 		printf("hola!! espere a mi hijo, devolvio %d\n", ret);
 	}
@@ -165,11 +166,8 @@ void shell(){
 	printf("Welcome to the command line! Type HELP for more information.\n");
     putc('>');
     while(1){
-		call_to_hlt();
 		char c = call_to_getchar();
-		if(c!=0){
-			saveChar(c);
-		}
+		saveChar(c);
     }
 }
 

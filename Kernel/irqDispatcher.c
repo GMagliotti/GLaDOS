@@ -1,9 +1,14 @@
 #include "Scheduler/include/process.h"
 #include "Scheduler/include/scheduler.h"
+#include "Semaphore/include/semaphore.h"
 #include "include/syscalls.h"
+#include "include/textDriver.h"
+#include "include/textModeDriver.h"
 #include <irqDispatcher.h>
 
 extern uint8_t getKey();
+
+extern int r_w_sem_id;
 
 static uint64_t int_20();
 static uint64_t int_21();
@@ -37,13 +42,13 @@ uint64_t int_21() {
 	else if (keyScanCode == 0x9D) ctrlPressed = false;
 	else {
 		int c = getCharacterFromKeyboardHex(keyScanCode);
+		if (c == 0) return 0;
 		if (ctrlPressed && c == 'C') {
 			printChar('^');
 			printChar(c);
 			clearBuffer();
 			saveKey('\n');
 			kill_process(get_foreground_process());
-			
 		} else if (ctrlPressed && c == 'Z') {
 			printChar('^');
 			printChar(c);
@@ -60,6 +65,7 @@ uint64_t int_21() {
 			//si estoy en bash imprimo el caracter y ademas lo guardo en buffer (para su posterior validacion de comando)
 			saveKey(c);
 		}
+		sem_post(r_w_sem_id);
 	}
 	if (tabPressed && shiftPressed) return 1;
 	else return 0;

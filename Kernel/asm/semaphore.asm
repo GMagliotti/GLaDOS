@@ -4,6 +4,7 @@ EXTERN printf
 
 section .text
 enter_region:
+    sti
     MOV  rax, QWORD 0x0
     XCHG rax, QWORD [rdi]
     CMP  rax, QWORD 0x0

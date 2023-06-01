@@ -13,11 +13,17 @@
 #include "soundDriver.h"
 #include "registers.h"
 #include "../Scheduler/include/scheduler.h"
+#include "../Scheduler/include/process.h"
 #include <MemoryManager.h>
+#include "../Semaphore/include/semaphore.h"
+
+#define R_W_SEMNAME "r_w_sem"
 
 typedef struct time{
 	uint8_t seconds, minutes, hours;
 } timeStructT;
+
+void initialize_sys_blocking_sem();
 
 void sys_exit();
 void sys_write(char * string, int length, char fd);
