@@ -88,7 +88,6 @@ process_ptr create_process(int argc, char** argv, void (*fn)(int, char **)) {
     } else {
         new_process->visibility = BACKGROUND;
     }
-    new_process->visibility = FOREGROUND;
 
     new_process->priority = 1;
     new_process->ppid = current_pid;  

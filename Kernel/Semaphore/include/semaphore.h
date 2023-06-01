@@ -2,7 +2,7 @@
 #define SEMAPHORE_H
 
 #include <stdint.h>
-#include <syscalls.h>
+#include <stdlib.h>
 
 #define MAX_NAME 15
 #define MAX_SEM 30
@@ -27,7 +27,7 @@ typedef struct
     uint64_t size_list; // cantidad de procesos bloqueados
 } sem_t;
 
-static int find_available_semaphore();
+int find_available_semaphore();
 uint64_t create_sem(uint64_t initial_value, char * name);
 void init_sem();
 void destroy_sem(int sem_index);

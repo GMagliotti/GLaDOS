@@ -10,7 +10,7 @@
 #include <interrupts.h>
 #include <textDriver.h>
 #include <time.h>
-#include <syscalls.h>
+// #include <syscalls.h>
 
 extern uint8_t getKey();
 

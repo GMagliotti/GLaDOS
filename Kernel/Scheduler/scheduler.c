@@ -41,7 +41,7 @@ void * scheduler(void * rsp) {
     if (on_print_mode()) { print_current_process(); }
 
     free_adopted_zombies(current_process->pid);
-
+    
     if (current_process->status == FINISHED || current_process->status == KILLED) {
         set_current_process(current_process->ppid);
 

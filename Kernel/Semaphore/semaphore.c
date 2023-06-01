@@ -3,6 +3,7 @@
 
 extern void enter_region(uint64_t *lock);
 extern void leave_region(uint64_t *lock);
+extern void * sys_malloc(size_t requestedSize);
 
 typedef struct
 {
@@ -12,7 +13,7 @@ typedef struct
 static space sem_spaces[MAX_SEM];
 
 // Is there a race condition here?
-static int find_available_semaphore() {
+int find_available_semaphore() {
     for (int i = 0; i < MAX_SEM; i++) {
         if (sem_spaces[i].available == TRUE) {
             sem_spaces[i].available = FALSE;
