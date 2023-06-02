@@ -113,6 +113,22 @@ int scheduler_waitpid(int pid) {
     return waitpid(pid);
 }
 
+void scheduler_revive_process(int pid) {
+    process_ptr proc = get_process(pid);
+    if(proc != NULL) {
+        proc->status = ALIVE;
+    }
+}
+
+int scheduler_block_current_process() {
+    int current_pid = get_current_pid();
+    if(current_pid != ERROR) {
+        return ERROR;
+    }
+    block_process(current_pid);
+    return current_pid;
+}
+
 // #include <stdio.h>
 // #include <string.h>
 
