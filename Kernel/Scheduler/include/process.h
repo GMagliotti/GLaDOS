@@ -42,6 +42,7 @@ typedef struct process {
     int currentLives;
     int status; 
     int visibility; //foreground o background
+    int og_visibility;
     int fd_r; //read
     int fd_w; //write
     int children[MAX_PROCESS_AMOUNT];

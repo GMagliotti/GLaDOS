@@ -125,6 +125,13 @@ void init(int argc, char** argv, void (*fn)(int, char **)) {
     char arr[0];
     arr[0] = '&';
     int amp_found = stringEquals(argv[argc-1], arr);
+    if(amp_found == 0) {
+        
+        proc->og_visibility = FOREGROUND;
+    } else {
+        
+        proc->og_visibility = BACKGROUND;
+    }
 
     if (process_array[proc->ppid]->visibility == FOREGROUND) {
         if (amp_found) {
@@ -215,7 +222,6 @@ int kill_process(int pid) {
 
 //removes process from list and frees its memory.
 int free_process(int pid) {
-
     if(!process_exists(pid))
         return -1;
     // if (pid <= 1) return 0;
@@ -436,8 +442,9 @@ int waitpid(int pid) {
 void free_adopted_zombies(int pid) {
     for (int i = 0; process_array[pid]->children[i] != NULL; i++) {
         process_ptr child = process_array[process_array[pid]->children[i]];
-        if (child->status == ZOMBIE && child->adopted == true) {
-            waitpid(child->pid);
+        if (child->status == ZOMBIE) {
+            // waitpid(child->pid);
+            free_process(child->pid);
         }
     }
 }
