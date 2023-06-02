@@ -4,11 +4,6 @@ int64_t my_getpid() {
   return call_to_getpid();
 }
 
-void endless_loop() {
-  while (1)
-    ;
-}
-
 int64_t my_create_process(char *name, uint64_t argc, char *argv[]) {
 
   for (int i = argc; i > 0; i--) {

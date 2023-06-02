@@ -262,21 +262,17 @@ int nice_process(int pid, int priority) {
 
 //block: cambia el estado de un proceso entre bloqueado y listo dado su pid
 int block_process(int pid) {
-    if (pid == 0 || pid == 1) return 0;
+    if (pid == 0) return 0;
 
     if(!process_exists(pid))
         return ERROR;
 
-    if (process_array[pid]->status == BLOCKED) {
-        unblock_process(pid);
-    } else {
-        process_array[pid]->status = BLOCKED;
 
-        if (foreground_process_pid == pid) {
-            process_array[pid]->visibility = BACKGROUND;
-            foreground_process_pid = process_array[pid]->ppid;
-            process_array[foreground_process_pid]->visibility = FOREGROUND;
-        }
+    process_array[pid]->status = BLOCKED;
+    if (foreground_process_pid == pid && pid != 1) {
+        process_array[pid]->visibility = BACKGROUND;
+        foreground_process_pid = process_array[pid]->ppid;
+        process_array[foreground_process_pid]->visibility = FOREGROUND;
     }
 
     //if the process blocked was the one running, force a timer tick
