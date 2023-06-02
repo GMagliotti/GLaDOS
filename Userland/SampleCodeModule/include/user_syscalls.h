@@ -43,4 +43,7 @@ void call_to_set_print_mode();
 
 int call_to_waitpid(int pid);
 
+int call_to_pipe_open(char *name);
+int call_to_pipe_close(int pipe_index);
+
 #endif

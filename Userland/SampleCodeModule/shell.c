@@ -106,11 +106,9 @@ void checkBuffer(){
 			params2[i] = params[we_piping + i + 1];
 		}
 
-		int pipe_id = 16;
-        // int pipe_id = pipe_open("|");
-        // if (pipe_id == -1) printf("Error opening pipe");
+        int pipe_id = call_to_pipe_open("|");
+        if (pipe_id == -1) printf("Error opening pipe");
         int fd[2] = {pipe_id, 0};
-        // int pid1;
 
 		if ((command_pos = is_valid_command(params[0])) != -1) {
     			pid1 = call_to_create_process(argc, params, commandFunctions[command_pos], fd);
@@ -131,6 +129,7 @@ void checkBuffer(){
 			printf("Cmd 2 not found, matando 1\n");
 		}
 
+		// call_to_pipe_close(pipe_id);
 		// pipe close cuando??
 
 	} else {

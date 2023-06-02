@@ -38,9 +38,7 @@ void sys_write(char * string, int length, char fd) {
             }
         }
     } else {
-        for (int i = 0; i < length; i++) {
-            // write_pipe(proc->fd_r, string[i]);
-        }
+        write_pipe(proc->fd_w, string);
     }
 }
 
@@ -58,22 +56,15 @@ int sys_read(uint8_t fd, char * toRet, int cantChars) {
     if (proc->fd_r == 0) {
         if (current_is_foreground()){
             for (; read_count < cantChars && !null_found; read_count++) {
-                // printString("w", 2);
                 sem_wait(r_w_sem_id);
-                // printString("r\n", 4);
                 toRet[read_count] = getChar();
                 if (toRet[read_count] == '\0') null_found = true;
             }
         }
     } else {
-        // for (; read_count < cantChars && !null_found; read_count++) {
-        //     // printString("w", 2);
-        //     // read_pipe(proc->fd_r);
-        //     // printString("r\n", 4);
-        //     toRet[read_count] = getChar();
-        //     if (toRet[read_count] == '\0') null_found = true;
-        // }
-        printString("Pipe time!!!\n", 50);
+        for (; read_count < cantChars; read_count++) {
+            toRet[read_count] = read_pipe(proc->fd_r);
+        }
     }
 
     return read_count;
@@ -143,10 +134,28 @@ uint16_t sys_getvbewidth(){
 }
 
 void sys_clearbuffer(){
-    if (current_is_foreground()) {
+
+    // printString("Starting PIPE test:\n", 50);
+
+    // int pipe_id = pipe_open("Pipe Test");
+
+    // write_pipe(pipe_id, "Hello World!\n");
+    
+    // for(int i = 0; i < 13; i++) {
+    //     char c = read_pipe(pipe_id);
+    //     //     if (c == '\0') break;
+    //     printChar(c);
+    //     // }
+    // }
+
+
+    // printString("Ending PIPE test:\n", 50);
+
+
+    // if (current_is_foreground()) {
         clearBuffer();
-    }
-    return;
+    // }
+    // return;
 }
 
 int sys_getbufferpos(){
@@ -227,4 +236,12 @@ int sys_create_process(int argc, char** argv, void (*fn)(int, char **), int fd[2
 
 int sys_waitpid(int pid) {
     return scheduler_waitpid(pid);
+}
+
+int sys_pipe_open(char *name) {
+    return pipe_open(name);
+}
+
+int sys_pipe_close(int pipe_index) {
+    return pipe_close(pipe_index);
 }

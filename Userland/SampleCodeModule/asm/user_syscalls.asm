@@ -27,6 +27,8 @@ GLOBAL call_to_nice_process
 GLOBAL call_to_block_process
 GLOBAL call_to_create_process
 GLOBAL call_to_waitpid
+GLOBAL call_to_pipe_open
+GLOBAL call_to_pipe_close
 
 %macro call_to_handler 1
     push rbp
@@ -123,3 +125,11 @@ call_to_create_process:
 
 call_to_waitpid:
     call_to_handler 29
+
+
+
+call_to_pipe_open:
+    call_to_handler 36
+
+call_to_pipe_close:
+    call_to_handler 37

@@ -56,7 +56,8 @@ uint64_t int_21() {
 			printChar('\n');
 			block_process(get_foreground_process());
 		} else if (ctrlPressed && c == 'D') {
-			saveKey('\0');
+			sys_write("\0", 1, NULL);
+			// saveKey('\0');
 		} else if (shiftPressed && c == '7') {
 			saveKey('&');
 		} else if (shiftPressed && c == '\\') {
@@ -159,6 +160,13 @@ uint64_t int_80(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t
 			break;
 		case 29:
 			return sys_waitpid((int) rsi);
+			break;
+
+		case 36:
+			return sys_pipe_open((char *) rsi);
+			break;
+		case 37:
+			return sys_pipe_close((int) rsi);
 			break;
 		default:
 			return 0;

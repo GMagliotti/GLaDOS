@@ -16,6 +16,8 @@
 #include "../Scheduler/include/process.h"
 #include <MemoryManager.h>
 #include "../Semaphore/include/semaphore.h"
+#include "pipe.h"
+
 
 #define R_W_SEMNAME "r_w_sem"
 
@@ -60,5 +62,8 @@ int sys_block(int pid);
 int sys_create_process(int argc, char** argv, void (*fn)(int, char **), int fd[2]);
 
 int sys_waitpid(int pid);
+
+int sys_pipe_open(char *name);
+int sys_pipe_close(int pipe_index);
 
 #endif
