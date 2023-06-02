@@ -7,6 +7,8 @@
 #define GENERAL_PROTECTION_EXCEPTION_ID 13
 #define PG_FAULT_EXCEPTION_ID 14
 
+extern void loader();
+
 static void zero_division();
 static void invalid_opcode();
 static void general_protection_exc();
@@ -77,7 +79,7 @@ void guruMeditation() {
 	printChar('\n');
 	setFontSize(2);
 	printCurrentRegisters(&registerDump);
-	while(1);
+	haltcpu();
 }
 
 

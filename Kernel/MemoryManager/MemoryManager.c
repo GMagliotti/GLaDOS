@@ -13,6 +13,9 @@ MemoryManagerADT createMemoryManager(void *const restrict memoryForMemoryManager
 	MemoryManagerADT the_mman = (MemoryManagerADT) memoryForMemoryManager;
 	if (!bmp_initialize((uint8_t *)memoryForMemoryManager+sizeof(MemoryManagerCDT), MMAN_PAGECOUNT)) return NULL;
 	the_mman->managed_memory_start_address = (uint8_t *) managedMemory;
+	for (int i = 0; i < MMAN_PAGECOUNT; i++) {
+		the_mman->page_info_array[i].state = MMAN_FREE;
+	}
 	return the_mman;
 }
 
@@ -28,7 +31,7 @@ void *allocMemory(MemoryManagerADT const restrict memoryManager, const size_t me
 	int limit = start_page + pages_needed;
 
 	memoryManager->page_info_array[start_page].state = MMAN_BOUNDARY;
-	for (int i = start_page; i < limit; i++) {
+	for (int i = start_page+1; i < limit; i++) {
 		memoryManager->page_info_array[i].state = MMAN_USED;
 	}
 
@@ -43,6 +46,6 @@ void mman_free(MemoryManagerADT const restrict memoryManager, void * ptr) {
 	do {
 		pages_info[curr_page].state = MMAN_FREE;
 		curr_page++;
-	} while ( pages_info[curr_page].state != MMAN_BOUNDARY );
+	} while ( pages_info[curr_page].state == MMAN_USED );
 	bmp_set_off(curr_page-start_page, start_page);
 }
