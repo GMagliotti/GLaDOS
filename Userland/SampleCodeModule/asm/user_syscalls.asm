@@ -25,6 +25,7 @@ GLOBAL call_to_set_print_mode
 GLOBAL call_to_pkill_process
 GLOBAL call_to_nice_process
 GLOBAL call_to_block_process
+GLOBAL call_to_unblock_process
 GLOBAL call_to_create_process
 GLOBAL call_to_waitpid
 GLOBAL call_to_pipe_open
@@ -133,3 +134,6 @@ call_to_pipe_open:
 
 call_to_pipe_close:
     call_to_handler 37
+
+call_to_unblock_process:
+    call_to_handler 38

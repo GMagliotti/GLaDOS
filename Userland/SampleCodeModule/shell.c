@@ -1,5 +1,6 @@
 #include "include/shell.h"
 #include "include/user_syscalls.h"
+#include "programs/include/process_info.h"
 
 #define MAX_CHARS_PER_COMMAND 128
 
@@ -48,16 +49,18 @@ char* validCommands[32][2] = 	{{"HELP", "Provides a list of available programs"}
 								{"LOOP", "Loops a new process printing its pid"},
 								{"PKILL", "Kills a valid process"},
 								{"NICE", "Changes the priority of a process"},
-								{"BLOCK", "Block / Unblock a process (YMMV)"},
+								{"BLOCK", "Block a process (YMMV)"},
+								{"UNBLOCK", "Unblock a process (YMMV)"},
 								{"SHELL", "Creates a new shell!! (Limit testing)"},
 								{"CAT", "Prints the stdin it recieves"},
 								{"WC", "Counts the amount of words in input"},
 								{"FILTER", "Filters the vocals in the input"},
-								{"PRINTSCHEDULER", "Sets the scheduler on print mode"}
+								{"PRINTSCHEDULER", "Sets the scheduler on print mode"},
+								{"TESTS", "Runs one of the available tests"}
 								};
 
 void (*commandFunctions[32])(int, char **) = {	help, returnToShell, time, tron, printRegisters, test0Div, testInvalidExc, printMemoryAt, setSize, beeperSongs, 
-												getpid, ps, loop_process, kill_process, nice_process, block_process, shell, cat, wc, filter, call_to_set_print_mode};
+												getpid, ps, loop_process, kill_process, nice_process, block_process, unblock_process, shell, cat, wc, filter, call_to_set_print_mode, tests};
 
 
 int find_pipe(char * params[], int argc){

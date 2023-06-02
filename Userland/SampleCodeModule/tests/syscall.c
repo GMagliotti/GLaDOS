@@ -27,7 +27,7 @@ int64_t my_block(uint64_t pid) {
 }
 
 int64_t my_unblock(uint64_t pid) {
-  return 0;
+  return call_to_unblock_process(pid);
 }
 
 int64_t my_sem_open(char *sem_id, uint64_t initialValue) {

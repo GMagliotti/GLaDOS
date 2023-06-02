@@ -85,3 +85,20 @@ void block_process(int argc, char** argv) {
 
     call_to_block_process(pid);
 }
+
+void unblock_process(int argc, char** argv) {
+    
+    if (argc < 2) {
+        printf("Usage: UNBLOCK <pid>\n");
+        return;
+    }
+
+    int pid = string_to_int(argv[1]);
+
+    if ( pid < 0) {
+        printf("PID must be positive\n");
+        return;
+    }
+
+    call_to_unblock_process(pid);
+}

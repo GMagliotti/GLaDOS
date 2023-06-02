@@ -168,6 +168,9 @@ uint64_t int_80(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t
 		case 37:
 			return sys_pipe_close((int) rsi);
 			break;
+		case 38:
+			return sys_unblock((int) rsi);
+			break;
 		default:
 			return 0;
 			break;

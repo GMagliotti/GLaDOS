@@ -1,4 +1,4 @@
-#include "test_mm.h"
+#include "test_util.h"
 
 #define MAX_BLOCKS 128
 

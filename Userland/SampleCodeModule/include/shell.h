@@ -10,6 +10,7 @@
 #include <beeper.h>
 #include "../programs/include/process_info.h"
 #include "../programs/include/ipc_processes.h"
+#include "../tests/test_util.h"
 #include <stdbool.h>
 
 #define MAX_PARAMS 8
