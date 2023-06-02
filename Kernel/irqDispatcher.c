@@ -36,8 +36,8 @@ uint64_t int_21() {
 	uint8_t keyScanCode = getKey();
 	if (keyScanCode == 0x0F) tabPressed = true;
 	else if (keyScanCode == 0x8F) tabPressed = false;
-	else if (keyScanCode == 0x2A) shiftPressed = true;
-	else if (keyScanCode == 0xAA) shiftPressed = false;
+	else if (keyScanCode == 0x2A || keyScanCode == 0x36) shiftPressed = true;
+	else if (keyScanCode == 0xAA || keyScanCode == 0xB6) shiftPressed = false;
 	else if (keyScanCode == 0x1D) ctrlPressed = true;
 	else if (keyScanCode == 0x9D) ctrlPressed = false;
 	else {
@@ -47,13 +47,13 @@ uint64_t int_21() {
 			printChar('^');
 			printChar(c);
 			clearBuffer();
-			saveKey('\n');
+			printChar('\n');
 			kill_process(get_foreground_process());
 		} else if (ctrlPressed && c == 'Z') {
 			printChar('^');
 			printChar(c);
 			clearBuffer();
-			saveKey('\n');
+			printChar('\n');
 			block_process(get_foreground_process());
 		} else if (ctrlPressed && c == 'D') {
 			saveKey('\0');
@@ -61,6 +61,9 @@ uint64_t int_21() {
 			saveKey('&');
 		} else if (shiftPressed && c == '\\') {
 			saveKey('|');
+		} else if (shiftPressed && c == '1') { // debugging
+			ps();
+			return 0;
 		} else {
 			//si estoy en bash imprimo el caracter y ademas lo guardo en buffer (para su posterior validacion de comando)
 			saveKey(c);
@@ -79,14 +82,13 @@ uint64_t int_80(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t
 		case 1:
 			sys_write((char *)rsi, rdx, rcx);
 			break;
-		case 2: //putchar que usara el printf
-			sys_putchar((int)rsi); 
+		case 2:
 			break;
 		case 3:
 			sys_putpixel((uint32_t)rsi, (uint32_t)rdx, (uint32_t)rcx);
 			break;
 		case 4:
-			sys_read(rsi, (char *)rdx, rcx);
+			return sys_read(rsi, (char *)rdx, rcx);
 			break;
 		case 5:
 			sys_sleep((uint32_t)rsi);
@@ -102,7 +104,6 @@ uint64_t int_80(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t
 		case 9:
 			return sys_getvbewidth();
 		case 10:
-			return sys_getchar();
 			break;
 		case 11:
 			sys_clearbuffer();

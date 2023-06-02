@@ -64,7 +64,7 @@ void tron(){
 		
         while(call_to_getticks() <= tickAnt+1){
             call_to_hlt();
-            char c = call_to_getchar();
+            char c = getChar();
 			if(c == 'Q'){ //tecla para salir de juego
 				endGame();
 				return; //salgo de juego
@@ -258,7 +258,7 @@ void gameOver(int whoHit){
     call_to_setptrx(SCREEN_PIXEL_WIDTH/2-GRIDSQUARE*3);
     call_to_setptry(SCREEN_PIXEL_HEIGHT/2+32);
     printf("press any key");
-    while(call_to_getchar() == 0);
+    while(getChar() == 0);
 }
 
 void tronMenu(){
@@ -284,5 +284,5 @@ void tronMenu(){
 	call_to_setptrx(300);
 	printf("Press any key to begin playing");
 	
-	while(call_to_getchar() == 0);
+	while(getChar() == 0);
 }

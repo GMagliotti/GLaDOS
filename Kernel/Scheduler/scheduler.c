@@ -121,6 +121,7 @@ void scheduler_revive_process(int pid) {
     process_ptr proc = get_process(pid);
     if(proc != NULL) {
         proc->status = ALIVE;
+        // proc->visibility = proc->og_visibility;
     }
 }
 

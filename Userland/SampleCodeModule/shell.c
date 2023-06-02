@@ -166,7 +166,7 @@ void shell(){
 	printf("Welcome to the command line! Type HELP for more information.\n");
     putc('>');
     while(1){
-		char c = call_to_getchar();
+		char c = getChar();
 		saveChar(c);
     }
 }

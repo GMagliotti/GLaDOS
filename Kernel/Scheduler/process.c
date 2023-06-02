@@ -276,11 +276,11 @@ int block_process(int pid) {
 
 
     process_array[pid]->status = BLOCKED;
-    if (foreground_process_pid == pid && pid != 1) {
-        process_array[pid]->visibility = BACKGROUND;
-        foreground_process_pid = process_array[pid]->ppid;
-        process_array[foreground_process_pid]->visibility = FOREGROUND;
-    }
+    // if (foreground_process_pid == pid && pid != 1) {
+    //     process_array[pid]->visibility = BACKGROUND;
+    //     foreground_process_pid = process_array[pid]->ppid;
+    //     process_array[foreground_process_pid]->visibility = FOREGROUND;
+    // }
 
     //if the process blocked was the one running, force a timer tick
     if(current_pid == pid) {
@@ -366,8 +366,8 @@ void print_current_process() {
 
     printColorString("Name: ", 32, colors[proc->pid % 5]); printString(proc->name, 16);
     printColorString(" - PID: ", 32, colors[proc->pid % 5]); printNumber(proc->pid, 10);
-    printColorString(" - Prio: ", 32, colors[proc->pid % 5]); printNumber(proc->priority, 10);
-    printColorString(" - Remaining lives: ", 32, colors[proc->pid % 5]); printNumber(proc->currentLives-1, 10);
+    printColorString(" - Prio: ", 32, colors[proc->pid % 5]); proc->priority < 0 ? printString("-1", 4) : printNumber(proc->priority, 10);
+    printColorString(" - Remaining lives: ", 32, colors[proc->pid % 5]); printNumber(proc->currentLives, 10);
     printString("\n", 2);
 }
 

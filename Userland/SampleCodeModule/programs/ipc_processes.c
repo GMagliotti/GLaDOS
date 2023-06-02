@@ -5,14 +5,14 @@
 
 void cat(int argc, char *argv[]) {
     char c;
-    while ((c = call_to_getchar()) != 0 ) putc(c);
+    while ((c = getChar()) != 0 ) putc(c);
     putc('\n');
 }
 
 void wc(int argc, char *argv[]) {
     int lines = 0;
     char c;
-    while ((c = call_to_getchar()) != 0) {
+    while ((c = getChar()) != 0) {
         if (c == '\n') {
             lines++;
             printf("Amount of lines: %d\n", lines);
@@ -30,7 +30,7 @@ int is_vowel(char c) {
 
 void filter(int argc, char *argv[]) {
     char c;
-    while ((c = call_to_getchar()) != 0) {
+    while ((c = getChar()) != 0) {
         if (!is_vowel(c)) {
             putc(c);
         }

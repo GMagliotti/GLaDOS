@@ -9,7 +9,6 @@ GLOBAL call_to_setptry
 GLOBAL call_to_getvbeheight
 GLOBAL call_to_getvbewidth
 GLOBAL call_to_clearbuffer
-GLOBAL call_to_getchar
 GLOBAL call_to_beep
 GLOBAL call_to_fillrectangle
 GLOBAL call_to_hlt
@@ -67,9 +66,6 @@ call_to_getvbeheight:
 
 call_to_getvbewidth:
     call_to_handler 9
-
-call_to_getchar:
-    call_to_handler 10
 
 call_to_clearbuffer:
     call_to_handler 11
