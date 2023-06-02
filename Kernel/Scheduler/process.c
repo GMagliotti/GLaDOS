@@ -122,7 +122,16 @@ void init(int argc, char** argv, void (*fn)(int, char **)) {
 
     process_ptr proc = get_process(current_pid);
 
-    int amp_found = stringEquals(argv[argc-1], "&");
+    char arr[0];
+    arr[0] = '&';
+    int amp_found = stringEquals(argv[argc-1], arr);
+    if(amp_found == 0) {
+        
+        proc->og_visibility = FOREGROUND;
+    } else {
+        
+        proc->og_visibility = BACKGROUND;
+    }
 
     if (process_array[proc->ppid]->visibility == FOREGROUND) {
         if (amp_found) {
@@ -213,7 +222,6 @@ int kill_process(int pid) {
 
 //removes process from list and frees its memory.
 int free_process(int pid) {
-
     if(!process_exists(pid))
         return -1;
     // if (pid <= 1) return 0;
@@ -260,21 +268,17 @@ int nice_process(int pid, int priority) {
 
 //block: cambia el estado de un proceso entre bloqueado y listo dado su pid
 int block_process(int pid) {
-    if (pid == 0 || pid == 1) return 0;
+    if (pid == 0) return 0;
 
     if(!process_exists(pid))
         return ERROR;
 
-    if (process_array[pid]->status == BLOCKED) {
-        unblock_process(pid);
-    } else {
-        process_array[pid]->status = BLOCKED;
 
-        if (foreground_process_pid == pid) {
-            process_array[pid]->visibility = BACKGROUND;
-            foreground_process_pid = process_array[pid]->ppid;
-            process_array[foreground_process_pid]->visibility = FOREGROUND;
-        }
+    process_array[pid]->status = BLOCKED;
+    if (foreground_process_pid == pid && pid != 1) {
+        process_array[pid]->visibility = BACKGROUND;
+        foreground_process_pid = process_array[pid]->ppid;
+        process_array[foreground_process_pid]->visibility = FOREGROUND;
     }
 
     //if the process blocked was the one running, force a timer tick
@@ -422,14 +426,6 @@ int waitpid(int pid) {
 
     process_ptr proc = process_array[pid];
 
-    // while (proc->status == ALIVE || proc->status == READY || proc->status == BLOCKED) {     // simula un semaforo
-    //     proc = process_array[pid];
-    //     printString(".", 10);
-    //     sleepms(1);
-    // }
-
-    // TODO: Find out why this sleep seemingly fixes everything
-    //block till child with id = pid is done executing (using semaphore the child has saved)
     sem_wait(proc->done_sem);
     destroy_sem(proc->done_sem);
 
@@ -446,8 +442,9 @@ int waitpid(int pid) {
 void free_adopted_zombies(int pid) {
     for (int i = 0; process_array[pid]->children[i] != NULL; i++) {
         process_ptr child = process_array[process_array[pid]->children[i]];
-        if (child->status == ZOMBIE && child->adopted == true) {
-            waitpid(child->pid);
+        if (child->status == ZOMBIE) {
+            // waitpid(child->pid);
+            free_process(child->pid);
         }
     }
 }

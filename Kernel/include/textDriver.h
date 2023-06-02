@@ -14,6 +14,9 @@ void setFontType(int type);
 void setFontSize(int size);
 void setBash();
 
+extern uint8_t getKey();
+void saveKey(uint8_t c);
+
 void setptrx(int num);
 void setptry(int num);
 

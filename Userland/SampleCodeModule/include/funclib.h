@@ -2,7 +2,7 @@
 #define FUNCLIB_H
 
 #include <stdint.h>
-#include <user_syscalls.h>
+#include "user_syscalls.h"
 #include <stdio.h>
 #include <stdbool.h>
 

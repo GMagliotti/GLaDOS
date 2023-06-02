@@ -8,6 +8,7 @@
 #include <MemoryManager.h>
 #include "./Scheduler/include/scheduler.h"
 #include "include/lib.h"
+#include "syscalls.h"
 
 extern uint8_t text;
 extern uint8_t rodata;
@@ -111,19 +112,7 @@ int main()
 	init_sem();
 	the_memory_manager = createMemoryManager((void *)0x50000, (void *)0x800000);
 	the_scheduler = create_scheduler(idle, sampleCodeModuleAddress);
-
-	// char arr[10] = {0};
-	// char * strstr = "Kachigga my ni-";
-	// char arr2[50] = {0};
-	// for (uint64_t i = 0; i < 0xFFFFFFFF; i++) {
-	// 	printColorString("The truth will be revealed: ", 445236, 0xF0C0A0);
-	// 	int_to_string(i, arr, 10);
-	// 	strCpy(arr2, strstr);
-	// 	strCat(arr2, arr);
-	// 	printColorString(arr2, 13414, 0xA410FC);
-	// 	printChar('\n');
-	// }
-	// 
+	initialize_sys_blocking_sem();
 	load_idt();
 
 	while(1) {
@@ -135,8 +124,8 @@ int main()
 
 void idle(int argc, char ** argv) {
 	while (1) {
-		printColorString("This is truly a runescape crocodile moment", 0xFFFFFFFFFFFFFFFF, 0x0000FF);
-		printChar('\n');
+		// printColorString("This is truly a runescape crocodile moment", 0xFFFFFFFFFFFFFFFF, 0x0000FF);
+		// printChar('\n');
 		_hlt();
 	}
 }

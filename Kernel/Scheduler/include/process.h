@@ -6,7 +6,7 @@
 #include <stdbool.h>
 #include "../../include/lib.h"
 #include "../../Semaphore/include/semaphore.h"
-#include <textDriver.h>
+#include "../../include/textDriver.h"
 
 
 #define ERROR -1
@@ -42,6 +42,7 @@ typedef struct process {
     int currentLives;
     int status; 
     int visibility; //foreground o background
+    int og_visibility;
     int fd_r; //read
     int fd_w; //write
     int children[MAX_PROCESS_AMOUNT];

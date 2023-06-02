@@ -173,10 +173,12 @@ int sem_close(char *name) {
 
 //gets called when waiting for a semaphore -> enqueues and blocks process
 void sem_whiff(uint64_t sem_index) {
-    int current_pid = scheduler_block_current_process();
+    int current_pid = get_current_pid();
+    
     if(current_pid != -1) {
         sem_enqueue_process(sem_index, current_pid);
     }
+    scheduler_block_current_process();
 }
 
 //TODO: hacer que el dequeue de un proceso chequee si contiene un sem -> si tiene uno y es el unico que lo accede -> destroy_sem

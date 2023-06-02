@@ -41,15 +41,19 @@ void * scheduler(void * rsp) {
     if (on_print_mode()) { print_current_process(); }
 
     free_adopted_zombies(current_process->pid);
-    
+
     if (current_process->status == FINISHED || current_process->status == KILLED) {
         set_current_process(current_process->ppid);
 
         if (current_process->pid != 0 && current_process->priority != -1) {
             process_ptr aux = current_process;
             scheduler_dequeue_process(current_process); 
-            // free_process(aux->pid);
+
             set_zombie(aux->pid);
+
+            if(aux->og_visibility == BACKGROUND) {
+                free_process(aux->pid);
+            }
             current_process = get_current_process(rr_scheduler);
 
         }

@@ -5,7 +5,7 @@ EXTERN sem_whiff
 
 section .text
 enter_region:
-    STI
+    CLI
     MOV  rax, QWORD 0x0
     XCHG rax, QWORD [rdi]
     CMP  rax, QWORD 0x0
@@ -14,9 +14,11 @@ enter_region:
     MOV  rdi, rsi
     CALL sem_whiff
     POP  rdi
+    STI
     JMP  .whiff
-    
+
 .success:
+    STI
     RET                  ;Requires process list to be implemented in semaphore.c.
 
 .whiff:
