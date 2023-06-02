@@ -20,7 +20,7 @@ static const uint32_t colors[5] = {
 
 process_ptr initialize_idle(void (*idle_fn)(int, char **)) {
     char * argv[1] = { "Idle" };
-    process_ptr idle = create_process(1, argv, idle_fn);
+    process_ptr idle = create_process(1, argv, idle_fn, NULL);
     idle->priority = -1;
     return idle;
 }
@@ -40,9 +40,10 @@ void uninitialize(void) {
  * @param argc number of arguments the process must receive
  * @param argv array of arguments the process receives
  * @param fn process' function that receives argc and argv
+ * @param fd process' array of file descriptors, read and write
  * @return process_ptr: returns the created process, or NULL if unsuccessful
  */
-process_ptr create_process(int argc, char** argv, void (*fn)(int, char **)) {
+process_ptr create_process(int argc, char** argv, void (*fn)(int, char **), int fd[2]) {
 
     process_ptr current_proc = get_process(current_pid);
 
@@ -98,12 +99,12 @@ process_ptr create_process(int argc, char** argv, void (*fn)(int, char **)) {
     new_process->status = ALIVE;
     new_process->adopted = false;
 
-    if(current_proc != NULL) {
-        new_process->fd_r = current_proc->fd_r;
-        new_process->fd_w = current_proc->fd_w;
+    if( fd != NULL) {
+        new_process->fd_r = fd[0];
+        new_process->fd_w = fd[1];
     } else {
         new_process->fd_r = 0;
-        new_process->fd_w = 1;
+        new_process->fd_w = 0;
     }
 
     initialize_stack(new_process->rsp, args, argc, fn, init);
@@ -275,11 +276,11 @@ int block_process(int pid) {
 
 
     process_array[pid]->status = BLOCKED;
-    if (foreground_process_pid == pid && pid != 1) {
-        process_array[pid]->visibility = BACKGROUND;
-        foreground_process_pid = process_array[pid]->ppid;
-        process_array[foreground_process_pid]->visibility = FOREGROUND;
-    }
+    // if (foreground_process_pid == pid && pid != 1) {
+    //     process_array[pid]->visibility = BACKGROUND;
+    //     foreground_process_pid = process_array[pid]->ppid;
+    //     process_array[foreground_process_pid]->visibility = FOREGROUND;
+    // }
 
     //if the process blocked was the one running, force a timer tick
     if(current_pid == pid) {
@@ -365,8 +366,8 @@ void print_current_process() {
 
     printColorString("Name: ", 32, colors[proc->pid % 5]); printString(proc->name, 16);
     printColorString(" - PID: ", 32, colors[proc->pid % 5]); printNumber(proc->pid, 10);
-    printColorString(" - Prio: ", 32, colors[proc->pid % 5]); printNumber(proc->priority, 10);
-    printColorString(" - Remaining lives: ", 32, colors[proc->pid % 5]); printNumber(proc->currentLives-1, 10);
+    printColorString(" - Prio: ", 32, colors[proc->pid % 5]); proc->priority < 0 ? printString("-1", 4) : printNumber(proc->priority, 10);
+    printColorString(" - Remaining lives: ", 32, colors[proc->pid % 5]); printNumber(proc->currentLives, 10);
     printString("\n", 2);
 }
 

@@ -83,7 +83,6 @@ void checkBuffer(){
 	int found = 0;
 	int command_pos = -1;
     int pid1 = -1;
-	int visibility = FOREGROUND;
 
 	char * params[MAX_PARAMS] = {NULL};
 
@@ -108,22 +107,21 @@ void checkBuffer(){
 			params2[i] = params[we_piping + i + 1];
 		}
 
-        // int pipe_id = pipe_open("|");
-        // if (pipe_id == -1) printf("Error opening pipe");
-        // int fd[2] = {pipe_id, 1};
-        // int pid1;
+        int pipe_id = call_to_pipe_open("|");
+        if (pipe_id == -1) printf("Error opening pipe");
+        int fd[2] = {pipe_id, 0};
 
 		if ((command_pos = is_valid_command(params[0])) != -1) {
-    			pid1 = call_to_create_process(argc, params, commandFunctions[command_pos]);
+    			pid1 = call_to_create_process(argc, params, commandFunctions[command_pos], fd);
 				found = 1;
 		}
 
-    	// fd[0] = 0;
-    	// fd[1] = pipe_id;
+    	fd[0] = 0;
+    	fd[1] = pipe_id;
 
 		if ((command_pos = is_valid_command(params[we_piping+1])) != -1 && found) {
 				params2[argc2++] = "&";
-    			call_to_create_process(argc2, params2, commandFunctions[command_pos]);
+    			call_to_create_process(argc2, params2, commandFunctions[command_pos], fd);
 				found2 = 1;
 		}
 
@@ -132,11 +130,12 @@ void checkBuffer(){
 			printf("Cmd 2 not found, matando 1\n");
 		}
 
+		// call_to_pipe_close(pipe_id);
 		// pipe close cuando??
 
 	} else {
 		if ((command_pos = is_valid_command(params[0])) != -1) {
-    			pid1 = call_to_create_process(argc, params, commandFunctions[command_pos]);
+    			pid1 = call_to_create_process(argc, params, commandFunctions[command_pos], NULL);
 				found = 1;
 		}
 	}
@@ -167,7 +166,7 @@ void shell(){
 	printf("Welcome to the command line! Type HELP for more information.\n");
     putc('>');
     while(1){
-		char c = call_to_getchar();
+		char c = getChar();
 		saveChar(c);
     }
 }
