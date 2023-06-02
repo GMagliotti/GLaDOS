@@ -11,7 +11,7 @@ int64_t my_create_process(char *name, uint64_t argc, char *argv[]) {
   }
   argv[0] = name;
 
-  return call_to_create_process(argc, argv, endless_loop);
+  return call_to_create_process(argc, argv, endless_loop, NULL);
 }
 
 int64_t my_nice(uint64_t pid, uint64_t newPrio) {

@@ -154,7 +154,7 @@ uint64_t int_80(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t
 			return sys_block((int) rsi);
 			break;
 		case 28:
-			return sys_create_process((int) rsi, (char**) rdx, (void *) rcx);
+			return sys_create_process((int) rsi, (char**) rdx, (void *) rcx, (int *) r8);
 			break;
 		case 29:
 			return sys_waitpid((int) rsi);

@@ -9,7 +9,7 @@ rr_queue_ptr rr_scheduler;
 rr_queue_ptr create_scheduler(void (*idle)(int, char **), void (*shell)(int, char **)) {
     rr_scheduler = create_new_round_robin(initialize_idle(idle));
     char *argv[1] = {"Shell"};
-	scheduler_create_process(1, argv, shell);
+	scheduler_create_process(1, argv, shell, NULL);
     next_process(rr_scheduler);
 
     return rr_scheduler;
@@ -75,9 +75,9 @@ int scheduler_enqueue_process(process_ptr p) {
     return 1;
 }
 
-int scheduler_create_process(int argc, char** argv, void (*fn)(int, char **)) {
+int scheduler_create_process(int argc, char** argv, void (*fn)(int, char **), int fd[2]) {
         
-    process_ptr created_process = create_process(argc, argv, fn);
+    process_ptr created_process = create_process(argc, argv, fn, fd);
     if(created_process == NULL) {
         return ERROR;
     }

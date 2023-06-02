@@ -20,7 +20,7 @@ static const uint32_t colors[5] = {
 
 process_ptr initialize_idle(void (*idle_fn)(int, char **)) {
     char * argv[1] = { "Idle" };
-    process_ptr idle = create_process(1, argv, idle_fn);
+    process_ptr idle = create_process(1, argv, idle_fn, NULL);
     idle->priority = -1;
     return idle;
 }
@@ -40,9 +40,10 @@ void uninitialize(void) {
  * @param argc number of arguments the process must receive
  * @param argv array of arguments the process receives
  * @param fn process' function that receives argc and argv
+ * @param fd process' array of file descriptors, read and write
  * @return process_ptr: returns the created process, or NULL if unsuccessful
  */
-process_ptr create_process(int argc, char** argv, void (*fn)(int, char **)) {
+process_ptr create_process(int argc, char** argv, void (*fn)(int, char **), int fd[2]) {
 
     process_ptr current_proc = get_process(current_pid);
 
@@ -98,12 +99,12 @@ process_ptr create_process(int argc, char** argv, void (*fn)(int, char **)) {
     new_process->status = ALIVE;
     new_process->adopted = false;
 
-    if(current_proc != NULL) {
-        new_process->fd_r = current_proc->fd_r;
-        new_process->fd_w = current_proc->fd_w;
+    if( fd != NULL) {
+        new_process->fd_r = fd[0];
+        new_process->fd_w = fd[1];
     } else {
         new_process->fd_r = 0;
-        new_process->fd_w = 1;
+        new_process->fd_w = 0;
     }
 
     initialize_stack(new_process->rsp, args, argc, fn, init);
