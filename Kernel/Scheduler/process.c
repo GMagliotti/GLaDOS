@@ -110,9 +110,10 @@ process_ptr create_process(int argc, char** argv, void (*fn)(int, char **)) {
     process_array[pid] = new_process;
     process_count++;
 
-    char pid_string[4] = { 0 };
-    strCpy(pid_string, int_to_string(new_process->pid, pid_string, 10));
-    new_process->done_sem = create_sem(0, strCat("sem_", pid_string));
+    //char pid_string[4] = { 0 };
+    //int_to_string(new_process->pid, pid_string, 10);
+    char * semnem = "the_sem";
+    new_process->done_sem = create_sem(0, semnem/*strCat("sem_", pid_string)*/);
 
     return new_process;
 }
@@ -148,7 +149,8 @@ void init(int argc, char** argv, void (*fn)(int, char **)) {
     force_timer();
 
     while(1) {
-        printString("xdxdxd", 4);
+        printString("Force timer more like fuck off\n", 0xFFFFFFFFFFFFFFFF);
+        sleep(1);
     }
     return ;
 }
@@ -418,8 +420,6 @@ int waitpid(int pid) {
 
     process_ptr current_proc = get_process(current_pid);
 
-    current_proc->status = BLOCKED; 
-
     process_ptr proc = process_array[pid];
 
     // while (proc->status == ALIVE || proc->status == READY || proc->status == BLOCKED) {     // simula un semaforo
@@ -429,13 +429,14 @@ int waitpid(int pid) {
     // }
 
     // TODO: Find out why this sleep seemingly fixes everything
-    sleepms(1);
     //block till child with id = pid is done executing (using semaphore the child has saved)
     sem_wait(proc->done_sem);
+    destroy_sem(proc->done_sem);
 
     int aux = proc->ret_value;
 
     //parent has done waitpid for this process, it can now be freed
+    //destroy_sem(proc->done_sem);
     free_process(pid);
 
     return aux;
@@ -459,8 +460,6 @@ void set_zombie(int pid) {
 
     save_children(pid);
 
-    printString("converting to zombie", 30);
-
     //if killed process was in fg, give parent process fg:
     if (proc->visibility == FOREGROUND) {
         proc->visibility = BACKGROUND;
@@ -471,11 +470,8 @@ void set_zombie(int pid) {
         }
     }
 
-        printString("converting to zombie", 30);
-
     
     //post done_sem so parent can collect my return value and i can be freed (parent was currently blocked at waitpid)
-    sem_post(process_array[proc->ppid]->done_sem);
-
-    process_array[proc->ppid]->status = ALIVE;
+    //sem_post(process_array[proc->ppid]->done_sem);'
+    sem_post(proc->done_sem);
 }

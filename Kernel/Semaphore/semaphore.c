@@ -1,7 +1,7 @@
 #include "include/semaphore.h"
 #include <textDriver.h>
 
-extern void enter_region(uint64_t *lock);
+extern void enter_region(uint64_t *lock, uint64_t sem_idx);
 extern void leave_region(uint64_t *lock);
 extern void * sys_malloc(size_t requestedSize);
 
@@ -63,11 +63,11 @@ void destroy_sem(int sem_index) {
 */
 uint64_t sem_post(uint64_t sem_idx) {
     if (sem_idx <= 0 || sem_idx >= MAX_SEM) return 1;
-    sem_t the_sem = sem_spaces[sem_idx].sem;
-    uint64_t * lock_addr = &(the_sem.lock);
-    if (the_sem.value != 0) enter_region(lock_addr);
-    the_sem.value++;
-    if(the_sem.size_list > 0) {
+    sem_t * the_sem = &(sem_spaces[sem_idx].sem);
+    uint64_t * lock_addr = &(the_sem->lock);
+    if (the_sem->value != 0) enter_region(lock_addr, sem_idx);
+    the_sem->value++;
+    if(the_sem->size_list > 0) {
         //wake up and dequeue the first process in line blocked 
         int pid = sem_dequeue_process(sem_idx);
         scheduler_revive_process(pid);
@@ -84,31 +84,33 @@ uint64_t sem_post(uint64_t sem_idx) {
 uint64_t sem_wait(uint64_t sem_idx) {
     if (sem_idx <= 0 || sem_idx >= MAX_SEM) return 0xFFFFFFFFFFFFFFFF;
     uint64_t * lock_addr = &(sem_spaces[sem_idx].sem.lock);
-    enter_region(lock_addr); //will call sem_whiff -> enqueues and blocks process if sem value is 0
+    enter_region(lock_addr, sem_idx); //will call sem_whiff -> enqueues and blocks process if sem value is 0
     sem_spaces[sem_idx].sem.value--;
-    if (sem_spaces[sem_idx].sem.value != 0) leave_region(lock_addr);
+    if (sem_spaces[sem_idx].sem.value != 0) {
+        leave_region(lock_addr);
+    } 
     return 0;
 }
 
 //returns pid of next process in list
 int sem_dequeue_process(int sem_index) {
-    space sem_space = sem_spaces[sem_index];
-    if(sem_space.available == TRUE) { //space doesnt exist
+    space * sem_space = &sem_spaces[sem_index];
+    if(sem_space->available == TRUE) { //space doesnt exist
         return -1;
     }
-    sem_t sem = sem_space.sem;
-    sem_process_t * current_process = sem.first_process;
+    sem_t * sem = &(sem_space->sem);
+    sem_process_t * current_process = sem->first_process;
     if(current_process == NULL) {
         return -1;
     }
 
     //remove process from sem list
     int current_pid = current_process->pid;
-    sem.first_process = current_process->next;
-    if(sem.first_process == NULL) { //we just removed its last process
-        sem.last_process == NULL;
+    sem->first_process = current_process->next;
+    if(sem->first_process == NULL) { //we just removed its last process
+        sem->last_process == NULL;
     }
-    sem.size_list--;
+    sem->size_list--;
     //free the sem_process (not the actual process)
     sys_free(current_process);
 
@@ -117,11 +119,11 @@ int sem_dequeue_process(int sem_index) {
 
 //returns 0 if successful, -1 if not
 int sem_enqueue_process(int sem_index, int pid) {
-    space sem_space = sem_spaces[sem_index];
-    if(sem_space.available == TRUE || pid == NULL) { //space doesnt exist
+    space * sem_space = &sem_spaces[sem_index];
+    if(sem_space->available == TRUE || pid == NULL) { //space doesnt exist
         return -1;
     }
-    sem_t sem = sem_space.sem;
+    sem_t * sem = &(sem_space->sem);
 
     sem_process_t * created_process = sys_malloc(sizeof(sem_process_t));
     if(created_process == NULL) {
@@ -129,16 +131,16 @@ int sem_enqueue_process(int sem_index, int pid) {
     }
 
     created_process->pid = pid;
-    if(sem.size_list == 0) { //adding first process in list
-        sem.first_process = created_process;
-        sem.last_process = created_process;
+    if(sem->size_list == 0) { //adding first process in list
+        sem->first_process = created_process;
+        sem->last_process = created_process;
     }
     else {
-        sem.last_process->next = created_process; //ex-last process now in front of created_process
-        sem.last_process = created_process; //created process now the last one in the list
+        sem->last_process->next = created_process; //ex-last process now in front of created_process
+        sem->last_process = created_process; //created process now the last one in the list
     }
     created_process->next = NULL;
-    sem.size_list++;
+    sem->size_list++;
 
     return 0;
 }

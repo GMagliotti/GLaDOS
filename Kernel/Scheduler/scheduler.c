@@ -122,7 +122,7 @@ void scheduler_revive_process(int pid) {
 
 int scheduler_block_current_process() {
     int current_pid = get_current_pid();
-    if(current_pid != ERROR) {
+    if(current_pid == ERROR) {
         return ERROR;
     }
     block_process(current_pid);
