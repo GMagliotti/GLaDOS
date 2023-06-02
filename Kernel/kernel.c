@@ -110,7 +110,7 @@ int main()
 {	
 	hvdClear();
 	init_sem();
-	the_memory_manager = createMemoryManager((void *)0x50000, (void *)0x1000000);
+	the_memory_manager = createMemoryManager((void *)0x50000, (void *)0x800000);
 	the_scheduler = create_scheduler(idle, sampleCodeModuleAddress);
 	initialize_sys_blocking_sem();
 	load_idt();

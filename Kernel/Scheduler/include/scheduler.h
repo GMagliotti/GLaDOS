@@ -20,4 +20,7 @@ void save_rsp(process_ptr process, uint64_t * to_save);
 void free_scheduler(void);
 int get_current_pid(void);
 
+void scheduler_revive_process(int pid);
+int scheduler_block_current_process();
+
 #endif

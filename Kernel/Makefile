@@ -33,6 +33,6 @@ $(LOADEROBJECT):
 	$(ASM) $(ASMFLAGS) $(LOADERSRC) -o $(LOADEROBJECT)
 
 clean:
-	rm -rf asm/*.o *.o *.bin MemoryManager/*.o
+	rm -rf asm/*.o *.o *.bin ./*/*.o
 
 .PHONY: all clean
