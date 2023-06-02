@@ -42,21 +42,23 @@ uint64_t test_mm() {
 
     // // Set
     uint32_t i;
-    // for (i = 0; i < rq; i++)
-    //   if (mm_rqs[i].address)
-    //     memset(mm_rqs[i].address, i, mm_rqs[i].size);
+    for (i = 0; i < rq; i++)
+      if (mm_rqs[i].address)
+        memset(mm_rqs[i].address, i, mm_rqs[i].size);
 
-    // // Check
-    // for (i = 0; i < rq; i++)
-    //   if (mm_rqs[i].address)
-    //     if (!memcheck(mm_rqs[i].address, i, mm_rqs[i].size)) {
-    //       printf("test_mm ERROR\n");
-    //       return -1;
-    //     }
+    // Check
+    for (i = 0; i < rq; i++)
+      if (mm_rqs[i].address)
+        if (!memcheck(mm_rqs[i].address, i, mm_rqs[i].size)) {
+          printf("test_mm ERROR\n");
+          return -1;
+        }
 
     // Free
     for (i = 0; i < rq; i++)
-      if (mm_rqs[i].address)
+      if (mm_rqs[i].address) {
+        printf("Free addr: %x\n", mm_rqs[i].address);
         call_to_free(mm_rqs[i].address);
+      }
   }
 }
