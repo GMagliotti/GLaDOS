@@ -1,5 +1,6 @@
 #include "include/shell.h"
 #include "include/user_syscalls.h"
+#include "./tests/test_mm.h"
 
 #define MAX_CHARS_PER_COMMAND 128
 
@@ -56,7 +57,7 @@ char* validCommands[32][2] = 	{{"HELP", "Provides a list of available programs"}
 								{"PRINTSCHEDULER", "Sets the scheduler on print mode"}
 								};
 
-void (*commandFunctions[32])(int, char **) = {	help, returnToShell, time, tron, printRegisters, test0Div, testInvalidExc, printMemoryAt, setSize, beeperSongs, 
+void (*commandFunctions[32])(int, char **) = {	help, returnToShell, time, /*tron*/ test_mm, printRegisters, test0Div, testInvalidExc, printMemoryAt, setSize, beeperSongs, 
 												getpid, ps, loop_process, kill_process, nice_process, block_process, shell, cat, wc, filter, call_to_set_print_mode};
 
 
