@@ -53,4 +53,6 @@ int call_to_sem_post(int sem_index);
 int call_to_pipe_open(char *name);
 int call_to_pipe_close(int pipe_index);
 
+void call_to_print_mem();
+
 #endif

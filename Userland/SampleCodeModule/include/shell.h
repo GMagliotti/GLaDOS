@@ -30,6 +30,7 @@ void shell();
 void setBash();
 void hvdClear();
 void help();
+void show_arqui_commands();
 void clearCommandBuffer();
 void setSize(int argc, char ** argv);
 void printRegisters();                 // it must do something...

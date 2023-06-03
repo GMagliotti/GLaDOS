@@ -36,6 +36,7 @@ void saveChar(char c){
 //chequea si lo que esta en el buffer antes del \n es un comando correcto, y ademas limpia el buffer
 char* validCommands[32][2] = 	{{"HELP", "Provides a list of available programs"}, 
 								{"CLEAR", "Clears the screen"}, 
+								{"ARQUI", "Shows old commands"}, 
 								{"TIME", "Shows current system time (GMT-3)"}, 
 								{"TRON", "Runs Tron game"}, 
 								{"REGISTERS", "Prints value of all the registers (SHIFT + TAB)"}, 
@@ -44,6 +45,7 @@ char* validCommands[32][2] = 	{{"HELP", "Provides a list of available programs"}
 								{"MEMORYAT", "Displays the content at the desired location"}, 
 								{"SETSIZE", "Sets the letter size (Default 2)"},
 								{"SONGS", "Choose from a variety of available songs"},
+								{"MEM", "Prints the current memory status"},
 								{"GETPID", "Displays the current process ID"}, 
 								{"PS", "Prints the list of active processes"},
 								{"LOOP", "Loops a new process printing its pid"},
@@ -60,8 +62,8 @@ char* validCommands[32][2] = 	{{"HELP", "Provides a list of available programs"}
 								{"TESTS", "Runs one of the available tests"}
 								};
 
-void (*commandFunctions[32])(int, char **) = {	help, returnToShell, time, tron, printRegisters, test0Div, testInvalidExc, printMemoryAt, setSize, beeperSongs, 
-												getpid, ps, loop_process, kill_process, nice_process, block_process, unblock_process, shell, cat, wc, filter, call_to_set_print_mode, phylo, tests};
+void (*commandFunctions[32])(int, char **) = {	help, returnToShell, show_arqui_commands, time, tron, printRegisters, test0Div, testInvalidExc, printMemoryAt, setSize, beeperSongs, 
+												call_to_print_mem, getpid, ps, loop_process, kill_process, nice_process, block_process, unblock_process, shell, cat, wc, filter, call_to_set_print_mode, phylo, tests};
 
 
 int find_pipe(char * params[], int argc){
@@ -190,10 +192,20 @@ void help() {
 	printf("The available commands are:\n\n");
 
 	for (int i = 0; validCommands[i][0] != 0 && validCommands[i][1] != 0; i++) {
-		printf("\t%s - %s\n", validCommands[i][0], validCommands[i][1]);
+		if (i < 3 || i > 10) printf("\t%s - %s\n", validCommands[i][0], validCommands[i][1]);
 		if (i == 9) printf("\n");
 	}
 }
+
+void show_arqui_commands() {
+
+	printf("Implemented previously:\n\n");
+
+	for (int i = 3; validCommands[i][0] != 0 && validCommands[i][1] != 0 && i < 11; i++) {
+		printf("\t%s - %s\n", validCommands[i][0], validCommands[i][1]);
+	}
+}
+
 
 void returnToShell(){
     hvdClear();				 //limpio pantalla
