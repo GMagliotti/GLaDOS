@@ -56,13 +56,13 @@ uint64_t int_21() {
       print_char('^');
       print_char(c);
       clear_buffer();
-      print_char('\n');
+      save_key('\n');
       kill_process(get_foreground_process());
     } else if (ctrl_pressed && c == 'Z') {
       print_char('^');
       print_char(c);
       clear_buffer();
-      print_char('\n');
+      save_key('\n');
       block_process(get_foreground_process());
     } else if (ctrl_pressed && c == 'D') {
       sys_write("\0", 1, NULL);
@@ -99,7 +99,7 @@ uint64_t int_80(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rcx,
   case 2:
     break;
   case 3:
-    sys_putpixel((uint32_t)rsi, (uint32_t)rdx, (uint32_t)rcx);
+    sys_put_pixel((uint32_t)rsi, (uint32_t)rdx, (uint32_t)rcx);
     break;
   case 4:
     return sys_read(rsi, (char *)rdx, rcx);
@@ -108,26 +108,26 @@ uint64_t int_80(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rcx,
     sys_sleep((uint32_t)rsi);
     break;
   case 6:
-    sys_setptrx((int)rsi);
+    sys_set_ptrx((int)rsi);
     break;
   case 7:
-    sys_setptry((int)rsi);
+    sys_set_ptry((int)rsi);
     break;
   case 8:
-    return sys_getvbeheight();
+    return sys_get_screen_height();
   case 9:
-    return sys_getvbewidth();
+    return sys_get_screen_width();
   case 10:
     break;
   case 11:
-    sys_clearbuffer();
+    sys_clear_buffer();
     break;
   case 12:
     sys_beep((int)rsi, (int)rdx);
     break;
   case 13:
-    sys_fillrectangle((uint16_t)rsi, (uint16_t)rdx, (uint32_t)rcx, (uint16_t)r8,
-                      (uint16_t)r9);
+    sys_fill_rectangle((uint16_t)rsi, (uint16_t)rdx, (uint32_t)rcx,
+                       (uint16_t)r8, (uint16_t)r9);
     break;
   case 14:
     sys_accessRTC((void *)rsi);
