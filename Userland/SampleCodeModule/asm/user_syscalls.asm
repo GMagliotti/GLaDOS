@@ -36,6 +36,7 @@ GLOBAL call_to_sem_wait
 GLOBAL call_to_sem_post
 GLOBAL call_to_pipe_open
 GLOBAL call_to_pipe_close
+GLOBAL call_to_print_mem
 GLOBAL call_to_yield
 
 %macro call_to_handler 1
@@ -160,6 +161,9 @@ call_to_pipe_close:
 
 call_to_unblock_process:
     call_to_handler 38
+
+call_to_print_mem:
+    call_to_handler 39
 
 call_to_yield:
     call_to_handler 40
