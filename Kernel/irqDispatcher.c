@@ -189,6 +189,8 @@ uint64_t int_80(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t
 		case 38:
 			return sys_unblock((int) rsi);
 			break;
+		case 39:
+			sys_print_mem();
 		default:
 			return 0;
 			break;

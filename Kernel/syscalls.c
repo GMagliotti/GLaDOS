@@ -274,3 +274,7 @@ int sys_pipe_open(char *name) {
 int sys_pipe_close(int pipe_index) {
     return pipe_close(pipe_index);
 }
+
+void sys_print_mem() {
+    print_mem();
+}

@@ -7,7 +7,7 @@
 
 
 #define MMAN_PAGESIZE   0x1000
-#define MMAN_MEMSIZE    0xFF00000
+#define MMAN_MEMSIZE    0x1000000
 #define MMAN_PAGECOUNT  (MMAN_MEMSIZE/MMAN_PAGESIZE)
 
 #include <stdlib.h>
@@ -25,5 +25,7 @@ MemoryManagerADT createMemoryManager(void *const restrict memoryForMemoryManager
 void *allocMemory(MemoryManagerADT const restrict memoryManager, const size_t memoryToAllocate);
 
 void mman_free(MemoryManagerADT const restrict memoryManager, void * ptr);
+
+void print_mem();
 
 #endif

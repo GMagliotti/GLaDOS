@@ -107,6 +107,38 @@ bit_amount bmp_find(bit_amount size_in_bits, slot_index * slot, bit_index * bit)
     return -1;
 }   
 
+void print_header(int slot) {
+    printString("Showing pages 0x", 0x100);
+    printNumber(slot*8, 16);
+    printString(" - 0x", 0x100);
+    printNumber((slot + 128)*8-1, 16);
+    printString(" (32 per line)\n", 0x100);
+    printString("---------------------------------------------------------------\n", 64);
+}
+
+void print_bitmap() {
+    uint64_t total_bits = the_bitmap.size*BITS_PER_SLOT;
+    uint64_t slot = 0, subindex = 0; 
+    
+    print_header(slot);
+    for (slot = 0; slot*BITS_PER_SLOT+subindex < total_bits; slot++) {
+        if (slot % 128 == 0 && slot != 0) {
+            printString("---------------------------------------------------------------\n", 64);
+            printColorString("Bitmap state - 0 FREE - 1 OCCUPIED\nEach bit represents a page, PAGESIZE = 4096B\n", 0x100, 0x00FF00);
+            sleep(5);
+            hvdClear();
+            print_header(slot);
+        } else if (slot % 4 == 0 && slot != 0) { 
+            printChar('\n');
+        }
+        for (subindex = 0; subindex < BITS_PER_SLOT; subindex++) {
+            printNumber((the_bitmap.bitmap_array[slot]>>subindex)&0x1, 10);
+            printChar(' ');
+        }
+        subindex = 0;
+    }
+}
+
 // Implementar aca la forma "rapida"
 // bit_amount bmp_find_improved(bit_amount size_in_bits, slot_index * slot, bit_index * bit);
 
