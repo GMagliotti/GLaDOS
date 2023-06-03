@@ -23,4 +23,9 @@ int is_only_space(char * str);
 
 void printMemoryAt(int argc, char** argv);
 
+char *strCat(char *destination, const char *source);
+void numToStr(int num, char *string, int len);
+uint32_t uintToBase2(uint64_t value, char *buffer, uint32_t base);
+int atoi2(char *str);
+
 #endif

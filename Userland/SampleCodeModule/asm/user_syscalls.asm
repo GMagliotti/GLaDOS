@@ -28,6 +28,12 @@ GLOBAL call_to_nice_process
 GLOBAL call_to_block_process
 GLOBAL call_to_create_process
 GLOBAL call_to_waitpid
+GLOBAL call_to_create_sem
+GLOBAL call_to_destroy_sem
+GLOBAL call_to_sem_open
+GLOBAL call_to_sem_close
+GLOBAL call_to_sem_wait
+GLOBAL call_to_sem_post
 
 %macro call_to_handler 1
     push rbp
@@ -127,3 +133,21 @@ call_to_create_process:
 
 call_to_waitpid:
     call_to_handler 29
+
+call_to_create_sem:
+    call_to_handler 30
+
+call_to_destroy_sem:
+    call_to_handler 31
+
+call_to_sem_open:
+    call_to_handler 32
+
+call_to_sem_close:
+    call_to_handler 33
+
+call_to_sem_wait:
+    call_to_handler 34
+
+call_to_sem_post:
+    call_to_handler 35

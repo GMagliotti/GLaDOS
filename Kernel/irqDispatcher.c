@@ -159,6 +159,24 @@ uint64_t int_80(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t
 		case 29:
 			return sys_waitpid((int) rsi);
 			break;
+		case 30:
+			return sys_create_sem((int) rsi, (char*) rdx);
+			break;
+		case 31:
+			sys_destroy_sem((int) rsi);
+			break;
+		case 32:
+			return sys_sem_open((char*) rsi);
+			break;
+		case 33:
+			return sys_sem_close((char*) rsi);
+			break;
+		case 34:
+			return sys_sem_wait((int) rsi);
+			break;
+		case 35:
+			return sys_sem_post((int) rsi);
+			break;
 		default:
 			return 0;
 			break;

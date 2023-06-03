@@ -53,11 +53,12 @@ char* validCommands[32][2] = 	{{"HELP", "Provides a list of available programs"}
 								{"CAT", "Prints the stdin it recieves"},
 								{"WC", "Counts the amount of words in input"},
 								{"FILTER", "Filters the vocals in the input"},
-								{"PRINTSCHEDULER", "Sets the scheduler on print mode"}
+								{"PRINTSCHEDULER", "Sets the scheduler on print mode"},
+								{"PHYLO", "Runs Philosophers dilemma"}
 								};
 
 void (*commandFunctions[32])(int, char **) = {	help, returnToShell, time, tron, printRegisters, test0Div, testInvalidExc, printMemoryAt, setSize, beeperSongs, 
-												getpid, ps, loop_process, kill_process, nice_process, block_process, shell, cat, wc, filter, call_to_set_print_mode};
+												getpid, ps, loop_process, kill_process, nice_process, block_process, shell, cat, wc, filter, call_to_set_print_mode, phylo};
 
 
 int find_pipe(char * params[], int argc){

@@ -150,3 +150,79 @@ void printMemoryAt(int argc, char** argv) {
         sleepms(250);
 	}
 }
+
+char *strCat(char *destination, const char *source) {
+	// make `ptr` point to the end of the destination string
+	char *ptr = destination + strLength(destination);
+
+	// appends characters of the source to the destination string
+	while (*source != '\0') {
+		*ptr++ = *source++;
+	}
+
+	// null terminate destination string
+	*ptr = '\0';
+
+	// the destination is returned by standard `strcat()`
+	return destination;
+}
+
+// Retorna como parametro de entrada salida un string del numero ingresado.
+void numToStr(int num, char *string, int len) {
+	string[len] = 0;
+	for (int i = len - 1; i >= 0; i--)
+	{
+		string[i] = (num % 10) + '0';
+		num /= 10;
+	}
+}
+
+uint32_t uintToBase2(uint64_t value, char *buffer, uint32_t base) {
+	char *p = buffer;
+	char *p1, *p2;
+	uint32_t digits = 0;
+
+	//Calculate characters for each digit
+	do {
+		uint32_t remainder = value % base;
+		*p++ = (remainder < 10) ? remainder + '0' : remainder + 'A' - 10;
+		digits++;
+	} while (value /= base);
+
+	// Terminate string in buffer.
+	*p = 0;
+
+	//Reverse string in buffer.
+	p1 = buffer;
+	p2 = p - 1;
+	while (p1 < p2) {
+		char tmp = *p1;
+		*p1 = *p2;
+		*p2 = tmp;
+		p1++;
+		p2--;
+	}
+
+	return digits;
+}
+
+int atoi2(char *str) {
+	// Initialize result
+	int res = 0;
+
+	// Iterate through all characters
+	// of input string and update result
+	// take ASCII character of corosponding digit and
+	// subtract the code from '0' to get numerical
+	// value and multiply res by 10 to shuffle
+	// digits left to update running total
+	int flag = (str[0] == '-' ? -1 : 1);
+	if (flag == -1) {
+		str++;
+	}
+	for (int i = 0; str[i] != '\0'; ++i)
+		res = res * 10 + str[i] - '0';
+
+	// return result.
+	return res * flag;
+}

@@ -238,3 +238,27 @@ int sys_create_process(int argc, char** argv, void (*fn)(int, char **)) {
 int sys_waitpid(int pid) {
     return scheduler_waitpid(pid);
 }
+
+int sys_create_sem(int initial_value, char* sem_name) {
+    return create_sem(initial_value, sem_name);
+}
+
+void sys_destroy_sem(int sem_index) {
+    destroy_sem(sem_index);
+}
+
+int sys_sem_open(char* sem_name) {
+    return sem_open(sem_name);
+}
+
+int sys_sem_close(char* sem_name) {
+    return sem_close(sem_name);
+}
+
+int sys_sem_wait(int sem_index) {
+    return sem_wait(sem_index);
+}
+
+int sys_sem_post(int sem_index) {
+    return sem_post(sem_index);
+}

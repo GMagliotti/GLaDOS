@@ -17,13 +17,13 @@ int baseToSint(uint32_t base, uint8_t * errFlag);
 int baseToUint(char* str, uint8_t base);
 int vscanf(const char *format, va_list args);
 
-void clearBuffer(){
+void clearBuffer() {
 	for(int i = 0; i < BUFFER_SIZE; i++){
 		buffer[i] = 0;
 	}
 }
 
-void vprintf(char * fmt, va_list ap){
+void vprintf(char * fmt, va_list ap) {
 	uint32_t length = 0;
 	while(*fmt && length < BUFFER_SIZE){
         if(*fmt == '%'){
@@ -81,7 +81,7 @@ void vprintf(char * fmt, va_list ap){
 	call_to_sys_write(buffer, length, STDOUT);
 }
 
-void printf(char * fmt, ...){
+void printf(char * fmt, ...) {
 	clearBuffer();
 	va_list ap;
     va_start(ap, fmt);
@@ -93,8 +93,7 @@ void putc(char character) {
 	call_to_sys_write(&character, 1, STDOUT);
 }
 
-uint64_t uintToBase(uint64_t value, char * buffer, uint32_t base)
-{
+uint64_t uintToBase(uint64_t value, char * buffer, uint32_t base) {
 	char *p = buffer;
 	char *p1, *p2;
 	uint32_t digits = 0;
@@ -126,7 +125,7 @@ uint64_t uintToBase(uint64_t value, char * buffer, uint32_t base)
 	return digits;
 }
 
-void addToCopyBuffer(uint8_t c){
+void addToCopyBuffer(uint8_t c) {
     // two cases: it is full, or not
     if((copyBufferEnd+1)%BUFFER_SIZE==copyBufferStart){
         copyBufferStart = (copyBufferStart + 1)%BUFFER_SIZE;
@@ -135,7 +134,7 @@ void addToCopyBuffer(uint8_t c){
     copyBufferEnd = (copyBufferEnd + 1)%BUFFER_SIZE;
 }
 
-char getChar(){
+char getChar() {
     putc(' ');
     uint8_t c;
     if(copyBufferEnd!=copyBufferStart){ // if it is not empty, returns whatever it has
@@ -259,7 +258,7 @@ int vscanf(const char *format, va_list args) {
             }
         } else {
 			getInput();
-			while(*format!='%' && *format!=0){
+			while(*format!='%' && *format!=0) {
 				putc(buffer[bufferPos]);
 				if (buffer[bufferPos++] != *format) {
 					return ret;
@@ -267,11 +266,11 @@ int vscanf(const char *format, va_list args) {
 				format++;
 			}
 
-			while(buffer[bufferPos]=='\n'){
+			while(buffer[bufferPos]=='\n') {
 				bufferPos++;
 			}
 
-			if(*format==0 || buffer[bufferPos]!=0){ // if buffer is not finished, or if there is no more format to read, return
+			if(*format==0 || buffer[bufferPos]!=0) { // if buffer is not finished, or if there is no more format to read, return
 				return ret;
 			}
 
@@ -289,7 +288,7 @@ int vscanf(const char *format, va_list args) {
 }
 
 // uses getChar for input and returns the number inputted
-void getInput(){
+void getInput() {
 	int i = bufferPos;
 	char c;
 	do{
@@ -308,7 +307,7 @@ void getInput(){
 }
 
 // function that converts a string to a signed integer
-int32_t baseToSint(uint32_t base, uint8_t * errFlag){
+int32_t baseToSint(uint32_t base, uint8_t * errFlag) {
 	char * str = buffer;
 	int sign = 1;
 	int32_t num = 0;
@@ -329,7 +328,7 @@ int32_t baseToSint(uint32_t base, uint8_t * errFlag){
 }
 
 // function that converts a string to an unsigned integer
-int32_t baseToUint(char* str, uint8_t base){
+int32_t baseToUint(char* str, uint8_t base) {
 	int32_t ret = 0;
 	int i = bufferPos;
 	while(str[i]!='\0' && str[i]!='\n'){
