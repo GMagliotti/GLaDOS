@@ -127,26 +127,10 @@ uint16_t sys_get_screen_height() { return get_screen_height(); }
 uint16_t sys_get_screen_width() { return get_screen_width(); }
 
 void sys_clear_buffer() {
-
-  // print_string("Starting PIPE test:\n", 50);
-
-  // int pipe_id = pipe_open("Pipe Test");
-
-  // write_pipe(pipe_id, "Hello World!\n");
-
-  // for(int i = 0; i < 13; i++) {
-  //     char c = read_pipe(pipe_id);
-  //     //     if (c == '\0') break;
-  //     print_char(c);
-  //     // }
-  // }
-
-  // print_string("Ending PIPE test:\n", 50);
-
-  // if (current_is_foreground()) {
-  clear_buffer();
-  // }
-  // return;
+  if (current_is_foreground()) {
+    clear_buffer();
+  }
+  return;
 }
 
 int sys_getbufferpos() { return get_buffer_pos(); }

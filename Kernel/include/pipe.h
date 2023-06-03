@@ -9,10 +9,11 @@
 #define TRUE 1
 #define FALSE 0
 
+#include "../Semaphore/include/semaphore.h"
 #include "defs.h"
 #include "lib.h"
 #include "textDriver.h"
-// #include "../Semaphore/include/semaphore.h"
+#include <stdbool.h>
 
 int init_pipes();
 int pipe_open(char *name);

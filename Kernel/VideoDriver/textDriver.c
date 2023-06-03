@@ -37,7 +37,9 @@ void set_bash() {
 
 void print_char(uint8_t key_code) {
   uint8_t letter = key_code; // get_character_from_keyboard_hex(key_code);
-  if (letter == '\n') {      // es un enter
+  if (letter == '\0')
+    return;
+  if (letter == '\n') { // es un enter
     pen_ptr_y += font_size * font_height;
     pen_ptr_x = 0;
     if (scroll_if_full_screen(pen_ptr_y))

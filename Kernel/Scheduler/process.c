@@ -221,11 +221,14 @@ int kill_process(int pid) {
     return 0;
 
   if (!process_exists(pid)) {
+    print_string("No existe\n", 20);
     return ERROR;
   }
 
   process_array[pid]->status = KILLED;
   process_array[pid]->ret_value = KILLED;
+
+  print_string("Killed\n", 20);
 
   if (current_pid == pid) {
     // forzar timer tick

@@ -64,9 +64,10 @@ uint64_t int_21() {
       clear_buffer();
       save_key('\n');
       block_process(get_foreground_process());
+      print_number(get_foreground_process(), 10);
     } else if (ctrl_pressed && c == 'D') {
+      save_key('\0');
       sys_write("\0", 1, NULL);
-      // save_key('\0');
     } else if (shift_pressed && c == '7') {
       save_key('&');
     } else if (shift_pressed && c == '\\') {
