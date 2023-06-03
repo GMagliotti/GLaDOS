@@ -99,7 +99,7 @@ uint64_t int_80(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rcx,
   case 2:
     break;
   case 3:
-    sys_put_pixel((uint32_t)rsi, (uint32_t)rdx, (uint32_t)rcx);
+    sys_putpixel((uint32_t)rsi, (uint32_t)rdx, (uint32_t)rcx);
     break;
   case 4:
     return sys_read(rsi, (char *)rdx, rcx);
@@ -108,26 +108,26 @@ uint64_t int_80(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rcx,
     sys_sleep((uint32_t)rsi);
     break;
   case 6:
-    sys_set_ptrx((int)rsi);
+    sys_setptrx((int)rsi);
     break;
   case 7:
-    sys_set_ptry((int)rsi);
+    sys_setptry((int)rsi);
     break;
   case 8:
-    return sys_get_screen_height();
+    return sys_getvbeheight();
   case 9:
-    return sys_get_screen_width();
+    return sys_getvbewidth();
   case 10:
     break;
   case 11:
-    sys_clear_buffer();
+    sys_clearbuffer();
     break;
   case 12:
     sys_beep((int)rsi, (int)rdx);
     break;
   case 13:
-    sys_fill_rectangle((uint16_t)rsi, (uint16_t)rdx, (uint32_t)rcx,
-                       (uint16_t)r8, (uint16_t)r9);
+    sys_fillrectangle((uint16_t)rsi, (uint16_t)rdx, (uint32_t)rcx, (uint16_t)r8,
+                      (uint16_t)r9);
     break;
   case 14:
     sys_accessRTC((void *)rsi);
@@ -147,11 +147,13 @@ uint64_t int_80(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rcx,
     break;
   case 20:
     return (uint64_t)sys_malloc((uint32_t)rsi);
+    break;
   case 21:
     sys_free((void *)rsi);
     break;
   case 22:
     return sys_getpid();
+    break;
   case 23:
     sys_ps();
     break;
@@ -160,32 +162,47 @@ uint64_t int_80(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rcx,
     break;
   case 25:
     return sys_kill((int)rsi);
+    break;
   case 26:
     return sys_nice((int)rsi, (int)rdx);
+    break;
   case 27:
     return sys_block((int)rsi);
+    break;
   case 28:
     return sys_create_process((int)rsi, (char **)rdx, (void *)rcx, (int *)r8);
+    break;
   case 29:
     return sys_waitpid((int)rsi);
+    break;
   case 30:
     return sys_create_sem((int)rsi, (char *)rdx);
+    break;
   case 31:
     sys_destroy_sem((int)rsi);
+    break;
   case 32:
     return sys_sem_open((char *)rsi);
+    break;
   case 33:
     return sys_sem_close((char *)rsi);
+    break;
   case 34:
     return sys_sem_wait((int)rsi);
+    break;
   case 35:
     return sys_sem_post((int)rsi);
+    break;
+
   case 36:
     return sys_pipe_open((char *)rsi);
+    break;
   case 37:
     return sys_pipe_close((int)rsi);
+    break;
   case 38:
     return sys_unblock((int)rsi);
+    break;
   default:
     return 0;
     break;

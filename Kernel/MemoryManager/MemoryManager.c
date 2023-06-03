@@ -62,3 +62,5 @@ void mman_free(MemoryManagerADT const restrict memory_manager, void *ptr) {
   } while (pages_info[curr_page].state == MMAN_USED);
   bmp_set_off(curr_page - start_page, start_page);
 }
+
+void print_mem() { print_bitmap(); }

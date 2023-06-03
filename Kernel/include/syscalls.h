@@ -73,4 +73,6 @@ int sys_sem_wait(int sem_index);
 int sys_sem_post(int sem_index);
 int sys_pipe_open(char *name);
 int sys_pipe_close(int pipe_index);
+void sys_print_mem();
+void sys_yield();
 #endif

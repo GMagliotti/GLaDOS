@@ -50,8 +50,8 @@ uint64_t create_sem(uint64_t initial_value, char *name) {
 void destroy_sem(int sem_index) {
   if (sem_index <= 0 || sem_index >= MAX_SEM)
     return 1;
-  sem_t the_sem = sem_spaces[sem_index].sem;
-  while (the_sem.size_list > 0) {
+
+  while (sem_spaces[sem_index].sem.size_list > 0) {
     sem_dequeue_process(sem_index);
   }
   sem_spaces[sem_index].available = TRUE;
@@ -114,7 +114,7 @@ int sem_dequeue_process(int sem_index) {
   int current_pid = current_process->pid;
   sem->first_process = current_process->next;
   if (sem->first_process == NULL) { // we just removed its last process
-    sem->last_process == NULL;
+    sem->last_process = NULL;
   }
   sem->size_list--;
   // free the sem_process (not the actual process)
@@ -186,6 +186,25 @@ void sem_whiff(uint64_t sem_index) {
     sem_enqueue_process(sem_index, current_pid);
   }
   scheduler_block_current_process();
+}
+
+void sem_yield(uint64_t sem_index) {
+  space *sem_space = &sem_spaces[sem_index];
+  if (sem_space->available == TRUE) { // space doesnt exist
+    return -1;
+  }
+  sem_t *sem = &(sem_space->sem);
+
+  if (sem->size_list <= 1) {
+    return;
+  }
+
+  sem_process_t *aux = sem->first_process;
+
+  sem->first_process = aux->next;
+  sem->last_process->next = aux;
+  aux->next = NULL;
+  sem->last_process = aux;
 }
 
 // TODO: hacer que el dequeue de un proceso chequee si contiene un sem -> si

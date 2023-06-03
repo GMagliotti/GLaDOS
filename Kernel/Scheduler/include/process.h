@@ -62,6 +62,7 @@ process_ptr create_process(int argc, char **argv, void (*fn)(int, char **),
                            int fd[2]);
 void ps(void);
 int kill_process(int pid);
+int kill_current_process();
 int nice_process(int pid, int priority);
 int block_process(int pid);
 int unblock_process(int pid);

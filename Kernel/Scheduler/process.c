@@ -234,6 +234,8 @@ int kill_process(int pid) {
   return 1;
 }
 
+int kill_current_process() { return kill_process(current_pid); }
+
 // removes process from list and frees its memory.
 int free_process(int pid) {
   if (!process_exists(pid))
