@@ -121,12 +121,12 @@ bit_amount bmp_find(bit_amount size_in_bits, slot_index *slot, bit_index *bit) {
 }
 
 void print_header(int slot) {
-  printString("Showing pages 0x", 0x100);
-  printNumber(slot * 8, 16);
-  printString(" - 0x", 0x100);
-  printNumber((slot + 128) * 8 - 1, 16);
-  printString(" (32 per line)\n", 0x100);
-  printString(
+  print_string("Showing pages 0x", 0x100);
+  print_number(slot * 8, 16);
+  print_string(" - 0x", 0x100);
+  print_number((slot + 128) * 8 - 1, 16);
+  print_string(" (32 per line)\n", 0x100);
+  print_string(
       "---------------------------------------------------------------\n", 64);
 }
 
@@ -137,21 +137,21 @@ void print_bitmap() {
   print_header(slot);
   for (slot = 0; slot * BITS_PER_SLOT + subindex < total_bits; slot++) {
     if (slot % 128 == 0 && slot != 0) {
-      printString(
+      print_string(
           "---------------------------------------------------------------\n",
           64);
-      printColorString("Bitmap state - 0 FREE - 1 OCCUPIED\nEach bit "
+      print_color_string("Bitmap state - 0 FREE - 1 OCCUPIED\nEach bit "
                        "represents a page, PAGESIZE = 4096B\n",
                        0x100, 0x00FF00);
       sleep(5);
-      hvdClear();
+      hvd_clear();
       print_header(slot);
     } else if (slot % 4 == 0 && slot != 0) {
-      printChar('\n');
+      print_char('\n');
     }
     for (subindex = 0; subindex < BITS_PER_SLOT; subindex++) {
-      printNumber((the_bitmap.bitmap_array[slot] >> subindex) & 0x1, 10);
-      printChar(' ');
+      print_number((the_bitmap.bitmap_array[slot] >> subindex) & 0x1, 10);
+      print_char(' ');
     }
     subindex = 0;
   }
