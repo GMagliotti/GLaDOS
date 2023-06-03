@@ -1,11 +1,11 @@
 #ifndef MODULELOADER_H
 #define MODULELOADER_H
 
+#include <lib.h>
+#include <stdint.h>
 #include <textModeDriver.h>
 #include <videoDriver.h>
-#include <stdint.h>
-#include <lib.h>
 
-void loadModules(void * payloadStart, void ** moduleTargetAddress);
+void load_modules(void *payload_start, void **module_target_addres);
 
 #endif

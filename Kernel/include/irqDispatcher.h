@@ -2,17 +2,15 @@
 #define _IRQDISPATCHER_H
 
 #include "syscalls.h"
+#include <keyboardDriver.h>
 #include <lib.h>
-#include <videoDriver.h>
 #include <stdarg.h>
-#include <time.h>
 #include <stdint.h>
 #include <syscalls.h>
-#include <time.h>
-#include <keyboardDriver.h>
 #include <textDriver.h>
+#include <time.h>
+#include <videoDriver.h>
 
-void initializeIrqFunctionsArray();
-void initializeSyscallsArray();
+void initialize_irq_functions_array();
 
 #endif

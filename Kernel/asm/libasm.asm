@@ -1,6 +1,6 @@
 GLOBAL cpuVendor
 GLOBAL accessRTC
-GLOBAL getKey
+GLOBAL get_key
 GLOBAL generateRandSeed
 GLOBAL inb
 GLOBAL outb
@@ -33,13 +33,13 @@ accessRTC:
 	ret
 
 ;----------------------------------------------------------------------
-; uint8_t getKey()
-; getKey - Acceses the keyboard and waits for it to send a scan code
+; uint8_t get_key()
+; get_key - Acceses the keyboard and waits for it to send a scan code
 ;
 ; RETURNS: Scan code of the action performed
 ;----------------------------------------------------------------------
 
-getKey:
+get_key:
         push rbp
         mov rbp, rsp
       

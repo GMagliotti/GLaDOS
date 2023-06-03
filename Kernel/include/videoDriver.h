@@ -1,38 +1,34 @@
 #ifndef VIDEO_DRIVER_H
 #define VIDEO_DRIVER_H
 
-#include <stdint.h>
-#include <stdbool.h>
+#include <interrupts.h>
 #include <keyboardDriver.h>
 #include <lib.h>
-#include <stdarg.h>
 #include <naiveConsole.h>
-#include <interrupts.h>
+#include <stdarg.h>
+#include <stdbool.h>
+#include <stdint.h>
 #include <textDriver.h>
 #include <time.h>
 // #include <syscalls.h>
 
-void setTextBufferActive(bool active);
+void debug_print_grid();
+uint8_t scroll_if_full_screen(int pen_ptr_y);
 
-void debugPrintGrid();
-uint8_t scrollIfFullScreen(int penPTRY);
+void hvd_clear();
+char get_char();
+void clear_buffer();
 
-void hvdClear();
-char getChar();
-void clearBuffer();
+void set_bash();
 
-void setBash();
+void put_char(uint8_t key);
+void print_string(char *string, uint64_t str_length);
 
-void putChar(uint8_t key); 
-void printString(char * string, uint64_t strLength);
+void put_pixel(uint32_t x, uint32_t y, uint32_t color);
+void fill_rect(uint16_t x, uint16_t y, uint32_t rgb_value, uint16_t w,
+               uint16_t h);
 
-uint16_t getVBEHeight();
-uint16_t getVBEWidth();
-
-void putpixel(uint32_t x, uint32_t y, uint32_t color);
-void fillrect(uint16_t x, uint16_t y, uint32_t rgbValue, uint16_t w, uint16_t h);
-
-uint32_t getScreenWidth();
-uint32_t getScreenHeight();
+uint32_t get_screen_width();
+uint32_t get_screen_height();
 
 #endif

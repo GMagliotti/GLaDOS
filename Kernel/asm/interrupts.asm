@@ -1,34 +1,34 @@
 
 GLOBAL _cli
 GLOBAL _sti
-GLOBAL picMasterMask
-GLOBAL picSlaveMask
+GLOBAL pic_master_mask
+GLOBAL pic_slave_mask
 GLOBAL haltcpu
 GLOBAL _hlt
 GLOBAL initialize_stack
 
-EXTERN hvdPrintChar
-EXTERN hvdClear
+EXTERN hvd_printChar
+EXTERN hvd_clear
 EXTERN terminate
 EXTERN guruMeditation
 EXTERN scheduler
 EXTERN kill_current_process
 
-GLOBAL _irq00Handler
-GLOBAL _irq01Handler
-GLOBAL _irq02Handler
-GLOBAL _irq03Handler
-GLOBAL _irq04Handler
-GLOBAL _irq05Handler
-GLOBAL _irq60Handler
+GLOBAL _irq00_handler
+GLOBAL _irq01_handler
+GLOBAL _irq02_handler
+GLOBAL _irq03_handler
+GLOBAL _irq04_handler
+GLOBAL _irq05_handler
+GLOBAL _irq60_handler
 
-GLOBAL _exception0Handler
-GLOBAL _exception6Handler
-GLOBAL _exception13Handler
+GLOBAL _exception0_handler
+GLOBAL _exception6_handler
+GLOBAL _exception13_handler
 
-EXTERN irqDispatcher
+EXTERN irq_dispatcher
 EXTERN exceptionDispatcher
-EXTERN printCurrentRegisters
+EXTERN print_current_registers
 
 SECTION .text
 
@@ -112,11 +112,11 @@ SECTION .text
 	pop rax 
 %endmacro
 
-%macro irqHandlerMaster 1
+%macro irq_handlerMaster 1
 	pushState
 
 	mov rdi, %1 ; pasaje de parametro de irq code
-	call irqDispatcher
+	call irq_dispatcher
 
 	; signal pic EOI (End of Interrupt)
 	mov al, 20h
@@ -127,7 +127,7 @@ SECTION .text
 %endmacro
 
 
-%macro exceptionHandler 1
+%macro exception_handler 1
 	pushState
 	dumpState
 	
@@ -231,7 +231,7 @@ _sti:
 	sti
 	ret
 
-picMasterMask:
+pic_master_mask:
 	push rbp
     mov rbp, rsp
     mov ax, di
@@ -239,7 +239,7 @@ picMasterMask:
     pop rbp
     retn
 
-picSlaveMask:
+pic_slave_mask:
 	push    rbp
     mov     rbp, rsp
     mov     ax, di  ; ax = mascara de 16 bits
@@ -249,12 +249,12 @@ picSlaveMask:
 
 
 ;8254 Timer (Timer Tick)
-_irq00Handler:
+_irq00_handler:
 
 	pushState
 
 	mov rdi, 0h ; pasaje de parametro de irq code
-	call irqDispatcher
+	call irq_dispatcher
 
 	mov rdi, rsp
 	call scheduler
@@ -268,11 +268,11 @@ _irq00Handler:
 	iretq
 
 ;Keyboard
-_irq01Handler:
+_irq01_handler:
 	pushState
 
 	mov rdi, 1h ; pasaje de parametro de irq code
-	call irqDispatcher
+	call irq_dispatcher
 	cmp eax, 0
 	jz .eoi
 	dumpState
@@ -285,23 +285,23 @@ _irq01Handler:
 	iretq
 
 ;Cascade pic never called
-_irq02Handler:
-	irqHandlerMaster 2h
+_irq02_handler:
+	irq_handlerMaster 2h
 
 ;Serial Port 2 and 4
-_irq03Handler:
-	irqHandlerMaster 3h
+_irq03_handler:
+	irq_handlerMaster 3h
 
 ;Serial Port 1 and 3
-_irq04Handler:
-	irqHandlerMaster 4h
+_irq04_handler:
+	irq_handlerMaster 4h
 
 ;USB
-_irq05Handler:
-	irqHandlerMaster 5h
+_irq05_handler:
+	irq_handlerMaster 5h
 
 ;User-called syscalls
-_irq60Handler:
+_irq60_handler:
 	;pushState -> no usare push y pop state porque quiero retornar un valor en rax
 	;			ademas al ser una interrupcion de syscall (a pedido del user) no es necesario preservar todos los registros
 	push rbx
@@ -318,7 +318,7 @@ _irq60Handler:
 	mov rdx, rsi
 	mov rsi, rdi
 	mov rdi, 60h ; pasaje de parametro de irq code
-	call irqDispatcher
+	call irq_dispatcher
 	
 	mov rsp, rbp
 	;popState
@@ -331,19 +331,19 @@ _irq60Handler:
 	iretq
 
 ;Zero Division Exception
-_exception0Handler:
-	exceptionHandler 0
+_exception0_handler:
+	exception_handler 0
 
 ;Invalid OpCode Exception
-_exception6Handler:
-	exceptionHandler 6
+_exception6_handler:
+	exception_handler 6
 
 ;General Protection Fault
-_exception13Handler:
+_exception13_handler:
 	add rsp, 8 			
 	; ^ Necessary, as exception 13 (and a few others) push an error code into the stack
 	; Not doing so will most likely pop the wrong values when iretq executes
-	exceptionHandler 13
+	exception_handler 13
 
 haltcpu:
 	cli
@@ -355,7 +355,7 @@ printRegisters:
 	pushState
 	dumpState
 	mov rdi, registerDump
-;	call printCurrentRegisters
+;	call print_current_registers
 ;	popState
 ;	iretq
 
