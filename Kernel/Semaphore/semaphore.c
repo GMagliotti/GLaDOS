@@ -34,14 +34,14 @@ uint64_t create_sem(uint64_t initial_value, char * name) {
     int sem_index = find_available_semaphore();
     if(sem_index == -1 || strLength(name) >= MAX_NAME )
         return -1;
-    sem_t sem = sem_spaces[sem_index].sem;
-    if (initial_value == 0) sem.lock = 1;
-    strCpy(sem.name, name);
-    sem.value = initial_value;
-    sem.size = 1; //process creating sem is the only one using it initially
-    sem.size_list = 0;
-    sem.first_process = NULL;
-    sem.last_process = NULL;
+    sem_t * sem = &(sem_spaces[sem_index].sem);
+    if (initial_value == 0) sem->lock = 1;
+    strCpy(sem->name, name);
+    sem->value = initial_value;
+    sem->size = 1; //process creating sem is the only one using it initially
+    sem->size_list = 0;
+    sem->first_process = NULL;
+    sem->last_process = NULL;
     
     return sem_index;
 }

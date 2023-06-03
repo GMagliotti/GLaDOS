@@ -60,7 +60,7 @@ typedef process * process_ptr;
 process_ptr initialize_idle(void (*idle_fn)(int, char **));
 void uninitialize(void);
 
-process_ptr create_process(int argc, char** argv, void (*fn)(int, char **));
+process_ptr create_process(int argc, char** argv, void (*fn)(int, char **), int fd[2]);
 void ps(void);
 int kill_process(int pid);
 int nice_process(int pid, int priority);

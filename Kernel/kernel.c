@@ -9,6 +9,7 @@
 #include "./Scheduler/include/scheduler.h"
 #include "include/lib.h"
 #include "syscalls.h"
+#include "include/pipe.h"
 
 extern uint8_t text;
 extern uint8_t rodata;
@@ -110,6 +111,7 @@ int main()
 {	
 	hvdClear();
 	init_sem();
+	init_pipes();
 	the_memory_manager = createMemoryManager((void *)0x50000, (void *)0x800000);
 	the_scheduler = create_scheduler(idle, sampleCodeModuleAddress);
 	initialize_sys_blocking_sem();

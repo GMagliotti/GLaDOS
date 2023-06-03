@@ -1,5 +1,40 @@
 #include "test_util.h"
 
+void tests(int argc, char ** argv) {
+  if (argc < 2) {
+    printf("Usage: TESTS <test_number>\n");
+    printf("Available tests:\n");
+    printf("  1 - Test memory manager\n");
+    printf("  2 - Test priority\n");
+    printf("  3 - Test processes\n");
+    printf("  4 - Test synchronization\n");
+    return;
+  }
+
+  int test_num = string_to_int(argv[1]);
+
+  if (test_num < 1 || test_num > 4) {
+    printf("Invalid test number\n");
+    return;
+  }
+
+  switch (test_num) {
+  case 1:
+    test_mm();
+    break;
+  case 2:
+    test_prio();
+    break;
+  case 3:
+    test_processes();
+    break;
+  case 4:
+    test_sync();
+    break;
+  }
+}
+
+
 // Random
 static uint32_t m_z = 362436069;
 static uint32_t m_w = 521288629;

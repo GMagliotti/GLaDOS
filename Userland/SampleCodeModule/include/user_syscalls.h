@@ -20,7 +20,6 @@ void call_to_setptrx(int num);
 void call_to_setptry(int num);
 uint64_t call_to_getvbeheight();
 uint64_t call_to_getvbewidth();
-uint64_t call_to_getchar();
 void call_to_clearbuffer();
 void call_to_beep();
 void call_to_fillrectangle(uint16_t x, uint16_t y , uint32_t color, uint16_t w, uint16_t h);
@@ -39,7 +38,8 @@ int call_to_ps();
 int call_to_pkill_process(int pid);
 int call_to_nice_process(int pid, int priority);
 int call_to_block_process(int pid);
-int call_to_create_process(int argc, char** argv, void (*fn)(int, char **));
+int call_to_unblock_process(int pid);
+int call_to_create_process(int argc, char** argv, void (*fn)(int, char **), int fd[2]);
 void call_to_set_print_mode();
 
 int call_to_waitpid(int pid);
@@ -50,5 +50,7 @@ int call_to_sem_open(char* sem_name);
 int call_to_sem_close(char* sem_name);
 int call_to_sem_wait(int sem_index);
 int call_to_sem_post(int sem_index);
+int call_to_pipe_open(char *name);
+int call_to_pipe_close(int pipe_index);
 
 #endif

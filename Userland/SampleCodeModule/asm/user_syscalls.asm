@@ -9,7 +9,6 @@ GLOBAL call_to_setptry
 GLOBAL call_to_getvbeheight
 GLOBAL call_to_getvbewidth
 GLOBAL call_to_clearbuffer
-GLOBAL call_to_getchar
 GLOBAL call_to_beep
 GLOBAL call_to_fillrectangle
 GLOBAL call_to_hlt
@@ -26,6 +25,7 @@ GLOBAL call_to_set_print_mode
 GLOBAL call_to_pkill_process
 GLOBAL call_to_nice_process
 GLOBAL call_to_block_process
+GLOBAL call_to_unblock_process
 GLOBAL call_to_create_process
 GLOBAL call_to_waitpid
 GLOBAL call_to_create_sem
@@ -34,6 +34,8 @@ GLOBAL call_to_sem_open
 GLOBAL call_to_sem_close
 GLOBAL call_to_sem_wait
 GLOBAL call_to_sem_post
+GLOBAL call_to_pipe_open
+GLOBAL call_to_pipe_close
 
 %macro call_to_handler 1
     push rbp
@@ -73,9 +75,6 @@ call_to_getvbeheight:
 
 call_to_getvbewidth:
     call_to_handler 9
-
-call_to_getchar:
-    call_to_handler 10
 
 call_to_clearbuffer:
     call_to_handler 11
@@ -151,3 +150,12 @@ call_to_sem_wait:
 
 call_to_sem_post:
     call_to_handler 35
+    
+call_to_pipe_open:
+    call_to_handler 36
+
+call_to_pipe_close:
+    call_to_handler 37
+
+call_to_unblock_process:
+    call_to_handler 38

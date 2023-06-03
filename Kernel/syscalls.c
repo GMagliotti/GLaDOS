@@ -1,7 +1,10 @@
+#include "Scheduler/include/process.h"
+#include "Scheduler/include/scheduler.h"
+#include "include/videoDriver.h"
 #include <syscalls.h>
 
 #define STDIN 0
-#define STDOUT 1
+#define STDOUT 0
 #define STDERR 2
 
 extern uint8_t memoryAt(int dir); 
@@ -25,20 +28,17 @@ void sys_exit() {
    filedescriptors supported: 1 - STDOUT, 2 - STDERR
 */
 void sys_write(char * string, int length, char fd) {
-    switch (fd)
-    {
-    case STDERR:
-        printColorString(string, length, RED);
-        break;
-    case STDOUT:    ;
-        if (current_is_foreground()){
-            printString(string, length);
+
+    process_ptr proc = current_process();
+
+    if (proc->fd_w == 0) {
+        if (current_is_foreground()) {
+            for (int i = 0; i < length; i++) {
+                printChar(string[i]);
+            }
         }
-        break;
-    default:    ;
-        char errorMessage[] = "Error: Invalid file descriptor";
-        sys_write(errorMessage, strLength(errorMessage), STDERR);
-        break;
+    } else {
+        write_pipe(proc->fd_w, string);
     }
 }
 
@@ -46,29 +46,28 @@ void sys_write(char * string, int length, char fd) {
    said characters in the specified buffer toRet
    FileDescriptors supported: 0 - STDIN
 */
-void sys_read(uint8_t fd, char * toRet, int cantChars) {
-    switch (fd)
-    {
-    case STDIN:     ;
-        int j=0;
-        int bufferPos=getBufferPos();
-        for(int i=bufferPos; i < cantChars+bufferPos;){
-            if(bufferAt(i)!=0){
-                toRet[j] = bufferAt(i);
-                printString(toRet+j, 1);
-                i++;
-                j++;
+int sys_read(uint8_t fd, char * toRet, int cantChars) {
+
+    int read_count = 0;
+    bool null_found = false;
+
+    process_ptr proc = current_process();
+
+    if (proc->fd_r == 0) {
+        if (current_is_foreground()){
+            for (; read_count < cantChars && !null_found; read_count++) {
+                sem_wait(r_w_sem_id);
+                toRet[read_count] = getChar();
+                if (toRet[read_count] == '\0') null_found = true;
             }
-            _hlt();
         }
-        break;
-    default:    ;
-        printNumber(fd, 10);
-        char errorMessage[] = "Error: Invalid file descriptor";
-        sys_write(errorMessage, strLength(errorMessage), STDERR);
-        break;
+    } else {
+        for (; read_count < cantChars; read_count++) {
+            toRet[read_count] = read_pipe(proc->fd_r);
+        }
     }
-   
+
+    return read_count;
 }
 
 
@@ -113,14 +112,6 @@ void sys_sleep(uint32_t milliseconds){
     return;
 }
 
-
-void sys_putchar(int c){
-    if (current_is_foreground()){
-        printChar(c);
-    }
-    return;
-}
-
 void sys_setptrx(int num){
     if (current_is_foreground()) {
         setptrx(num);
@@ -142,21 +133,29 @@ uint16_t sys_getvbewidth(){
     return getVBEWidth();
 }
 
-char sys_getchar(){
-    // printString("w", 2);
-    sem_wait(r_w_sem_id);
-    // printString("r\n", 4);
-    if (current_is_foreground()){
-        return getChar();
-    }
-    return 0;
-}
-
 void sys_clearbuffer(){
-    if (current_is_foreground()) {
+
+    // printString("Starting PIPE test:\n", 50);
+
+    // int pipe_id = pipe_open("Pipe Test");
+
+    // write_pipe(pipe_id, "Hello World!\n");
+    
+    // for(int i = 0; i < 13; i++) {
+    //     char c = read_pipe(pipe_id);
+    //     //     if (c == '\0') break;
+    //     printChar(c);
+    //     // }
+    // }
+
+
+    // printString("Ending PIPE test:\n", 50);
+
+
+    // if (current_is_foreground()) {
         clearBuffer();
-    }
-    return;
+    // }
+    // return;
 }
 
 int sys_getbufferpos(){
@@ -231,8 +230,13 @@ int sys_block(int pid) {
     return block_process(pid);
 }
 
-int sys_create_process(int argc, char** argv, void (*fn)(int, char **)) {
-    return scheduler_create_process(argc, argv, fn);
+int sys_unblock(int pid) {
+    return unblock_process(pid);
+}
+
+
+int sys_create_process(int argc, char** argv, void (*fn)(int, char **), int fd[2]) {
+    return scheduler_create_process(argc, argv, fn, fd);
 }
 
 int sys_waitpid(int pid) {
@@ -261,4 +265,12 @@ int sys_sem_wait(int sem_index) {
 
 int sys_sem_post(int sem_index) {
     return sem_post(sem_index);
+}
+
+int sys_pipe_open(char *name) {
+    return pipe_open(name);
+}
+
+int sys_pipe_close(int pipe_index) {
+    return pipe_close(pipe_index);
 }

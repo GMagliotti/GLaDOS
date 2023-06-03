@@ -11,7 +11,6 @@ uint16_t copyBufferStart = 0;
 uint16_t copyBufferEnd = 0;
 uint16_t bufferPos = 0;
 uint64_t uintToBase(uint64_t value, char * buffer, uint32_t base);
-void addToCopyBuffer(uint8_t c);
 void getInput();
 int baseToSint(uint32_t base, uint8_t * errFlag);
 int baseToUint(char* str, uint8_t base);
@@ -134,31 +133,11 @@ void addToCopyBuffer(uint8_t c) {
     copyBufferEnd = (copyBufferEnd + 1)%BUFFER_SIZE;
 }
 
-char getChar() {
-    putc(' ');
+char getChar(){
     uint8_t c;
-    if(copyBufferEnd!=copyBufferStart){ // if it is not empty, returns whatever it has
-        c = copyBuffer[copyBufferStart];
-        copyBufferStart= (copyBufferStart + 1)%BUFFER_SIZE;
-        return c;
-    }
-    int i=copyBufferEnd;
-    while(copyBuffer[i]!='\n'){
-        call_to_hlt();
-        if(i!=copyBufferEnd){ // i have input
-            i = copyBufferEnd; // equivalent to incremente in mod BUFFER_SIZE
-        }
-        call_to_sys_read((uint8_t) STDIN, &c, (uint8_t)1);// this is OK, as long as
-		// the last parameter (amount of chars read) is 1
-        if(c != 0 && c!='\b'){
-            addToCopyBuffer(c);
-        }
-        if(c=='\b' && copyBufferEnd!=copyBufferStart){
-            copyBufferEnd = (copyBufferEnd - 1) % BUFFER_SIZE;
-        }
-    }
-    c = copyBuffer[copyBufferStart];
-    copyBufferStart = (copyBufferStart + 1)%BUFFER_SIZE;
+
+    call_to_sys_read((uint8_t) STDIN, &c, (uint8_t)1);
+
     return c;
 }
 

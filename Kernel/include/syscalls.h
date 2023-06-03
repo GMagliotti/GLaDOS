@@ -16,6 +16,8 @@
 #include "../Scheduler/include/process.h"
 #include <MemoryManager.h>
 #include "../Semaphore/include/semaphore.h"
+#include "pipe.h"
+
 
 #define R_W_SEMNAME "r_w_sem"
 
@@ -27,18 +29,16 @@ void initialize_sys_blocking_sem();
 
 void sys_exit();
 void sys_write(char * string, int length, char fd);
-void sys_read(uint8_t fd, char * toRet, int cantChars);
+int sys_read(uint8_t fd, char * toRet, int cantChars);
 void sys_putpixel(uint32_t x, uint32_t y, uint32_t color);
 void sys_fillrectangle(uint16_t x, uint16_t y, uint32_t color, uint16_t width, uint16_t height);
 void sys_sleep(uint32_t seconds);
 void sys_bashflag(int flag);
 void sys_microsleep(uint64_t ms);
-void sys_putchar(int c);
 void sys_setptrx(int num);
 void sys_setptry(int num);
 uint16_t sys_getvbeheight();
 uint16_t sys_getvbewidth();
-char sys_getchar();
 void sys_clearbuffer();
 int sys_getbufferpos();
 void sys_hlt();
@@ -59,7 +59,8 @@ void sys_set_print_mode();
 int sys_kill(int pid);
 int sys_nice(int pid, int priority);
 int sys_block(int pid);
-int sys_create_process(int argc, char** argv, void (*fn)(int, char **));
+int sys_unblock(int pid);
+int sys_create_process(int argc, char** argv, void (*fn)(int, char **), int fd[2]);
 
 int sys_waitpid(int pid);
 
@@ -69,5 +70,6 @@ int sys_sem_open(char* sem_name);
 int sys_sem_close(char* sem_name);
 int sys_sem_wait(int sem_index);
 int sys_sem_post(int sem_index);
-
+int sys_pipe_open(char *name);
+int sys_pipe_close(int pipe_index);
 #endif

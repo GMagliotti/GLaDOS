@@ -3,6 +3,15 @@
 
 #include "syscall.h"
 
+// HARD CAP AT 0x1000000 ALLOC
+#define TEST_MAXMEM 0x100000
+
+void tests(int argc, char **argv);
+uint64_t test_mm();
+void test_prio();
+int64_t test_processes();
+uint64_t test_sync();
+
 uint32_t GetUint();
 uint32_t GetUniform(uint32_t max);
 uint8_t memcheck(void *start, uint8_t value, uint32_t size);

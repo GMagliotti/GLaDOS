@@ -111,7 +111,7 @@ static int add_phylo(int p_index) {
     uintToBase2(seated, curr_seated, 10);
     char *argv[] = {"phi", curr_seated, NULL};
     phylos[p_index].state = THINKING; //argc, params, fn
-    if ((phylos[p_index].pid = call_to_create_process(2, argv, &do_nothing)) == 0) { //TODO Cambiar al implementar pipes
+    if ((phylos[p_index].pid = call_to_create_process(2, argv, &phylo_process, NULL)) == 0) { //TODO Cambiar al implementar pipes
         printf("Error creating philosopher process");
         return -1;
     }

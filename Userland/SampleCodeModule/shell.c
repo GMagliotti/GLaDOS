@@ -1,5 +1,6 @@
 #include "include/shell.h"
 #include "include/user_syscalls.h"
+#include "programs/include/process_info.h"
 
 #define MAX_CHARS_PER_COMMAND 128
 
@@ -48,17 +49,19 @@ char* validCommands[32][2] = 	{{"HELP", "Provides a list of available programs"}
 								{"LOOP", "Loops a new process printing its pid"},
 								{"PKILL", "Kills a valid process"},
 								{"NICE", "Changes the priority of a process"},
-								{"BLOCK", "Block / Unblock a process (YMMV)"},
+								{"BLOCK", "Block a process (YMMV)"},
+								{"UNBLOCK", "Unblock a process (YMMV)"},
 								{"SHELL", "Creates a new shell!! (Limit testing)"},
 								{"CAT", "Prints the stdin it recieves"},
 								{"WC", "Counts the amount of words in input"},
 								{"FILTER", "Filters the vocals in the input"},
 								{"PRINTSCHEDULER", "Sets the scheduler on print mode"},
-								{"PHYLO", "Runs Philosophers dilemma"}
+								{"PHYLO", "Runs Philosophers dilemma"},
+								{"TESTS", "Runs one of the available tests"}
 								};
 
 void (*commandFunctions[32])(int, char **) = {	help, returnToShell, time, tron, printRegisters, test0Div, testInvalidExc, printMemoryAt, setSize, beeperSongs, 
-												getpid, ps, loop_process, kill_process, nice_process, block_process, shell, cat, wc, filter, call_to_set_print_mode, phylo};
+												getpid, ps, loop_process, kill_process, nice_process, block_process, unblock_process, shell, cat, wc, filter, call_to_set_print_mode, phylo, tests};
 
 
 int find_pipe(char * params[], int argc){
@@ -83,7 +86,6 @@ void checkBuffer(){
 	int found = 0;
 	int command_pos = -1;
     int pid1 = -1;
-	int visibility = FOREGROUND;
 
 	char * params[MAX_PARAMS] = {NULL};
 
@@ -108,22 +110,21 @@ void checkBuffer(){
 			params2[i] = params[we_piping + i + 1];
 		}
 
-        // int pipe_id = pipe_open("|");
-        // if (pipe_id == -1) printf("Error opening pipe");
-        // int fd[2] = {pipe_id, 1};
-        // int pid1;
+        int pipe_id = call_to_pipe_open("|");
+        if (pipe_id == -1) printf("Error opening pipe");
+        int fd[2] = {pipe_id, 0};
 
 		if ((command_pos = is_valid_command(params[0])) != -1) {
-    			pid1 = call_to_create_process(argc, params, commandFunctions[command_pos]);
+    			pid1 = call_to_create_process(argc, params, commandFunctions[command_pos], fd);
 				found = 1;
 		}
 
-    	// fd[0] = 0;
-    	// fd[1] = pipe_id;
+    	fd[0] = 0;
+    	fd[1] = pipe_id;
 
 		if ((command_pos = is_valid_command(params[we_piping+1])) != -1 && found) {
 				params2[argc2++] = "&";
-    			call_to_create_process(argc2, params2, commandFunctions[command_pos]);
+    			call_to_create_process(argc2, params2, commandFunctions[command_pos], fd);
 				found2 = 1;
 		}
 
@@ -132,11 +133,12 @@ void checkBuffer(){
 			printf("Cmd 2 not found, matando 1\n");
 		}
 
+		// call_to_pipe_close(pipe_id);
 		// pipe close cuando??
 
 	} else {
 		if ((command_pos = is_valid_command(params[0])) != -1) {
-    			pid1 = call_to_create_process(argc, params, commandFunctions[command_pos]);
+    			pid1 = call_to_create_process(argc, params, commandFunctions[command_pos], NULL);
 				found = 1;
 		}
 	}
@@ -167,7 +169,7 @@ void shell(){
 	printf("Welcome to the command line! Type HELP for more information.\n");
     putc('>');
     while(1){
-		char c = call_to_getchar();
+		char c = getChar();
 		saveChar(c);
     }
 }
