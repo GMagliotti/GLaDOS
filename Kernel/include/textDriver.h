@@ -1,42 +1,38 @@
 #ifndef _TEXT_DRIVER_H
 #define _TEXT_DRIVER_H
-#include <stdint.h>
-#include <videoDriver.h>
 #include <keyboardDriver.h>
 #include <stdarg.h>
+#include <stdint.h>
+#include <videoDriver.h>
 
 #define DEFAULT_FONT_HEIGHT 8
 #define DEFAULT_FONT_WIDTH 8
 #define DEFAULT_FONT_COLOR 0xFFFFFF
 #define RED 0xFF0000
 
-void setFontType(int type);
-void setFontSize(int size);
-void setBash();
+void set_font_type(int type);
+void set_font_size(int size);
+void set_bash();
 
-extern uint8_t getKey();
-void saveKey(uint8_t c);
+extern uint8_t get_key();
+void save_key(uint8_t c);
 
-void setptrx(int num);
-void setptry(int num);
+void set_ptrx(int num);
+void set_ptry(int num);
 
-void printChar(uint8_t keyCode);
-void printString(char * string, uint64_t strLength);
-void printColorString(char * string, uint64_t strLength, uint32_t color);
-void printNumber(int value, int base);
+void print_char(uint8_t key_code);
+void print_string(char *string, uint64_t str_length);
+void print_color_string(char *string, uint64_t str_length, uint32_t color);
+void print_number(int value, int base);
 
-int stringEquals(char* buf, char* arr);
-int strLength(char* str);
-void strCpy(char* dest, char* src);
+int string_equals(char *buf, char *arr);
+int str_length(char *str);
+void str_cpy(char *dest, char *src);
 
-void checkBuffer();
-void saveChar(uint8_t c);
-int getBufferPos();
-char bufferAt(int n);
+int get_buffer_pos();
+char buffer_at(int n);
 
-void checkAndScroll();
-
-char* strCat(char* destination, const char* source);
-char* int_to_string(int num, char* str, int base);
+char *str_cat(char *destination, const char *source);
+char *int_to_string(int num, char *str, int base);
 
 #endif

@@ -1,18 +1,18 @@
 #ifndef ROUND_ROBIN_H
 #define ROUND_ROBIN_H
 
-#include <stdbool.h>
-#include <stdlib.h>
 #include "circularDoubleLinkedList.h"
 #include "process.h"
+#include <stdbool.h>
+#include <stdlib.h>
 
 typedef struct round_robin_queue {
-    NodeType list;
+  NodeType list;
 } rr_queue;
 
-typedef rr_queue * rr_queue_ptr;
+typedef rr_queue *rr_queue_ptr;
 
-typedef process * process_ptr;
+typedef process *process_ptr;
 
 rr_queue_ptr create_new_round_robin(process_ptr idle);
 NodeType enqueue_process(rr_queue_ptr queue, process *p);
@@ -23,6 +23,6 @@ process_ptr get_current_process(rr_queue_ptr queue);
 
 void free_round_robin(rr_queue_ptr queue);
 
-void printRobin(NodeType current);
+void print_robin(NodeType current);
 
 #endif
