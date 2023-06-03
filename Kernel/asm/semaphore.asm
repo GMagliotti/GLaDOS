@@ -5,7 +5,6 @@ EXTERN sem_whiff
 
 section .text
 enter_region:
-    CLI
     MOV  rax, locked
     XCHG rax, [rdi]
     CMP  rax, locked
@@ -14,7 +13,6 @@ enter_region:
     MOV  rdi, rsi
     CALL sem_whiff
     POP  rdi
-    STI
     JMP  .whiff
 
 .success:
