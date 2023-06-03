@@ -282,3 +282,7 @@ void mman_free(struct MemoryManager *const restrict memory_manager, void *ptr) {
   buddy_free(memory_manager,
              ((char *)ptr - (char *)memory_manager->start) / MMAN_PAGESIZE);
 }
+
+void print_mem() {
+  return;
+}

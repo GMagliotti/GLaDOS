@@ -38,6 +38,7 @@ GLOBAL call_to_pipe_open
 GLOBAL call_to_pipe_close
 GLOBAL call_to_print_mem
 GLOBAL call_to_yield
+GLOBAL call_to_clear_screen
 
 %macro call_to_handler 1
     push rbp
@@ -167,3 +168,6 @@ call_to_print_mem:
 
 call_to_yield:
     call_to_handler 40
+
+call_to_clear_screen
+    call_to_handler 41

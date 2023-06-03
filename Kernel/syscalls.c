@@ -213,7 +213,8 @@ int sys_pipe_open(char *name) { return pipe_open(name); }
 
 int sys_pipe_close(int pipe_index) { return pipe_close(pipe_index); }
 
-void sys_print_mem() { /*print_mem();*/
-}
+void sys_print_mem() { print_mem(); }
 
 void sys_yield() { sem_yield(); }
+
+void sys_clear_screen() { hvd_clear(); }

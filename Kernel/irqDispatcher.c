@@ -195,18 +195,27 @@ uint64_t int_80(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rcx,
     return sys_sem_post((int)rsi);
     break;
 
-  case 36:
-    return sys_pipe_open((char *)rsi);
-    break;
-  case 37:
-    return sys_pipe_close((int)rsi);
-    break;
-  case 38:
-    return sys_unblock((int)rsi);
-    break;
-  default:
-    return 0;
-    break;
-  }
-  return 0;
+		case 36:
+			return sys_pipe_open((char *) rsi);
+			break;
+		case 37:
+			return sys_pipe_close((int) rsi);
+			break;
+		case 38:
+			return sys_unblock((int) rsi);
+			break;
+		case 39:
+			sys_print_mem();
+			break;
+		case 40:
+			sys_yield();
+			break;
+		case 41:
+			sys_clear_screen();
+			break;
+		default:
+			return 0;
+			break;
+ 	}
+	return 0;
 }
