@@ -282,3 +282,7 @@ void sys_print_mem() {
 void sys_yield() {
     sem_yield();
 }
+
+void sys_clear_screen() {
+    hvdClear();
+}

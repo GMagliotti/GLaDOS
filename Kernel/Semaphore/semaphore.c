@@ -147,7 +147,7 @@ int sem_enqueue_process(int sem_index, int pid) {
 
 int find_sem_index(char* name) {
     for(int i = 0; i < MAX_SEM; i++) {
-        if(sem_spaces[i].available == FALSE && (stringEquals(sem_spaces[i].sem.name, name) == 0)) {
+        if(sem_spaces[i].available == FALSE && (stringEquals(sem_spaces[i].sem.name, name) == 1)) {
             return i;
         }
     }

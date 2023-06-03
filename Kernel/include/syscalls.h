@@ -74,4 +74,5 @@ int sys_pipe_open(char *name);
 int sys_pipe_close(int pipe_index);
 void sys_print_mem();
 void sys_yield();
+void sys_clear_screen();
 #endif
