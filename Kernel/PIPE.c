@@ -1,11 +1,10 @@
 #include <pipe.h>
-#include <stdbool.h>
 
 typedef struct {
   int r_index;
   int w_index;
-  int sem_read;  // id del sem para leer en este pipe
-  int sem_write; // id del sem para escribir en este pipe
+  int sem_read; // id del sem para leer en este pipe
+  char sem_read_name[MAX_LEN];
   char buffer[BUFFER_SIZE];
   char name[MAX_LEN];
   int amount_processes; // cantidad de procesos que estan usando el pipe
@@ -78,10 +77,9 @@ int pipe_close(int pipe_index) {
     return -1;
   }
 
-  int close_read = sem_close(pipes[pipe_index - 1].pipe.sem_read);
-  int close_write = sem_close(pipes[pipe_index - 1].pipe.sem_write);
+  int close_read = sem_close(pipes[pipe_index - 1].pipe.sem_read_name);
 
-  if (close_read == -1 || close_write == -1) {
+  if (close_read == -1) {
     print("pipe_close: Error en los sem close del pipe\n");
     return -1;
   }
@@ -113,10 +111,7 @@ int write_char(int pipe_index, char c) {
     return -1;
 
   pipe_t *pipe = &pipes[pipe_index - 1].pipe;
-  // if (sem_wait(pipe->sem_write) == -1) {
-  //     print("Error sem_wait en write_char\n");
-  //     return -1;
-  // }
+
   pipe->buffer[pipe->w_index % BUFFER_SIZE] = c;
   pipe->w_index++;
   if (sem_post(pipe->sem_read) == -1) {
@@ -137,10 +132,7 @@ char read_pipe(int pipe_index) {
   }
   char c = pipe->buffer[pipe->r_index % BUFFER_SIZE];
   pipe->r_index++;
-  // if (sem_post(pipe->sem_write) == -1) {
-  //     print("Error sem_post en read_pipe\n");
-  //     return -1;
-  // }
+
   return c;
 }
 
@@ -178,22 +170,17 @@ int create_pipe(char *name) {
     str_cpy(new_pipe->name, name);
     new_pipe->r_index = 0;
     new_pipe->w_index = 0;
-    char name_r[MAX_PIPE_NAME];
-    str_cpy(name_r, name);
-    name_r[len] = 'R';
-    name_r[len + 1] = 0;
-    uint64_t sem_read = create_sem(0, name_r);
-    char name_w[MAX_PIPE_NAME];
-    str_cpy(name_w, name);
-    name_w[len] = 'W';
-    name_w[len + 1] = 0;
-    uint64_t sem_write = create_sem(BUFFER_SIZE, name_w);
-    if (sem_read == -1 || sem_write == -1) {
+
+    str_cpy(new_pipe->sem_read_name, name);
+    new_pipe->sem_read_name[len] = 'R';
+    new_pipe->sem_read_name[len + 1] = 0;
+    uint64_t sem_read = create_sem(0, new_pipe->sem_read_name);
+
+    if (sem_read == -1) {
       print("Create_pipe: Error en los sem del pipe");
       return -1;
     }
     new_pipe->sem_read = sem_read;
-    new_pipe->sem_write = sem_write;
   }
   return pos + 1;
 }
