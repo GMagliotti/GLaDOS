@@ -278,3 +278,7 @@ int sys_pipe_close(int pipe_index) {
 void sys_print_mem() {
     print_mem();
 }
+
+void sys_yield() {
+    sem_yield();
+}

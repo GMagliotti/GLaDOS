@@ -191,6 +191,10 @@ uint64_t int_80(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t
 			break;
 		case 39:
 			sys_print_mem();
+			break;
+		case 40:
+			sys_yield();
+			break;
 		default:
 			return 0;
 			break;
