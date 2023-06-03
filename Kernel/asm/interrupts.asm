@@ -12,7 +12,7 @@ EXTERN hvdClear
 EXTERN terminate
 EXTERN guruMeditation
 EXTERN scheduler
-
+EXTERN kill_current_process
 
 GLOBAL _irq00Handler
 GLOBAL _irq01Handler
@@ -143,6 +143,7 @@ SECTION .text
 
 	popState
 	; TODO change with shell initializer function later
+	call kill_current_process
 	mov rax, userlandStartAddress
 	mov [rsp], rax
 	iretq
