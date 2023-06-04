@@ -175,49 +175,45 @@ void buddy_free(struct MemoryManager *self, int offset) {
   }
 }
 
-// void buddy_dump(struct MemoryManager *self)
-// {
-//     int len = self->size << 1;
-//     int max_col = self->size << 1;
-//     int level = 0;
-//     int i,j;
+void buddy_dump(struct MemoryManager *self) {
+  int len = self->size << 1;
+  int max_col = self->size << 1;
+  int level = 0;
+  int i, j;
 
-//     char cs[] = {'/', '\\'};
-//     int idx = 0;
-//     char c;
+  char cs[] = {'/', '\\'};
+  int idx = 0;
+  char c;
 
-//     for (i = 0, max_col=len, level=0; i < len-1; i++) {
-//         if (is_power_of_2(i+1)) {
-//             max_col >>= 1;
-//             level ++;
-//             idx = 0;
-//             printf("\n%d(%.2d): ", level, max_col);
-//         }
+  print_string(
+      "---------------------------------------------------------------\n", 64);
+  print_color_string("Buddy tree representation\n", 0x100, 0xd503ff);
 
-//         printf("%*d", max_col, (int)self->longest[i]);
-//     }
+  print_color_string("N = max number of pages available on the node\n", 0x100,
+                     0x00FF00);
 
-//     for (i = 0, max_col=len, level=0; i < len-1; i++) {
-//         if (is_power_of_2(i+1)) {
-//             max_col >>= 1;
-//             level ++;
-//             idx = 0;
-//             printf("\n%d(%.2d): ", level, max_col);
-//         }
+  print_color_string("PAGESIZE = 4096B\n", 0x100, 0x0364ff);
 
-//         if (self->longest[i] > 0) {
-//             c = '-';
-//         } else {
-//             c = cs[idx];
-//             idx ^= 0x1;
-//         }
+  for (i = 0, max_col = len, level = 0; i < len - 1; i++) {
+    if (is_power_of_2(i + 1)) {
+      max_col >>= 1;
+      level++;
+      idx = 0;
+      sleep(2);
 
-//         for (j = 0; j < max_col; j++) {
-//             printf("%c", c);
-//         }
-//     }
-//     printf("\n");
-// }
+      print_string("\n|| Level: ", 16);
+      print_number(level, 10);
+      print_string(": ", 16);
+    }
+
+    print_number((int)self->longest[i], 10);
+    print_string(" - ", 10);
+  }
+
+  print_string("\n------------------------------------------------------------"
+               "---\n",
+               66);
+}
 
 int buddy_size(struct MemoryManager *self, int offset) {
   unsigned node_size = 1;
@@ -229,32 +225,6 @@ int buddy_size(struct MemoryManager *self, int offset) {
 
   return node_size;
 }
-
-// int testerBuddy(int memoriaReservada) {
-//   char cmd[80];
-//   int arg;
-//   struct MemoryManager* buddy = NULL;
-
-//     int fragmentSize = 0x1000;
-
-//   buddy = buddy_new((void *)0x50000, (next_power_of_2(memoriaReservada) / 2)
-//   / fragmentSize, 0x1000000); buddy_dump(buddy);
-
-//   for (;;) {
-//     scanf("%s %d", cmd, &arg);
-//     if (strcmp(cmd, "alloc") == 0) {
-//       printf("allocated@%d\n", buddy_alloc(buddy, arg));
-//       buddy_dump(buddy);
-//     } else if (strcmp(cmd, "free") == 0) {
-//       buddy_free(buddy, arg);
-//       buddy_dump(buddy);
-//     } else if (strcmp(cmd, "size") == 0) {
-//       printf("size: %d\n", buddy_size(buddy, arg));
-//       buddy_dump(buddy);
-//     } else
-//       buddy_dump(buddy);
-//   }
-// }
 
 // WRAPPERS
 
@@ -283,6 +253,6 @@ void mman_free(struct MemoryManager *const restrict memory_manager, void *ptr) {
              ((char *)ptr - (char *)memory_manager->start) / MMAN_PAGESIZE);
 }
 
-void print_mem() {
-  return;
+void print_mem(MemoryManagerADT const restrict memory_manager) {
+  buddy_dump(memory_manager);
 }
