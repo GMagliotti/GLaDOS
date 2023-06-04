@@ -16,7 +16,7 @@ enter_region:
     JMP  .whiff
 
 .success:
-    STI
+    ; STI
     RET                  ;Requires process list to be implemented in semaphore.c.
 
 .whiff:
