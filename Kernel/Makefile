@@ -5,10 +5,10 @@ KERNEL=kernel.bin
 SOURCES_ASM=$(wildcard asm/*.asm) $(wildcard Semaphore/*.asm)
 
 ifdef enable_buddy
-	SOURCES := $(wildcard *.c) $(wildcard VideoDriver/*.c) $(wildcard MemoryManager/Buddy.c) $(wildcard Scheduler/*.c) $(wildcard Semaphore/*.c)
+	SOURCES := $(wildcard *.c) $(wildcard VideoDriver/*.c) $(wildcard MemoryManager/buddy.c) $(wildcard Scheduler/*.c) $(wildcard Semaphore/*.c)
 	MEMORY_MANAGER_FLAGS := -DIS_BUDDY
 else
-	SOURCES := $(wildcard *.c) $(wildcard VideoDriver/*.c) $(wildcard MemoryManager/MemoryManager.c) $(wildcard MemoryManager/Bitmap.c) $(wildcard Scheduler/*.c) $(wildcard Semaphore/*.c)
+	SOURCES := $(wildcard *.c) $(wildcard VideoDriver/*.c) $(wildcard MemoryManager/memoryManager.c) $(wildcard MemoryManager/bitmap.c) $(wildcard Scheduler/*.c) $(wildcard Semaphore/*.c)
 endif
 
 OBJECTS=$(SOURCES:.c=.o)

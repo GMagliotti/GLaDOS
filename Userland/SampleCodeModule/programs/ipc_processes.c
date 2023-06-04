@@ -15,7 +15,7 @@ void wc(int argc, char *argv[]) {
   while ((c = get_char()) != 0) {
     if (c == '\n') {
       lines++;
-      printf("Amount of lines: %d\n", lines);
+      printf("Line count: %d\n", lines);
     }
   }
   putc('\n');

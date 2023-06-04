@@ -60,7 +60,7 @@ char *valid_commands[32][2] = {
     {"UNBLOCK", "Unblock a process (YMMV)"},
     {"SHELL", "Creates a new shell!! (Limit testing)"},
     {"CAT", "Prints the stdin it recieves"},
-    {"WC", "Counts the amount of words in input"},
+    {"WC", "Counts the amount of lines in input"},
     {"FILTER", "Filters the vocals in the input"},
     {"PRINTSCHEDULER", "Sets the scheduler on print mode"},
     {"PHYLO", "Runs Philosophers dilemma"},

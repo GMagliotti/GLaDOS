@@ -13,24 +13,23 @@
 // #define MMAN_MEMSIZE 0x1000000
 #define MMAN_PAGECOUNT (MMAN_MEMSIZE / MMAN_PAGESIZE)
 
-#include <bitmap.h>
-#include <stdlib.h>
+#include "bitmap.h"
 
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
 
-typedef struct MemoryManager *MemoryManagerADT;
+typedef struct memoryManager *memoryManagerADT;
 
-MemoryManagerADT
+memoryManagerADT
 create_memory_manager(void *const restrict memory_for_memory_manager,
                       void *const restrict managed_memory);
 
-void *alloc_memory(MemoryManagerADT const restrict memory_manager,
+void *alloc_memory(memoryManagerADT const restrict memory_manager,
                    const size_t memory_to_allocate);
 
-void mman_free(MemoryManagerADT const restrict memory_manager, void *ptr);
+void mman_free(memoryManagerADT const restrict memory_manager, void *ptr);
 
-void print_mem(MemoryManagerADT const restrict memory_manager);
+void print_mem(memoryManagerADT const restrict memory_manager);
 
 #endif

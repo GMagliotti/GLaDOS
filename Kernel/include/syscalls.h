@@ -9,13 +9,13 @@
 #include "../Semaphore/include/semaphore.h"
 #include "interrupts.h"
 #include "lib.h"
+#include "memoryManager.h"
 #include "pipe.h"
 #include "registers.h"
 #include "soundDriver.h"
 #include "textDriver.h"
 #include "textModeDriver.h"
 #include "videoDriver.h"
-#include <MemoryManager.h>
 #include <stdint.h>
 #include <time.h>
 

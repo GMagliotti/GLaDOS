@@ -1,11 +1,8 @@
-#include "Scheduler/include/process.h"
-#include "Scheduler/include/scheduler.h"
-#include "include/videoDriver.h"
 #include <syscalls.h>
 
 extern uint8_t memoryAt(int dir);
 
-extern MemoryManagerADT the_memory_manager;
+extern memoryManagerADT the_memory_manager;
 
 int r_w_sem_id = 10;
 
