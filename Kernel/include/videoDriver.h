@@ -18,6 +18,7 @@ uint8_t scroll_if_full_screen(int pen_ptr_y);
 void hvd_clear();
 char get_char();
 void clear_buffer();
+uint64_t uint_to_base(uint64_t value, char *buffer, uint32_t base);
 
 void set_bash();
 

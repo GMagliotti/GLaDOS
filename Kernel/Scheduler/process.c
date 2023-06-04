@@ -1,6 +1,9 @@
 #include "include/process.h"
 #include <stdio.h>
 
+extern void *sys_malloc(size_t requested_size);
+extern void sys_free(void *memptr);
+
 // array con todos los procesos (organizado por pid)
 process_ptr process_array[MAX_PROCESS_AMOUNT];
 int current_pid = 0;
@@ -376,7 +379,7 @@ void copy_args(char **destination, char **source, int amount) {
 
   for (int i = 0; i < amount; i++) {
     destination[i] =
-        (char **)sys_malloc(sizeof(char) * (str_length(source[i]) + 1));
+        (char *)sys_malloc(sizeof(char) * (str_length(source[i]) + 1));
     if (destination[i] == NULL)
       return;
     // str_cpy(destination[i], source[i], str_length(source[i]));
@@ -465,7 +468,7 @@ int waitpid(int pid) {
     return ERROR;
   }
 
-  process_ptr current_proc = get_process(current_pid);
+//   process_ptr current_proc = get_process(current_pid);
 
   process_ptr proc = process_array[pid];
 

@@ -1,5 +1,6 @@
 #ifndef _SYSCALLS_H
 #define _SYSCALLS_H
+#define STDIN 0
 #define STDOUT 1
 #define STDERR 2
 
@@ -27,7 +28,7 @@ typedef struct time {
 void initialize_sys_blocking_sem();
 
 void sys_exit();
-void sys_write(char *string, int length, char fd);
+void sys_write(char *string, int length);
 int sys_read(uint8_t fd, char *toRet, int cant_chars);
 void sys_put_pixel(uint32_t x, uint32_t y, uint32_t color);
 void sys_fill_rectangle(uint16_t x, uint16_t y, uint32_t color, uint16_t width,

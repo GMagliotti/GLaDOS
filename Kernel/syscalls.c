@@ -3,9 +3,6 @@
 #include "include/videoDriver.h"
 #include <syscalls.h>
 
-#define STDIN 0
-#define STDOUT 0
-#define STDERR 2
 
 extern uint8_t memoryAt(int dir);
 
@@ -24,7 +21,7 @@ void sys_exit() {
    descriptor If specified length is longer than string length, it'll only print
    up to the string end filedescriptors supported: 1 - STDOUT, 2 - STDERR
 */
-void sys_write(char *string, int length, char fd) {
+void sys_write(char *string, int length) {
 
   process_ptr proc = current_process();
 

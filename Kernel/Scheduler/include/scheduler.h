@@ -23,5 +23,6 @@ int get_current_pid(void);
 
 void scheduler_revive_process(int pid);
 int scheduler_block_current_process();
+int scheduler_waitpid(int pid);
 
 #endif

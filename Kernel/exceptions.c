@@ -8,6 +8,7 @@
 #define PG_FAULT_EXCEPTION_ID 14
 
 extern void loader();
+extern void sys_hlt();
 
 static void zero_division();
 static void invalid_opcode();

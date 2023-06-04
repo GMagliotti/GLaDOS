@@ -67,7 +67,7 @@ uint64_t int_21() {
       print_number(get_foreground_process(), 10);
     } else if (ctrl_pressed && c == 'D') {
       save_key('\0');
-      sys_write("\0", 1, NULL);
+      sys_write("\0", 1);
     } else if (shift_pressed && c == '7') {
       save_key('&');
     } else if (shift_pressed && c == '\\') {
@@ -95,7 +95,7 @@ uint64_t int_80(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rcx,
     sys_exit();
     break;
   case 1:
-    sys_write((char *)rsi, rdx, rcx);
+    sys_write((char *)rsi, rdx);
     break;
   case 2:
     break;
