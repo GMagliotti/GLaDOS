@@ -40,8 +40,8 @@ void hvd_print_bin(uint64_t value, uint8_t attribute) {
 }
 
 void hvd_print_base(uint64_t value, uint32_t base, uint8_t attribute) {
-  uint_to_base(value, buffer, base);
-  hvd_print(buffer, attribute);
+  uint_to_base(value, (char *)buffer, base);
+  hvd_print((char *)buffer, attribute);
 }
 
 void hvd_erase_char() {

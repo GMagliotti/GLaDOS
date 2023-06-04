@@ -76,6 +76,9 @@ process_ptr create_process(int argc, char **argv, void (*fn)(int, char **),
     current_proc->children[current_proc->children_count++] = pid;
   }
   new_process->children_count = 0;
+  for(int i = 0; i < MAX_PROCESS_AMOUNT; i++) {
+    new_process->children[i] = -1;
+  }
 
   new_process->name = (char *)sys_malloc(str_length(argv[0]));
   if (new_process->name == NULL) {
@@ -227,6 +230,8 @@ int kill_process(int pid) {
     print_string("No existe\n", 20);
     return ERROR;
   }
+
+  save_children(pid);
 
   process_array[pid]->status = KILLED;
   process_array[pid]->ret_value = KILLED;
@@ -489,7 +494,7 @@ int waitpid(int pid) {
 
 // waitpid for orphan processes it has inherited (receives parent pid)
 void free_adopted_zombies(int pid) {
-  for (int i = 0; process_array[pid]->children[i] != NULL; i++) {
+  for (int i = 0; process_array[pid]->children[i] != -1; i++) {
     process_ptr child = process_array[process_array[pid]->children[i]];
     if (child->status == ZOMBIE) {
       // waitpid(child->pid);

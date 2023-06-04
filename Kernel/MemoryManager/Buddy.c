@@ -179,11 +179,12 @@ void buddy_dump(struct MemoryManager *self) {
   int len = self->size << 1;
   int max_col = self->size << 1;
   int level = 0;
-  int i, j;
+  // int i, j;
+  int i;
 
-  char cs[] = {'/', '\\'};
-  int idx = 0;
-  char c;
+  // char cs[] = {'/', '\\'};
+  // int idx = 0;
+  // char c;
 
   print_string(
       "---------------------------------------------------------------\n", 64);
@@ -198,7 +199,7 @@ void buddy_dump(struct MemoryManager *self) {
     if (is_power_of_2(i + 1)) {
       max_col >>= 1;
       level++;
-      idx = 0;
+      // idx = 0;
       sleep(2);
 
       print_string("\n|| Level: ", 16);

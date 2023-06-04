@@ -20,7 +20,6 @@ void tests(int argc, char **argv) {
     return;
   }
 
-  int argc_aux = 3;
   char *argv_aux[3] = {argv[2], "1", "1"};
 
   if (argc >= 4) {

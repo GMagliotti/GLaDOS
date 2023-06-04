@@ -130,7 +130,7 @@ int sem_dequeue_process(int sem_index) {
 // returns 0 if successful, -1 if not
 int sem_enqueue_process(int sem_index, int pid) {
   space *sem_space = &sem_spaces[sem_index];
-  if (sem_space->available == TRUE || pid == NULL) { // space doesnt exist
+  if (sem_space->available == TRUE) { // space doesnt exist
     return -1;
   }
   sem_t *sem = &(sem_space->sem);
