@@ -98,5 +98,6 @@ bool on_print_mode();
 int waitpid(int pid);
 void set_zombie(int pid);
 void free_adopted_zombies(int pid);
+void free_killed_children(int pid);
 
 #endif
