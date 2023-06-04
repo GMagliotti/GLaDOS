@@ -228,12 +228,19 @@ int kill_process(int pid) {
   process_array[pid]->status = KILLED;
   process_array[pid]->ret_value = KILLED;
 
+  // if (foreground_process_pid == pid) {
+  //   process_array[pid]->visibility = BACKGROUND;
+  //   foreground_process_pid = process_array[pid]->ppid;
+  //   process_array[foreground_process_pid]->visibility = FOREGROUND;
+  // }
+
   print_string("Killed\n", 20);
 
   if (current_pid == pid) {
     // forzar timer tick
     force_timer();
   }
+
   return 1;
 }
 
@@ -296,6 +303,12 @@ int block_process(int pid) {
   if (!process_exists(pid))
     return ERROR;
 
+  if (process_array[pid]->status == KILLED ||
+      process_array[pid]->status == ZOMBIE) {
+    print_string("Tried to block a dead process", 20);
+    return ERROR;
+  }
+
   process_array[pid]->status = BLOCKED;
   // if (foreground_process_pid == pid && pid != 1) {
   //     process_array[pid]->visibility = BACKGROUND;
@@ -315,6 +328,13 @@ int block_process(int pid) {
 int unblock_process(int pid) {
   if (!process_exists(pid) || pid == 0)
     return ERROR;
+
+  if (process_array[pid]->status == KILLED ||
+      process_array[pid]->status == ZOMBIE) {
+    print_string("Tried to unblock a dead process", 20);
+    return ERROR;
+  }
+
   process_array[pid]->status = READY;
   return 0;
 }
