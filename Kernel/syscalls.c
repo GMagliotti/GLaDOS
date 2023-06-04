@@ -201,7 +201,7 @@ int sys_create_sem(int initial_value, char *sem_name) {
 
 void sys_destroy_sem(int sem_index) { destroy_sem(sem_index); }
 
-int sys_sem_open(char *sem_name) { return sem_open(sem_name); }
+int sys_sem_open(int initial_value, char *sem_name) { return sem_open(initial_value, sem_name); }
 
 int sys_sem_close(char *sem_name) { return sem_close(sem_name); }
 
