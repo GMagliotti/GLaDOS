@@ -63,4 +63,6 @@ void mman_free(MemoryManagerADT const restrict memory_manager, void *ptr) {
   bmp_set_off(curr_page - start_page, start_page);
 }
 
-void print_mem() { print_bitmap(); }
+void print_mem(MemoryManagerADT const restrict memory_manager) {
+  print_bitmap();
+}

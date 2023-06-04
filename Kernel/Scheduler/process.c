@@ -231,17 +231,20 @@ int kill_process(int pid) {
   process_array[pid]->status = KILLED;
   process_array[pid]->ret_value = KILLED;
 
-  // if (foreground_process_pid == pid) {
-  //   process_array[pid]->visibility = BACKGROUND;
-  //   foreground_process_pid = process_array[pid]->ppid;
-  //   process_array[foreground_process_pid]->visibility = FOREGROUND;
-  // }
+  if (foreground_process_pid == pid) {
+    process_array[pid]->visibility = BACKGROUND;
+    foreground_process_pid = process_array[pid]->ppid;
+    process_array[foreground_process_pid]->visibility = FOREGROUND;
+  }
 
   print_string("Killed\n", 20);
+
+  sem_post(process_array[pid]->done_sem);
 
   if (current_pid == pid) {
     // forzar timer tick
     force_timer();
+    print_color_string("Evil runescape crocodile", 0xFFFF, 0xFF0000);
   }
 
   return 1;
@@ -413,9 +416,9 @@ void print_current_process() {
   print_string("\n", 2);
 }
 
-bool wants_to_run(
-    process_ptr process) { // probs hayan otras condiciones a tener en cuenta
-  return (process->status != BLOCKED) && process->priority != -1;
+bool wants_to_run(process_ptr process) {
+  return (process->status == ALIVE || process->status == READY) &&
+         process->priority != -1;
 }
 
 void save_children(int pid) {
@@ -517,4 +520,8 @@ void set_zombie(int pid) {
   // post done_sem so parent can collect my return value and I can be freed
   // (parent was currently blocked at waitpid)
   sem_post(proc->done_sem);
+
+  if (proc->og_visibility == BACKGROUND) {
+    free_process(proc->pid);
+  }
 }

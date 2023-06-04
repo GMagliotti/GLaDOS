@@ -113,12 +113,18 @@ void free_round_robin(rr_queue_ptr queue) {
   sys_free(queue);
 }
 
-// void print_robin(NodeType current) {
-//     NodeType node = current;
-//     while (node->next != current) {
-//         printf("%d (%i lives) - ", ((process *)(node->data))->pid, ((process
-//         *)(node->data))->current_lives); node = node->next;
-//     }
-//     printf("%d (%i lives)\n", ((process *)(node->data))->pid, ((process
-//     *)(node->data))->current_lives);
-// }
+void print_robin(NodeType current) {
+  NodeType node = current;
+  while (node->next != current) {
+    print_number(((process *)(node->data))->pid, 10);
+    print_string(" (", 4);
+    print_number(((process *)(node->data))->current_lives, 10);
+    print_string(" lives) - ", 15);
+    node = node->next;
+  }
+  print_number(((process *)(node->data))->pid, 10);
+  print_string(" (", 4);
+  print_number(((process *)(node->data))->current_lives, 10);
+  print_string(" lives)\n", 15);
+  node = node->next;
+}

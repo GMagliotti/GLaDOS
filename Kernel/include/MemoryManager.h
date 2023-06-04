@@ -31,6 +31,6 @@ void *alloc_memory(MemoryManagerADT const restrict memory_manager,
 
 void mman_free(MemoryManagerADT const restrict memory_manager, void *ptr);
 
-void print_mem();
+void print_mem(MemoryManagerADT const restrict memory_manager);
 
 #endif
