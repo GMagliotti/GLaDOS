@@ -19,22 +19,22 @@ int waiting_list_size = 0;
 int num_philos = 0;
 
 // Starting function
-int philo2(int argc, char** argv) {
+void philo2(int argc, char** argv) {
     if (argc != 2) {
-        return -1;
+        printf("Usage: PHYLO <number of philosophers>\n");
+        return;
     }
 
     num_philos = string_to_int(argv[1]);
     printf("number of philos: %d\n", num_philos);
     if (num_philos > 20 || num_philos < 2) {
         printf("There must be at least 2 philosophers and at most 20 philosophers!\n");
-        return -1;
+        return;
     }
     
 
     mutex_id = call_to_create_sem(1, "philo_mutex");
     
-    // sleep(2);
     // Initialize STATE and waiting list
     for (int i = 0; i < num_philos; i++) {
         philo_sems[i] = call_to_create_sem(0, "philo_sem");
@@ -43,48 +43,46 @@ int philo2(int argc, char** argv) {
     }
 
     // Print menu
-    printf("Welcome to the philosopher's dilemma\n");
+    printf("\n\t\t\t\tWelcome to the philosopher's dilemma\n");
     printf("You have chosen %d philosophers to take turns eating/thinking!\n", num_philos);
     printf("Press 'Q' at any time to quit the simulation\n");
     call_to_setSize(1);
 
     // Create philosopher processes
     for (int i = 0; i < num_philos; i++) {
-        int cant_args = 2;
         char* num;
         num = int_to_string(i, num, 10);
         char* args[3] = {"philo", num, NULL};
         philo_pids[i] = call_to_create_process(2, args, &philosopher2, NULL);
     }
     printf("\n");
-    // call_to_ps(); //todos vivos :)
     print_state2();
 
     while(getChar() != 'Q');
-    // call_to_unblock_process(2); //hardcodeado -> testeo para que proceso phylo printee lo siguiente
-    call_to_setSize(2); //no se esta haciendo esto
-    //mato los procesos y semaforos
+
+    //kill processes and semaphores
     for(int i = 0; i < num_philos; i++) {
-        printf("matando philo %d\n", i);
-        call_to_ps();
+        // printf("killing philo %d\n", i);
         call_to_pkill_process(philo_pids[i]);
         call_to_destroy_sem(philo_sems[i]);
     }
+
     call_to_destroy_sem(mutex_id);
+
     call_to_setSize(2);
+
+    call_to_pkill_process(call_to_getpid()); 
 }
 
 void philosopher2(int argc, char** argv) {
-    int i = string_to_int(argv[1]); //el numero de filosofo que es
+    int i = string_to_int(argv[1]); //their philosopher index
 
     while (1) {
         think2();
-        // print_state2();
         take_forks2(i);      // Acquire two forks
-        // print_state2();
         eat2();
         put_forks2(i);       // Put both forks down
-        // print_state2();
+
         printf("\n\t\t\t\t\tPress Q to end simulation\n");
     }
 }
@@ -104,22 +102,6 @@ void take_forks2(int i) {
         call_to_sem_post(mutex_id);       // Exit critical region
     }
 }
-
-
-// void take_forks2(int i) {
-//     call_to_sem_wait(mutex_id);          // Enter critical region
-//     state[i] = HUNGRY;
-//     test2(i);                            // Try to acquire 2 forks
-
-//     if (state[i] != EATING) {
-//         // Philosopher is not eating, add to waiting list
-//         waiting_list[waiting_list_size++] = i;
-//         call_to_sem_post(mutex_id);     // Exit critical region
-//         call_to_sem_wait(philo_sems[i]); // Block if forks weren't acquired
-//     } else {
-//         call_to_sem_post(mutex_id);     // Exit critical region
-//     }
-// }
 
 void put_forks2(int i) {
     call_to_sem_wait(mutex_id);          // Enter critical region
@@ -191,5 +173,5 @@ void print_state2() {
         if(state[i] == HUNGRY)
             printf("%d ", i);
     }
-    printf("\n\n");
+    printf("\n--------------------------------\n");
 }

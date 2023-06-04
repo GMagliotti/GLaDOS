@@ -1,7 +1,7 @@
 #ifndef _PHILO_CLASE_H
 #define _PHILO_CLASE_H
 
-int philo2(int argc, char** argv);
+void philo2(int argc, char** argv);
 void philosopher2(int argc, char** argv);
 void take_forks2(int i);
 void put_forks2(int i);
