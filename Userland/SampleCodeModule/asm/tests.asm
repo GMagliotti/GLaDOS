@@ -1,8 +1,8 @@
 section .text
 
-GLOBAL testInvalidExc
+GLOBAL test_invalid_exc
 
-testInvalidExc:
+test_invalid_exc:
     push rbp
     mov rbp, rsp
     ud2				; lanza un error de iop

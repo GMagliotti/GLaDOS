@@ -1,17 +1,17 @@
 #ifndef _BEEPER_H
 #define _BEEPER_H
 
-#include <user_syscalls.h>
 #include <funclib.h>
+#include <user_syscalls.h>
 
-void beepSample();
-void bootSound();
+void beep_sample();
+void boot_sound();
 void victory();
-void beeperSongs(int argc, char** argv);
+void beeper_songs(int argc, char **argv);
 void zelda();
-void FFVTheme();
-void tetrisIntro();
-void mortalKombat();
+void FFV_theme();
+void tetris_intro();
+void mortal_kombat();
 void mario();
 
 #endif

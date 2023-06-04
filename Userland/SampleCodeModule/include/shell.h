@@ -1,18 +1,18 @@
 #ifndef SHELL_H
 #define SHELL_H
 
-#include <stdint.h>
-#include "user_syscalls.h"
-#include "tron.h"
-#include "time.h"
 #include "funclib.h"
 #include "tests.h"
+#include "time.h"
+#include "tron.h"
+#include "user_syscalls.h"
 #include <beeper.h>
+#include <stdint.h>
 // #include <phylo.h>
-#include "philoclase.h"
-#include "../programs/include/process_info.h"
 #include "../programs/include/ipc_processes.h"
+#include "../programs/include/process_info.h"
 #include "../tests/test_util.h"
+#include "philoclase.h"
 #include <stdbool.h>
 
 #define MAX_PARAMS 8
@@ -22,24 +22,24 @@
 #define FOREGROUND 0
 #define BACKGROUND 1
 
-void setTextBufferActive(int active);
+void set_text_buffer_active(int active);
 
-void saveChar(char c);
-void checkBuffer();
+void save_char(char c);
+void check_buffer();
 
 void shell();
-void setBash();
-void hvdClear();
+void set_bash();
+void hvd_clear();
 void help();
 void show_arqui_commands();
-void clearCommandBuffer();
-void setSize(int argc, char ** argv);
-void printRegisters();                 // it must do something...
+void clear_command_buffer();
+void set_size(int argc, char **argv);
+void print_registers(); // it must do something...
 
-extern void testInvalidExc();
-extern void test0Div();
-void returnToShell();
+extern void test_invalid_exc();
+extern void test0_div();
+void return_to_shell();
 
-int get_params(char* str, char* params[], int max_params);
+int get_params(char *str, char *params[], int max_params);
 
 #endif

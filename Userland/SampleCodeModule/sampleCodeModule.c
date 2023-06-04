@@ -1,18 +1,17 @@
 /* sampleCodeModule.c */
-#include <stdio.h>
-#include <user_syscalls.h>
-#include <stdint.h>
-#include <user_syscalls.h>
-#include <shell.h>
 #include <beeper.h>
-#include <time.h>
-#include <tests.h>
 #include <funclib.h>
+#include <shell.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <tests.h>
+#include <time.h>
+#include <user_syscalls.h>
 
 void help();
 
 int main() {
-	hvdClear();
-	shell();	
-	return 0;
+  hvd_clear();
+  shell();
+  return 0;
 }

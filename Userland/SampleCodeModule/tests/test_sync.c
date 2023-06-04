@@ -92,7 +92,7 @@ uint64_t test_sync(int argc, char *argv[]) { //{n, use_sem, 0}
   for (i = 0; i < pair_proc_num * 2; i++) {
     // my_wait(pids[i]);
     // my_wait(pids[i + TOTAL_PAIR_PROCESSES]);
-    call_to_setSize(1);
+    call_to_set_size(1);
     // call_to_clear_screen();
     printf("Esperando las creatura\n");
     // call_to_ps();

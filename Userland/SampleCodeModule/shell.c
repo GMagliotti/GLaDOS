@@ -5,35 +5,32 @@
 
 #define MAX_CHARS_PER_COMMAND 128
 
-int textBufferActive = 1; // no usamos estas dos vars
-int kernelBufferPos = 0;
+int min_char_size = 1;
+int max_char_size = 6;
 
-int minCharSize = 1;
-int maxCharSize = 6;
-
-static char commandBuffer[256] = {0}; // buffer local en base al buffer
-static int commandBufferPos = 0;      // current position de commandBuffer
-void saveChar(char c) {
+static char command_buffer[256] = {0}; // buffer local en base al buffer
+static int command_buffer_pos = 0;     // current position de command_buffer
+void save_char(char c) {
   // si tecla que recibo de kernel es un enter, chequeo lo que ya tenia, si es
   // backspace borro ultimo char, si no lo guardo en buffer local
   if (c == '\n') {
     printf("\n");
-    checkBuffer();
+    check_buffer();
   } else if (c == '\b') {
-    if (commandBufferPos > 0 ||
-        (commandBufferPos == 0 && commandBuffer[commandBufferPos] == '>')) {
-      commandBuffer[--commandBufferPos] = 0;
+    if (command_buffer_pos > 0 || (command_buffer_pos == 0 &&
+                                   command_buffer[command_buffer_pos] == '>')) {
+      command_buffer[--command_buffer_pos] = 0;
       printf("\b");
     }
   } else if (c == '\0') {
     return;
   } else {
-    commandBuffer[commandBufferPos++] = c;
+    command_buffer[command_buffer_pos++] = c;
     putc(c);
   }
 
-  if (commandBufferPos >= MAX_CHARS_PER_COMMAND) {
-    clearCommandBuffer();
+  if (command_buffer_pos >= MAX_CHARS_PER_COMMAND) {
+    clear_command_buffer();
     printf(
         "\nMax command length reached. Type HELP to see available commands\n>");
   }
@@ -41,17 +38,17 @@ void saveChar(char c) {
 
 // chequea si lo que esta en el buffer antes del \n es un comando correcto, y
 // ademas limpia el buffer
-char *validCommands[32][2] = {
+char *valid_commands[32][2] = {
     {"HELP", "Provides a list of available programs"},
     {"CLEAR", "Clears the screen"},
     {"ARQUI", "Shows old commands"},
     {"TIME", "Shows current system time (GMT-3)"},
     {"TRON", "Runs Tron game"},
     {"REGISTERS", "Prints value of all the registers (SHIFT + TAB)"},
-    {"TEST0DIV", "Tests the division by 0 exception"},
-    {"TESTINVALIDEXC", "Tests an invalid exception"},
+    {"test0_div", "Tests the division by 0 exception"},
+    {"test_invalid_exc", "Tests an invalid exception"},
     {"MEMORYAT", "Displays the content at the desired location"},
-    {"SETSIZE", "Sets the letter size (Default 2)"},
+    {"set_size", "Sets the letter size (Default 2)"},
     {"SONGS", "Choose from a variety of available songs"},
     {"MEM", "Prints the current memory status"},
     {"GETPID", "Displays the current process ID"},
@@ -69,36 +66,36 @@ char *validCommands[32][2] = {
     {"PHYLO", "Runs Philosophers dilemma"},
     {"TEST", "Runs one of the available tests"}};
 
-void (*commandFunctions[32])(int, char **) = {help,
-                                              returnToShell,
-                                              show_arqui_commands,
-                                              time,
-                                              tron,
-                                              printRegisters,
-                                              test0Div,
-                                              testInvalidExc,
-                                              printMemoryAt,
-                                              setSize,
-                                              beeperSongs,
-                                              call_to_print_mem,
-                                              getpid,
-                                              ps,
-                                              loop_process,
-                                              kill_process,
-                                              nice_process,
-                                              block_process,
-                                              unblock_process,
-                                              shell,
-                                              cat,
-                                              wc,
-                                              filter,
-                                              call_to_set_print_mode,
-                                              philo2,
-                                              tests};
+void (*command_functions[32])(int, char **) = {help,
+                                               return_to_shell,
+                                               show_arqui_commands,
+                                               time,
+                                               tron,
+                                               print_registers,
+                                               test0_div,
+                                               test_invalid_exc,
+                                               print_memory_at,
+                                               set_size,
+                                               beeper_songs,
+                                               call_to_print_mem,
+                                               getpid,
+                                               ps,
+                                               loop_process,
+                                               kill_process,
+                                               nice_process,
+                                               block_process,
+                                               unblock_process,
+                                               shell,
+                                               cat,
+                                               wc,
+                                               filter,
+                                               call_to_set_print_mode,
+                                               philo2,
+                                               tests};
 
 int find_pipe(char *params[], int argc) {
   for (int i = 0; i < argc; i++) {
-    if (stringEquals(params[i], "|")) {
+    if (string_equals(params[i], "|")) {
       return i;
     }
   }
@@ -106,22 +103,22 @@ int find_pipe(char *params[], int argc) {
 }
 
 int is_valid_command(char *command) {
-  for (int i = 0; validCommands[i][0] != 0; i++) {
-    if (stringEquals(command, validCommands[i][0])) {
+  for (int i = 0; valid_commands[i][0] != 0; i++) {
+    if (string_equals(command, valid_commands[i][0])) {
       return i;
     }
   }
   return -1;
 }
 
-void checkBuffer() {
+void check_buffer() {
   int found = 0;
   int command_pos = -1;
   int pid1 = -1;
 
   char *params[MAX_PARAMS] = {NULL};
 
-  int argc = get_params(commandBuffer, params, MAX_PARAMS);
+  int argc = get_params(command_buffer, params, MAX_PARAMS);
 
   int we_piping = find_pipe(params, argc);
 
@@ -148,8 +145,8 @@ void checkBuffer() {
     int fd[2] = {pipe_id, 0};
 
     if ((command_pos = is_valid_command(params[0])) != -1) {
-      pid1 = call_to_create_process(argc, params, commandFunctions[command_pos],
-                                    fd);
+      pid1 = call_to_create_process(argc, params,
+                                    command_functions[command_pos], fd);
       found = 1;
     }
 
@@ -159,7 +156,8 @@ void checkBuffer() {
     if ((command_pos = is_valid_command(params[we_piping + 1])) != -1 &&
         found) {
       params2[argc2++] = "&";
-      call_to_create_process(argc2, params2, commandFunctions[command_pos], fd);
+      call_to_create_process(argc2, params2, command_functions[command_pos],
+                             fd);
       found2 = 1;
     }
 
@@ -173,62 +171,62 @@ void checkBuffer() {
 
   } else {
     if ((command_pos = is_valid_command(params[0])) != -1) {
-      pid1 = call_to_create_process(argc, params, commandFunctions[command_pos],
-                                    NULL);
+      pid1 = call_to_create_process(argc, params,
+                                    command_functions[command_pos], NULL);
       found = 1;
     }
   }
 
-  if (pid1 > 0 && !stringEquals(params[argc - 1], "&")) {
-    /*int ret = */call_to_waitpid(pid1);
+  if (pid1 > 0 && !string_equals(params[argc - 1], "&")) {
+    /*int ret = */ call_to_waitpid(pid1);
     // printf("hola!! espere a mi hijo, devolvio %d\n", ret);
   }
 
-  if (!found && !is_only_space(commandBuffer)) {
+  if (!found && !is_only_space(command_buffer)) {
     printf("Invalid option. Type HELP for more information.\n");
   }
 
   printf(">");
 
-  clearCommandBuffer(); // limpio el buffer local y seteo posicion de contador
-                        // en 0
+  clear_command_buffer(); // limpio el buffer local y seteo posicion de contador
+                          // en 0
 
-  call_to_clearbuffer(); // limpio el buffer de kernel mediante syscall
+  call_to_clear_buffer(); // limpio el buffer de kernel mediante syscall
 }
 
-void clearCommandBuffer() {
+void clear_command_buffer() {
   for (int i = 0; i < 256; i++)
-    commandBuffer[i] = 0;
-  commandBufferPos = 0;
+    command_buffer[i] = 0;
+  command_buffer_pos = 0;
 }
 
 void shell() {
-  call_to_setSize(DEFAULT_TEXT_SIZE);
+  call_to_set_size(DEFAULT_TEXT_SIZE);
   printf("Welcome to the command line! Type HELP for more information.\n");
   putc('>');
   while (1) {
-    char c = getChar();
-    saveChar(c);
+    char c = get_char();
+    save_char(c);
   }
 }
 
-void setBash() {
+void set_bash() {
   call_to_setptrx(0);
   call_to_setptry(0);
 }
 
-void hvdClear() {
+void hvd_clear() {
   call_to_fillrectangle(0, 0, 0, SCREEN_PIXEL_WIDTH, SCREEN_PIXEL_HEIGHT);
-  setBash();
+  set_bash();
 }
 
 void help() {
 
   printf("The available commands are:\n\n");
 
-  for (int i = 0; validCommands[i][0] != 0 && validCommands[i][1] != 0; i++) {
+  for (int i = 0; valid_commands[i][0] != 0 && valid_commands[i][1] != 0; i++) {
     if (i < 3 || i > 10)
-      printf("\t%s - %s\n", validCommands[i][0], validCommands[i][1]);
+      printf("\t%s - %s\n", valid_commands[i][0], valid_commands[i][1]);
     if (i == 9)
       printf("\n");
   }
@@ -239,32 +237,32 @@ void show_arqui_commands() {
   printf("Implemented previously:\n\n");
 
   for (int i = 3;
-       validCommands[i][0] != 0 && validCommands[i][1] != 0 && i < 11; i++) {
-    printf("\t%s - %s\n", validCommands[i][0], validCommands[i][1]);
+       valid_commands[i][0] != 0 && valid_commands[i][1] != 0 && i < 11; i++) {
+    printf("\t%s - %s\n", valid_commands[i][0], valid_commands[i][1]);
   }
 }
 
-void returnToShell() {
-  hvdClear(); // limpio pantalla
+void return_to_shell() {
+  hvd_clear(); // limpio pantalla
 }
 
-void printRegisters() { call_to_printRegisters(); }
+void print_registers() { call_to_print_registers(); }
 
-void setSize(int argc, char **argv) {
+void set_size(int argc, char **argv) {
 
   if (argc < 2) {
-    printf("Usage: SETSIZE <size>\n");
+    printf("Usage: set_size <size>\n");
     return;
   }
 
-  int newSize = string_to_int(argv[1]);
+  int new_size = string_to_int(argv[1]);
 
-  if (newSize < minCharSize || newSize > maxCharSize) {
-    printf("Size must be between %d and %d\n", minCharSize, maxCharSize);
+  if (new_size < min_char_size || new_size > max_char_size) {
+    printf("Size must be between %d and %d\n", min_char_size, max_char_size);
   } else {
-    call_to_setSize(newSize);
-    hvdClear();
-    printf("New screen size: %d\n", newSize);
+    call_to_set_size(new_size);
+    hvd_clear();
+    printf("New screen size: %d\n", new_size);
   }
 }
 
