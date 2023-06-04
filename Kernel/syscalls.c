@@ -29,11 +29,11 @@ void sys_write(char *string, int length, char fd) {
   process_ptr proc = current_process();
 
   if (proc->fd_w == 0) {
-    if (current_is_foreground()) {
-      for (int i = 0; i < length; i++) {
-        print_char(string[i]);
-      }
+    // if (current_is_foreground()) {
+    for (int i = 0; i < length; i++) {
+      print_char(string[i]);
     }
+    // }
   } else {
     write_pipe(proc->fd_w, string);
   }
