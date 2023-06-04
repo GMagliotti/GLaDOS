@@ -141,8 +141,8 @@ void print_bitmap() {
           "---------------------------------------------------------------\n",
           64);
       print_color_string("Bitmap state - 0 FREE - 1 OCCUPIED\nEach bit "
-                       "represents a page, PAGESIZE = 4096B\n",
-                       0x100, 0x00FF00);
+                         "represents a page, PAGESIZE = 4096B\n",
+                         0x100, 0x00FF00);
       sleep(5);
       hvd_clear();
       print_header(slot);

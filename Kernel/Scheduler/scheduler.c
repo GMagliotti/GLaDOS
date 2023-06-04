@@ -44,23 +44,15 @@ void *scheduler(void *rsp) {
 
   free_adopted_zombies(current_process->pid);
 
-  if (current_process->status == FINISHED ||
-      current_process->status == KILLED) {
-    set_current_process(current_process->ppid);
+  scheduler_free_killed_children(current_process->pid);
 
-    if (current_process->pid != 0 && current_process->priority != -1) {
-      process_ptr aux = current_process;
-      scheduler_dequeue_process(current_process);
+  if (current_process->status == FINISHED) {
+    current_process = finished_process_handler(current_process);
 
-      set_zombie(aux->pid);
-
-      if (aux->og_visibility == BACKGROUND) {
-        free_process(aux->pid);
-      }
-      current_process = get_current_process(rr_scheduler);
-    }
-  } else if (current_process->status == BLOCKED) {
+  } else if (current_process->status == BLOCKED ||
+             current_process->status == KILLED) {
     current_process = next_process(rr_scheduler);
+
   } else {
     current_process = next_tick(rr_scheduler);
   }
@@ -129,6 +121,32 @@ int scheduler_block_current_process() {
 
   block_process(current_pid);
   return current_pid;
+}
+
+void print_scheduler_robin() { print_robin(rr_scheduler->list); }
+
+void scheduler_free_killed_children(int pid) {
+  process_ptr proc = get_process(pid);
+  if (proc == NULL) {
+    return;
+  }
+  for (int i = 0; i < proc->children_count; i++) {
+    process_ptr child = get_process(proc->children[i]);
+    if (child->status == KILLED) {
+      scheduler_dequeue_process(get_process(proc->children[i]));
+      free_process(proc->children[i]);
+    }
+  }
+}
+
+process_ptr finished_process_handler(process_ptr current_process) {
+  process_ptr next = next_process(rr_scheduler);
+
+  scheduler_dequeue_process(current_process);
+
+  set_zombie(current_process->pid);
+
+  return next;
 }
 
 // #include <stdio.h>

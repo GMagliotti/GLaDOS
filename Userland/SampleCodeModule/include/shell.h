@@ -8,7 +8,8 @@
 #include "funclib.h"
 #include "tests.h"
 #include <beeper.h>
-#include <phylo.h>
+// #include <phylo.h>
+#include "philoclase.h"
 #include "../programs/include/process_info.h"
 #include "../programs/include/ipc_processes.h"
 #include "../tests/test_util.h"

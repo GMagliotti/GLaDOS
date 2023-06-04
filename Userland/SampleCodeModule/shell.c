@@ -67,7 +67,7 @@ char *validCommands[32][2] = {
     {"FILTER", "Filters the vocals in the input"},
     {"PRINTSCHEDULER", "Sets the scheduler on print mode"},
     {"PHYLO", "Runs Philosophers dilemma"},
-    {"TESTS", "Runs one of the available tests"}};
+    {"TEST", "Runs one of the available tests"}};
 
 void (*commandFunctions[32])(int, char **) = {help,
                                               returnToShell,
@@ -93,7 +93,7 @@ void (*commandFunctions[32])(int, char **) = {help,
                                               wc,
                                               filter,
                                               call_to_set_print_mode,
-                                              phylo,
+                                              philo2,
                                               tests};
 
 int find_pipe(char *params[], int argc) {
@@ -180,7 +180,7 @@ void checkBuffer() {
   }
 
   if (pid1 > 0 && !stringEquals(params[argc - 1], "&")) {
-    int ret = call_to_waitpid(pid1);
+    /*int ret = */call_to_waitpid(pid1);
     // printf("hola!! espere a mi hijo, devolvio %d\n", ret);
   }
 

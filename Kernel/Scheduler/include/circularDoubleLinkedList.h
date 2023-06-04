@@ -24,6 +24,9 @@ void delete_node(struct Node** last, void * key);
 
 void free_list(struct Node* last); 
 
+extern void sys_free(void *memptr);
+extern void *sys_malloc(size_t requestedMemory);
+
 // void traverse(struct Node* last);
 
 #endif

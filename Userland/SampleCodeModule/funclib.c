@@ -34,49 +34,49 @@ int beginsWith(char * container, char * contains) {
 }
 
 int checkNumWithBase(char val, int base) {				// verifica si es un numero, si lo es, lo retorna
-	switch (base) {
-		case (2):
-			if (val >= '0' && val <= '1') {
-				return val - '0';
-			}
-			return -1;
-			break;
-		case (10):
-			if (val >= '0' && val <= '9') {
-				return val - '0';
-			}
-			return -1;
-			break;
-		case (16):
-			if (val >= '0' && val <= '9') {
-				return val - '0';
-			} else if (val >= 'A' && val <= 'F') {
-				return val - 'A' + 10;
-			}
-			return -1;
-			break;
-		default:
-			return -1;
-	}
-	
+  switch (base) {
+  case (2):
+    if (val >= '0' && val <= '1') {
+      return val - '0';
+    }
+    return -1;
+    break;
+  case (10):
+    if (val >= '0' && val <= '9') {
+      return val - '0';
+    }
+    return -1;
+    break;
+  case (16):
+    if (val >= '0' && val <= '9') {
+      return val - '0';
+    } else if (val >= 'A' && val <= 'F') {
+      return val - 'A' + 10;
+    }
+    return -1;
+    break;
+  default:
+    return -1;
+  }
+
 
 }
 
 int toNumWithBase(char * buffer, int from, int base) {
-	int toReturn = 0;
-	for (int i = from; buffer[i] != 0; i++) {
-		int currentNum = checkNumWithBase(buffer[i], base);
-		if (currentNum != -1) {
-			toReturn *= base;
-			toReturn += currentNum;
-		} else {
-			if (buffer[i] == ' ') {
-				return -2;
-			}
-			return -1;
-		}
-	}
-	return toReturn;
+  int toReturn = 0;
+  for (int i = from; buffer[i] != 0; i++) {
+    int currentNum = checkNumWithBase(buffer[i], base);
+    if (currentNum != -1) {
+      toReturn *= base;
+      toReturn += currentNum;
+    } else {
+      if (buffer[i] == ' ') {
+        return -2;
+      }
+      return -1;
+    }
+  }
+  return toReturn;
 }
 
 int string_to_int(char * str) {
@@ -152,19 +152,19 @@ void printMemoryAt(int argc, char** argv) {
 }
 
 char *strCat(char *destination, const char *source) {
-	// make `ptr` point to the end of the destination string
-	char *ptr = destination + strLength(destination);
+  // make `ptr` point to the end of the destination string
+  char *ptr = destination + strLength(destination);
 
-	// appends characters of the source to the destination string
-	while (*source != '\0') {
-		*ptr++ = *source++;
-	}
+  // appends characters of the source to the destination string
+  while (*source != '\0') {
+    *ptr++ = *source++;
+  }
 
-	// null terminate destination string
-	*ptr = '\0';
+  // null terminate destination string
+  *ptr = '\0';
 
-	// the destination is returned by standard `strcat()`
-	return destination;
+  // the destination is returned by standard `strcat()`
+  return destination;
 }
 
 // Retorna como parametro de entrada salida un string del numero ingresado.
@@ -178,51 +178,85 @@ void numToStr(int num, char *string, int len) {
 }
 
 uint32_t uintToBase2(uint64_t value, char *buffer, uint32_t base) {
-	char *p = buffer;
-	char *p1, *p2;
-	uint32_t digits = 0;
+  char *p = buffer;
+  char *p1, *p2;
+  uint32_t digits = 0;
 
-	//Calculate characters for each digit
-	do {
-		uint32_t remainder = value % base;
-		*p++ = (remainder < 10) ? remainder + '0' : remainder + 'A' - 10;
-		digits++;
-	} while (value /= base);
+  //Calculate characters for each digit
+  do {
+    uint32_t remainder = value % base;
+    *p++ = (remainder < 10) ? remainder + '0' : remainder + 'A' - 10;
+    digits++;
+  } while (value /= base);
 
-	// Terminate string in buffer.
-	*p = 0;
+  // Terminate string in buffer.
+  *p = 0;
 
-	//Reverse string in buffer.
-	p1 = buffer;
-	p2 = p - 1;
-	while (p1 < p2) {
-		char tmp = *p1;
-		*p1 = *p2;
-		*p2 = tmp;
-		p1++;
-		p2--;
-	}
+  //Reverse string in buffer.
+  p1 = buffer;
+  p2 = p - 1;
+  while (p1 < p2) {
+    char tmp = *p1;
+    *p1 = *p2;
+    *p2 = tmp;
+    p1++;
+    p2--;
+  }
 
-	return digits;
+  return digits;
 }
 
 int atoi2(char *str) {
-	// Initialize result
-	int res = 0;
+  // Initialize result
+  int res = 0;
 
-	// Iterate through all characters
-	// of input string and update result
-	// take ASCII character of corosponding digit and
-	// subtract the code from '0' to get numerical
-	// value and multiply res by 10 to shuffle
-	// digits left to update running total
-	int flag = (str[0] == '-' ? -1 : 1);
-	if (flag == -1) {
-		str++;
-	}
-	for (int i = 0; str[i] != '\0'; ++i)
-		res = res * 10 + str[i] - '0';
+  // Iterate through all characters
+  // of input string and update result
+  // take ASCII character of corosponding digit and
+  // subtract the code from '0' to get numerical
+  // value and multiply res by 10 to shuffle
+  // digits left to update running total
+  int flag = (str[0] == '-' ? -1 : 1);
+  if (flag == -1) {
+    str++;
+  }
+  for (int i = 0; str[i] != '\0'; ++i)
+    res = res * 10 + str[i] - '0';
 
-	// return result.
-	return res * flag;
+  // return result.
+  return res * flag;
+}
+
+void reverse(char str[], int length) {
+  int start = 0;
+  int end = length - 1;
+  while (start < end) {
+    char temp = str[start];
+    str[start] = str[end];
+    str[end] = temp;
+    end--;
+    start++;
+  }
+}
+
+char *int_to_string(int num, char *str, int base) {
+  int i = 0;
+
+  if (num == 0) {
+    str[i++] = '0';
+    str[i] = '\0';
+    return str;
+  }
+
+  // Process individual digits
+  while (num != 0) {
+    int rem = num % base;
+    str[i++] = (rem > 9) ? (rem - 10) + 'a' : rem + '0';
+    num = num / base;
+  }
+
+  str[i] = '\0';
+
+  reverse(str, i);
+  return str;
 }

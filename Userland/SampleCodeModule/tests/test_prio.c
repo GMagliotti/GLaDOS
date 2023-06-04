@@ -1,7 +1,11 @@
 #include "test_util.h"
 
-#define MINOR_WAIT 1000 // TODO: Change this value to prevent a process from flooding the screen
-#define WAIT 100000      // TODO: Change this value to make the wait long enough to see theese processes beeing run at least twice
+#define MINOR_WAIT                                                             \
+  10000 // TODO: Change this value to prevent a process from flooding the
+        // screen
+#define WAIT                                                                   \
+  1000000 // TODO: Change this value to make the wait long enough to see theese
+          // processes beeing run at least twice
 
 #define TOTAL_PROCESSES 5
 #define LOWEST 0  // TODO: Change as required
@@ -45,4 +49,7 @@ void test_prio() {
 
   for (i = 0; i < TOTAL_PROCESSES; i++)
     my_kill(pids[i]);
+
+  printf("\nTest ended. Processes were not printed because\n");
+  printf("they were created at background.\n");
 }

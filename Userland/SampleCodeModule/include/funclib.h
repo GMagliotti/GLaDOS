@@ -27,5 +27,7 @@ char *strCat(char *destination, const char *source);
 void numToStr(int num, char *string, int len);
 uint32_t uintToBase2(uint64_t value, char *buffer, uint32_t base);
 int atoi2(char *str);
+void reverse(char str[], int length);
+char* int_to_string(int num, char* str, int base);
 
 #endif
