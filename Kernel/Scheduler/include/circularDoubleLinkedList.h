@@ -5,27 +5,27 @@
 #include <stdlib.h>
 
 typedef struct Node {
-  void * data;
-  struct Node* next;
-  struct Node* prev;
+  void *data;
+  struct Node *next;
+  struct Node *prev;
 } Node;
 
-typedef Node * NodeType;
+typedef Node *NodeType;
 
-// funciones locales, que se podrían usar si se desea modificar la implementación
-// struct Node* add_front(struct Node* last, void * data);
-// struct Node* add_end(struct Node* last, void * data);
-// struct Node* add_after(struct Node* last, void * data, void * item);
+// funciones locales, que se podrían usar si se desea modificar la
+// implementación struct Node* add_front(struct Node* last, void * data); struct
+// Node* add_end(struct Node* last, void * data); struct Node* add_after(struct
+// Node* last, void * data, void * item);
 
-struct Node* add_to_empty(struct Node* last, void * data);
-struct Node* add_last(struct Node* last, void * data);
+struct Node *add_to_empty(struct Node *last, void *data);
+struct Node *add_last(struct Node *last, void *data);
 
-void delete_node(struct Node** last, void * key);
+void delete_node(struct Node **last, void *key);
 
-void free_list(struct Node* last); 
+void free_list(struct Node *last);
 
 extern void sys_free(void *memptr);
-extern void *sys_malloc(size_t requestedMemory);
+extern void *sys_malloc(size_t requested_memory);
 
 // void traverse(struct Node* last);
 

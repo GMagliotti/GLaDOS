@@ -29,7 +29,7 @@ void initialize_sys_blocking_sem();
 
 void sys_exit();
 void sys_write(char *string, int length);
-int sys_read(uint8_t fd, char *toRet, int cant_chars);
+int sys_read(uint8_t fd, char *to_ret, int cant_chars);
 void sys_put_pixel(uint32_t x, uint32_t y, uint32_t color);
 void sys_fill_rectangle(uint16_t x, uint16_t y, uint32_t color, uint16_t width,
                         uint16_t height);
@@ -41,15 +41,15 @@ void sys_set_ptry(int num);
 uint16_t sys_get_screen_height();
 uint16_t sys_get_screen_width();
 void sys_clear_buffer();
-int sys_getbufferpos();
+int sys_getbuffer_pos();
 void sys_hlt();
 int sys_getticks();
-void sys_accessRTC(timeStructT *timeStruct);
+void sys_accessRTC(timeStructT *time_struct);
 uint8_t sys_memoryAt(int dir);
 void sys_set_bash();
 void sys_beep(int freq, int timems);
-void sys_setSize(int newSize);
-void sys_printRegisters();
+void sys_set_size(int new_size);
+void sys_print_registers();
 
 void *sys_malloc(size_t requested_size);
 void sys_free(void *memptr);

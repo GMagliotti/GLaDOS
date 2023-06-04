@@ -97,7 +97,7 @@ void *initializeKernelBinary() {
   return get_stack_base();
 }
 
-extern void testInvalidExc();
+extern void test_invalid_exc();
 
 int main() {
   hvd_clear();

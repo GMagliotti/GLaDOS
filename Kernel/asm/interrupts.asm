@@ -350,8 +350,8 @@ haltcpu:
 	hlt
 	ret
 
-GLOBAL printRegisters
-printRegisters:
+GLOBAL print_registers
+print_registers:
 	pushState
 	dumpState
 	mov rdi, registerDump
