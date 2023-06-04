@@ -131,12 +131,13 @@ int sem_enqueue_process(int sem_index, int pid) {
   }
   sem_t *sem = &(sem_space->sem);
 
-  sem_process_t *created_process = sys_malloc(sizeof(sem_process_t));
+  sem_process_t *created_process = (sem_process_t *) sys_malloc(sizeof(sem_process_t));
   if (created_process == NULL) {
     return -1;
   }
 
   created_process->pid = pid;
+  created_process->next = NULL;
   if (sem->size_list == 0) { // adding first process in list
     sem->first_process = created_process;
     sem->last_process = created_process;
@@ -146,7 +147,6 @@ int sem_enqueue_process(int sem_index, int pid) {
     sem->last_process =
         created_process; // created process now the last one in the list
   }
-  created_process->next = NULL;
   sem->size_list++;
 
   return 0;

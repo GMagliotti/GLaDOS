@@ -29,11 +29,11 @@ void sys_write(char *string, int length, char fd) {
   process_ptr proc = current_process();
 
   if (proc->fd_w == 0) {
-    if (current_is_foreground()) {
+    //if (current_is_foreground()) {
       for (int i = 0; i < length; i++) {
         print_char(string[i]);
       }
-    }
+    //}
   } else {
     write_pipe(proc->fd_w, string);
   }
@@ -215,6 +215,6 @@ int sys_pipe_close(int pipe_index) { return pipe_close(pipe_index); }
 
 void sys_print_mem() { print_mem(); }
 
-void sys_yield() { sem_yield(); }
+void sys_yield() { force_timer(); }
 
 void sys_clear_screen() { hvd_clear(); }
