@@ -180,7 +180,7 @@ void checkBuffer() {
   }
 
   if (pid1 > 0 && !stringEquals(params[argc - 1], "&")) {
-    int ret = call_to_waitpid(pid1);
+    /*int ret = */call_to_waitpid(pid1);
     // printf("hola!! espere a mi hijo, devolvio %d\n", ret);
   }
 

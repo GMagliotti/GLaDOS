@@ -4,6 +4,10 @@
 extern void enter_region(uint64_t *lock, uint64_t sem_idx);
 extern void leave_region(uint64_t *lock);
 extern void *sys_malloc(size_t requested_size);
+extern int get_current_pid(void);
+extern void scheduler_revive_process(int pid);
+extern int scheduler_block_current_process();
+extern void sys_free(void *memptr);
 
 typedef struct {
   sem_t sem;
@@ -49,7 +53,7 @@ uint64_t create_sem(uint64_t initial_value, char *name) {
 // sets available condition of semaphore to true
 void destroy_sem(int sem_index) {
   if (sem_index <= 0 || sem_index >= MAX_SEM)
-    return 1;
+    return;
 
   while (sem_spaces[sem_index].sem.size_list > 0) {
     sem_dequeue_process(sem_index);
@@ -191,7 +195,7 @@ void sem_whiff(uint64_t sem_index) {
 void sem_yield(uint64_t sem_index) {
   space *sem_space = &sem_spaces[sem_index];
   if (sem_space->available == TRUE) { // space doesnt exist
-    return -1;
+    return;
   }
   sem_t *sem = &(sem_space->sem);
 

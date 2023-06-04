@@ -43,5 +43,7 @@ uint64_t sem_post(uint64_t sem_idx);
 int find_sem_index(char *name);
 // char *getSemName(uint64_t semIndex);
 // void printProcessesSem(uint64_t semIndex);
+int sem_enqueue_process(int sem_index, int pid);
+int sem_dequeue_process(int sem_index);
 
 #endif
