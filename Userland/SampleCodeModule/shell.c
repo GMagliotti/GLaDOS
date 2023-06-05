@@ -89,7 +89,7 @@ void (*command_functions[32])(int, char **) = {help,
                                                wc,
                                                filter,
                                                call_to_set_print_mode,
-                                               philo2,
+                                               philo,
                                                tests};
 
 int find_pipe(char *params[], int argc) {
