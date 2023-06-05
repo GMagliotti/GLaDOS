@@ -5,7 +5,7 @@
 #include <stdlib.h>
 
 #define MAX_NAME 15
-#define MAX_SEM 30
+#define MAX_SEM 128
 
 #define TRUE 1
 #define FALSE 0

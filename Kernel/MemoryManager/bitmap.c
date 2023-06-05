@@ -9,11 +9,6 @@ typedef struct bitmap {
   uint16_t size;
 } bitmap;
 
-typedef struct pageinfo {
-  uint32_t start_addr;
-  uint8_t state;
-} pageinfo;
-
 bitmap the_bitmap;
 
 /**
