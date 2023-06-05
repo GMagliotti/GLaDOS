@@ -85,8 +85,8 @@ void guruMeditation() {
   haltcpu();
 }
 
-void terminate() {
-  hvd_clear();
-  while (1)
-    ;
-}
+// void terminate() {
+//   hvd_clear();
+//   while (1)
+//     ;
+// }

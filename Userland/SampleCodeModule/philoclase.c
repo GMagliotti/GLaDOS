@@ -37,7 +37,7 @@ void philo2(int argc, char **argv) {
     return;
   }
 
-  r_w_sem_index = call_to_sem_open(R_W_SEMNAME); 
+  r_w_sem_index = call_to_sem_open(R_W_SEMNAME);
 
   mutex_id = call_to_create_sem(1, "philo_mutex");
 
@@ -54,11 +54,11 @@ void philo2(int argc, char **argv) {
          num_philos);
   printf("Press 'Q' at any time to quit the simulation\n");
   printf("Press 'A' to add a philosopher, or 'R' to remove one\n");
-  
+
   call_to_set_size(1);
 
   // Create philosopher processes
-  char *num;
+  char *num = NULL;
   for (int i = 0; i < num_philos; i++) {
     num = int_to_string(i, num, 10);
     char *args[3] = {"philo", num, "&"};
@@ -70,22 +70,23 @@ void philo2(int argc, char **argv) {
 
   char c;
   while ((c = get_char()) != 'Q') {
-    if(c == 'A') {
-      if(num_philos < MAX_PHILOS) {
+    if (c == 'A') {
+      if (num_philos < MAX_PHILOS) {
         num = int_to_string(num_philos, num, 10);
-        char* args[3] = {"philo", num, "&"};
-        philo_pids[num_philos] = call_to_create_process(3, args, &philosopher2, NULL);
+        char *args[3] = {"philo", num, "&"};
+        philo_pids[num_philos] =
+            call_to_create_process(3, args, &philosopher2, NULL);
         num_philos++;
       }
-    } else if(c == 'R') {
-      if(remove_philosopher() == -1) { //RACE CONDITION !!!
-        printf("Failed to remove philosopher: there must always be at least one philosopher\n");
+    } else if (c == 'R') {
+      if (remove_philosopher() == -1) { // RACE CONDITION !!!
+        printf("Failed to remove philosopher: there must always be at least "
+               "one philosopher\n");
         printf("Press 'Q' to end simulation");
       }
     } else {
       print_state2();
     }
-
   }
 
   // kill processes and semaphores
@@ -102,7 +103,7 @@ void philo2(int argc, char **argv) {
   call_to_pkill_process(call_to_getpid());
 }
 
-//remove last philosopher added
+// remove last philosopher added
 int remove_philosopher() {
   /*if(waiting_list_size > 0) {
     // Remove philosopher last philosopher from waiting list
@@ -112,12 +113,12 @@ int remove_philosopher() {
     waiting_list_size--;
     num_philos--;
     return 1;
-  } else*/ 
-  if(num_philos > 1) { //remove last philosopher added
-    call_to_pkill_process(philo_pids[num_philos-1]);
-    call_to_destroy_sem(philo_sems[num_philos-1]);
-    philo_pids[num_philos - 1] = -1;     // Set the removed pid to -1
-    philo_sems[num_philos - 1] = -1;     // Set the removed semaphore to -1
+  } else*/
+  if (num_philos > 1) { // remove last philosopher added
+    call_to_pkill_process(philo_pids[num_philos - 1]);
+    call_to_destroy_sem(philo_sems[num_philos - 1]);
+    philo_pids[num_philos - 1] = -1; // Set the removed pid to -1
+    philo_sems[num_philos - 1] = -1; // Set the removed semaphore to -1
     num_philos--;
     return 1;
   } else {
@@ -127,7 +128,6 @@ int remove_philosopher() {
 
 void philosopher2(int argc, char **argv) {
   int i = string_to_int(argv[1]); // their philosopher index
-
 
   while (1) {
     think2();

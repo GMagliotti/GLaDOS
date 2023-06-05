@@ -177,14 +177,8 @@ void buddy_free(struct memoryManager *self, int offset) {
 
 void buddy_dump(struct memoryManager *self) {
   int len = self->size << 1;
-  int max_col = self->size << 1;
   int level = 0;
-  // int i, j;
   int i;
-
-  // char cs[] = {'/', '\\'};
-  // int idx = 0;
-  // char c;
 
   print_string(
       "---------------------------------------------------------------\n", 64);
@@ -195,11 +189,9 @@ void buddy_dump(struct memoryManager *self) {
 
   print_color_string("PAGESIZE = 4096B\n", 0x100, 0x0364ff);
 
-  for (i = 0, max_col = len, level = 0; i < len - 1; i++) {
+  for (i = 0; i < len - 1; i++) {
     if (is_power_of_2(i + 1)) {
-      max_col >>= 1;
       level++;
-      // idx = 0;
       sleep(2);
 
       print_string("\n|| Level: ", 16);
@@ -216,16 +208,16 @@ void buddy_dump(struct memoryManager *self) {
                66);
 }
 
-int buddy_size(struct memoryManager *self, int offset) {
-  unsigned node_size = 1;
-  unsigned index = offset + self->size - 1;
+// int buddy_size(struct memoryManager *self, int offset) {
+//   unsigned node_size = 1;
+//   unsigned index = offset + self->size - 1;
 
-  for (; self->longest[index]; index = parent(index)) {
-    node_size >>= 1;
-  }
+//   for (; self->longest[index]; index = parent(index)) {
+//     node_size >>= 1;
+//   }
 
-  return node_size;
-}
+//   return node_size;
+// }
 
 // WRAPPERS
 

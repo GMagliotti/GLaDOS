@@ -99,7 +99,7 @@ uint64_t test_sync(int argc, char *argv[]) { //{n, use_sem, 0}
     call_to_waitpid(pids[i]);
   }
 
-  printf("Final value: %d\n", global);
+  printf("Final value: %d\n", (int)global);
 
   return 0;
 }

@@ -114,114 +114,115 @@ char get_char() {
   return c;
 }
 
-int scanf(const char *format, ...) {
-  clear_buffer();
-  int ret;
-  va_list args;
-  va_start(args, format);
-  ret = vscanf(format, args);
-  va_end(args);
-  return ret;
-}
+// int scanf(const char *format, ...) {
+//   clear_buffer();
+//   int ret;
+//   va_list args;
+//   va_start(args, format);
+//   ret = vscanf(format, args);
+//   va_end(args);
+//   return ret;
+// }
 
-int vscanf(const char *format, va_list args) {
-  int ret = 0;
-  uint8_t flag = 0;
-  while (*format != '\0') {
-    if (buffer_pos == BUFFER_SIZE) {
-      clear_buffer();
-    }
-    if (*format == '%') {
-      ret++;
-      format++;
-      switch (*format) {
-      case 'd': {
-        int *i;
-        i = va_arg(args, int *);
-        get_input();
-        *i = base_to_int(10, &flag);
-      } break;
-      case 'i': {
-        int *i;
-        i = va_arg(args, int *);
-        get_input();
-        *i = base_to_int(10, &flag);
-      } break;
-      case 'u': {
-        int *i;
-        i = va_arg(args, int *);
-        get_input();
-        *i = base_to_uint(buffer, 10);
-        if (*i < 0) {
-          flag = 1;
-        }
-      } break;
-      case 'x': {
-        int *i;
-        i = va_arg(args, int *);
-        get_input();
-        *i = base_to_uint(buffer, 16);
-        if (*i < 0) {
-          flag = 1;
-        }
-      } break;
-      case 'X': {
-        int *i;
-        i = va_arg(args, int *);
-        get_input();
-        *i = base_to_uint(buffer, 16);
-        if (*i < 0) {
-          flag = 1;
-        }
-      } break;
-      case 'o': {
-        int *i;
-        i = va_arg(args, int *);
-        get_input();
-        *i = base_to_uint(buffer, 8);
-        if (*i < 0) {
-          flag = 1;
-        }
-      } break;
-      case 'c': {
-        char *c;
-        c = va_arg(args, char *);
-        get_input();
-        *c = buffer[buffer_pos++];
-      } break;
-      default:
-        break;
-      }
-    } else {
-      get_input();
-      while (*format != '%' && *format != 0) {
-        putc(buffer[buffer_pos]);
-        if (buffer[buffer_pos++] != *format) {
-          return ret;
-        }
-        format++;
-      }
+// int vscanf(const char *format, va_list args) {
+//   int ret = 0;
+//   uint8_t flag = 0;
+//   while (*format != '\0') {
+//     if (buffer_pos == BUFFER_SIZE) {
+//       clear_buffer();
+//     }
+//     if (*format == '%') {
+//       ret++;
+//       format++;
+//       switch (*format) {
+//       case 'd': {
+//         int *i;
+//         i = va_arg(args, int *);
+//         get_input();
+//         *i = base_to_int(10, &flag);
+//       } break;
+//       case 'i': {
+//         int *i;
+//         i = va_arg(args, int *);
+//         get_input();
+//         *i = base_to_int(10, &flag);
+//       } break;
+//       case 'u': {
+//         int *i;
+//         i = va_arg(args, int *);
+//         get_input();
+//         *i = base_to_uint(buffer, 10);
+//         if (*i < 0) {
+//           flag = 1;
+//         }
+//       } break;
+//       case 'x': {
+//         int *i;
+//         i = va_arg(args, int *);
+//         get_input();
+//         *i = base_to_uint(buffer, 16);
+//         if (*i < 0) {
+//           flag = 1;
+//         }
+//       } break;
+//       case 'X': {
+//         int *i;
+//         i = va_arg(args, int *);
+//         get_input();
+//         *i = base_to_uint(buffer, 16);
+//         if (*i < 0) {
+//           flag = 1;
+//         }
+//       } break;
+//       case 'o': {
+//         int *i;
+//         i = va_arg(args, int *);
+//         get_input();
+//         *i = base_to_uint(buffer, 8);
+//         if (*i < 0) {
+//           flag = 1;
+//         }
+//       } break;
+//       case 'c': {
+//         char *c;
+//         c = va_arg(args, char *);
+//         get_input();
+//         *c = buffer[buffer_pos++];
+//       } break;
+//       default:
+//         break;
+//       }
+//     } else {
+//       get_input();
+//       while (*format != '%' && *format != 0) {
+//         putc(buffer[buffer_pos]);
+//         if (buffer[buffer_pos++] != *format) {
+//           return ret;
+//         }
+//         format++;
+//       }
 
-      while (buffer[buffer_pos] == '\n') {
-        buffer_pos++;
-      }
+//       while (buffer[buffer_pos] == '\n') {
+//         buffer_pos++;
+//       }
 
-      if (*format == 0 ||
-          buffer[buffer_pos] != 0) { // if buffer is not finished, or if there
-                                     // is no more format to read, return
-        return ret;
-      }
+//       if (*format == 0 ||
+//           buffer[buffer_pos] != 0) { // if buffer is not finished, or if
+//           there
+//                                      // is no more format to read, return
+//         return ret;
+//       }
 
-      clear_buffer();
-      format--;
-    }
-    if (flag == 1) {
-      return ret;
-    }
-    format++;
-  }
-  return ret;
-}
+//       clear_buffer();
+//       format--;
+//     }
+//     if (flag == 1) {
+//       return ret;
+//     }
+//     format++;
+//   }
+//   return ret;
+// }
 
 // uses get_char for input and returns the number inputted
 void get_input() {

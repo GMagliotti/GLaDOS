@@ -126,5 +126,4 @@ void print_robin(NodeType current) {
   print_string(" (", 4);
   print_number(((process *)(node->data))->current_lives, 10);
   print_string(" lives)\n", 15);
-  node = node->next;
 }

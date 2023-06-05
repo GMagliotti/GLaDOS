@@ -17,8 +17,7 @@ void save_char(char c) {
     printf("\n");
     check_buffer();
   } else if (c == '\b') {
-    if (command_buffer_pos > 0 || (command_buffer_pos == 0 &&
-                                   command_buffer[command_buffer_pos] == '>')) {
+    if (command_buffer_pos > 0) {
       command_buffer[--command_buffer_pos] = 0;
       printf("\b");
     }

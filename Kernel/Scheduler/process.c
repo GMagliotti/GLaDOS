@@ -76,7 +76,7 @@ process_ptr create_process(int argc, char **argv, void (*fn)(int, char **),
     current_proc->children[current_proc->children_count++] = pid;
   }
   new_process->children_count = 0;
-  for(int i = 0; i < MAX_PROCESS_AMOUNT; i++) {
+  for (int i = 0; i < MAX_PROCESS_AMOUNT; i++) {
     new_process->children[i] = -1;
   }
 
@@ -241,8 +241,6 @@ int kill_process(int pid) {
     foreground_process_pid = process_array[pid]->ppid;
     process_array[foreground_process_pid]->visibility = FOREGROUND;
   }
-
-  print_string("Killed\n", 20);
 
   sem_post(process_array[pid]->done_sem);
 

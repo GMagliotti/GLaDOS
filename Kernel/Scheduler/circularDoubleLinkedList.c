@@ -156,19 +156,19 @@ void free_list(struct Node *last) {
   delete_node(&current, current->data);
 }
 
-void traverse(struct Node *last) {
-  struct Node *p;
+// void traverse(struct Node *last) {
+//   struct Node *p;
 
-  if (last == NULL) {
-    // printf("The list is empty");
-    return;
-  }
+//   if (last == NULL) {
+//     // printf("The list is empty");
+//     return;
+//   }
 
-  p = last->next;
+//   p = last->next;
 
-  do {
-    // printf("Imprimi algo");
-    p = p->next;
+//   do {
+//     // printf("Imprimi algo");
+//     p = p->next;
 
-  } while (p != last->next);
-}
+//   } while (p != last->next);
+// }

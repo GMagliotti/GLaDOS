@@ -23,9 +23,9 @@ void sys_write(char *string, int length) {
 
   if (proc->fd_w == 0) {
     if (current_is_foreground()) {
-    for (int i = 0; i < length; i++) {
-      print_char(string[i]);
-    }
+      for (int i = 0; i < length; i++) {
+        print_char(string[i]);
+      }
     }
   } else {
     write_pipe(proc->fd_w, string);
@@ -89,12 +89,12 @@ void sys_fill_rectangle(uint16_t x, uint16_t y, uint32_t color, uint16_t width,
   return;
 }
 
-void sys_set_bash() {
-  if (current_is_foreground()) {
-    set_bash();
-  }
-  return;
-}
+// void sys_set_bash() {
+//   if (current_is_foreground()) {
+//     set_bash();
+//   }
+//   return;
+// }
 
 /* Halts the execution of instructions for a specified amount of milliseconds */
 void sys_sleep(uint32_t milliseconds) {
@@ -126,7 +126,7 @@ void sys_clear_buffer() {
   return;
 }
 
-int sys_getbuffer_pos() { return get_buffer_pos(); }
+// int sys_getbuffer_pos() { return get_buffer_pos(); }
 
 void sys_beep(int freq, int timems) { beep(freq, timems); }
 

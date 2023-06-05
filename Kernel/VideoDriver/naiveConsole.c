@@ -2,13 +2,13 @@
 
 static uint32_t uint_to_base(uint64_t value, char *buffer, uint32_t base);
 
-static char buffer[64] = {[0 ... 63] = '0'}; //pvs warning fix
+static char buffer[64] = {[0 ... 63] = '0'}; // pvs warning fix
 static uint8_t *const video = (uint8_t *)0xB8000;
 static uint8_t *current_video = (uint8_t *)0xB8000;
 static const uint32_t width = 80;
 static const uint32_t height = 25;
 
-uint8_t *get_current_video() { return current_video; }
+// uint8_t *get_current_video() { return current_video; }
 
 void nc_print(const char *string) {
   int i;
@@ -28,24 +28,24 @@ void nc_newline() {
   } while ((uint64_t)(current_video - video) % (width * 2) != 0);
 }
 
-void nc_print_dec(uint64_t value) { nc_print_base(value, 10); }
+// void nc_print_dec(uint64_t value) { nc_print_base(value, 10); }
 
 void nc_print_hex(uint64_t value) { nc_print_base(value, 16); }
 
-void nc_print_bin(uint64_t value) { nc_print_base(value, 2); }
+// void nc_print_bin(uint64_t value) { nc_print_base(value, 2); }
 
 void nc_print_base(uint64_t value, uint32_t base) {
   uint_to_base(value, buffer, base);
   nc_print(buffer);
 }
 
-void nc_clear() {
-  int i;
+// void nc_clear() {
+//   int i;
 
-  for (i = 0; i < height * width; i++)
-    video[i * 2] = ' ';
-  current_video = video;
-}
+//   for (i = 0; i < height * width; i++)
+//     video[i * 2] = ' ';
+//   current_video = video;
+// }
 
 static uint32_t uint_to_base(uint64_t value, char *buffer, uint32_t base) {
   char *p = buffer;

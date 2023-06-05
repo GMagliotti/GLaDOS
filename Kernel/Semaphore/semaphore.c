@@ -67,7 +67,7 @@ void destroy_sem(int sem_index) {
  * @return 1 if sem_idx is not valid, 0 otherwise
  */
 uint64_t sem_post(uint64_t sem_idx) {
-  if (sem_idx <= 0 || sem_idx >= MAX_SEM)
+  if (sem_idx >= MAX_SEM)
     return 1;
   sem_t *the_sem = &(sem_spaces[sem_idx].sem);
   uint64_t *lock_addr = &(the_sem->lock);
@@ -90,7 +90,7 @@ uint64_t sem_post(uint64_t sem_idx) {
  * @return 1 if sem_idx is not valid, 0 otherwise
  */
 uint64_t sem_wait(uint64_t sem_idx) {
-  if (sem_idx <= 0 || sem_idx >= MAX_SEM)
+  if (sem_idx >= MAX_SEM)
     return 0xFFFFFFFFFFFFFFFF;
   uint64_t *lock_addr = &(sem_spaces[sem_idx].sem.lock);
   enter_region(lock_addr, sem_idx); // will call sem_whiff -> enqueues and
@@ -135,7 +135,8 @@ int sem_enqueue_process(int sem_index, int pid) {
   }
   sem_t *sem = &(sem_space->sem);
 
-  sem_process_t *created_process = (sem_process_t *) sys_malloc(sizeof(sem_process_t));
+  sem_process_t *created_process =
+      (sem_process_t *)sys_malloc(sizeof(sem_process_t));
   if (created_process == NULL) {
     return -1;
   }
@@ -192,24 +193,24 @@ void sem_whiff(uint64_t sem_index) {
   scheduler_block_current_process();
 }
 
-void sem_yield(uint64_t sem_index) {
-  space *sem_space = &sem_spaces[sem_index];
-  if (sem_space->available == TRUE) { // space doesnt exist
-    return;
-  }
-  sem_t *sem = &(sem_space->sem);
+// void sem_yield(uint64_t sem_index) {
+//   space *sem_space = &sem_spaces[sem_index];
+//   if (sem_space->available == TRUE) { // space doesnt exist
+//     return;
+//   }
+//   sem_t *sem = &(sem_space->sem);
 
-  if (sem->size_list <= 1) {
-    return;
-  }
+//   if (sem->size_list <= 1) {
+//     return;
+//   }
 
-  sem_process_t *aux = sem->first_process;
+//   sem_process_t *aux = sem->first_process;
 
-  sem->first_process = aux->next;
-  sem->last_process->next = aux;
-  aux->next = NULL;
-  sem->last_process = aux;
-}
+//   sem->first_process = aux->next;
+//   sem->last_process->next = aux;
+//   aux->next = NULL;
+//   sem->last_process = aux;
+// }
 
 // TODO: hacer que el dequeue de un proceso chequee si contiene un sem -> si
 // tiene uno y es el unico que lo accede -> destroy_sem
