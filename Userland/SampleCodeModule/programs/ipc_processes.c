@@ -2,8 +2,6 @@
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 #include "include/ipc_processes.h"
 
-// SE NECESITAN SYSCALLS BLOQUEANTES PARA QUE ESTOS PROCESOS FUNCIONEN!!!
-
 void cat(int argc, char *argv[]) {
   char c;
   while ((c = get_char()) != 0)

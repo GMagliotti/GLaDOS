@@ -115,7 +115,7 @@ SECTION .text
 %macro irq_handlerMaster 1
 	pushState
 
-	mov rdi, %1 ; pasaje de parametro de irq code
+	mov rdi, %1 ; passing of parameter irq code
 	call irq_dispatcher
 
 	; signal pic EOI (End of Interrupt)
@@ -137,12 +137,12 @@ SECTION .text
 	call guruMeditation
 
 
-	.nopanic: mov rdi, %1 ; pasaje de parametro
+	.nopanic: mov rdi, %1 ; passing of parameter
 	mov rsi, registerDump ; Struct de registros dumpeados
 	call exceptionDispatcher
 
 	popState
-	; TODO change with shell initializer function later
+
 	call kill_current_process
 	mov rax, userlandStartAddress
 	mov [rsp], rax
@@ -160,7 +160,7 @@ test:
 ; rcx = void (*fn)(int, char **)
 ; r8 = void (*fn)(int, char **, void (*fn)(int, char **))
 initialize_stack:
-	;pop rbx		; Direccion de retorno a funcion create_process()
+	;pop rbx		; Return address of function create_process()
 	;push rdx		; ARGC
 	;push rsi		; ARGV	
 	mov rax, 0h 
@@ -214,7 +214,7 @@ initialize_stack:
 	;push QWORD 14h
 	mov r15, 15h
 	mov [rdi], r15
-	;push rax		; Direccion de retorno
+	;push rax		; Return address
 	ret
 	
 _hlt:
@@ -242,7 +242,7 @@ pic_master_mask:
 pic_slave_mask:
 	push    rbp
     mov     rbp, rsp
-    mov     ax, di  ; ax = mascara de 16 bits
+    mov     ax, di  ; ax = 16 bit mask
     out	0A1h,al
     pop     rbp
     retn
@@ -252,7 +252,7 @@ pic_slave_mask:
 _irq00_handler:
 	pushState
 
-	mov rdi, 0h ; pasaje de parametro de irq code
+	mov rdi, 0h ; passing of parameter irq code
 	call irq_dispatcher
 
 	mov rdi, rsp
@@ -270,7 +270,7 @@ _irq00_handler:
 _irq01_handler:
 	pushState
 
-	mov rdi, 1h ; pasaje de parametro de irq code
+	mov rdi, 1h ; passing of parameter irq code
 	call irq_dispatcher
 	cmp eax, 0
 	jz .eoi
@@ -301,8 +301,8 @@ _irq05_handler:
 
 ;User-called syscalls
 _irq60_handler:
-	;pushState -> no usare push y pop state porque quiero retornar un valor en rax
-	;			ademas al ser una interrupcion de syscall (a pedido del user) no es necesario preservar todos los registros
+	;pushState -> wont use push/pop state becuase we want to return a value in rax. Also, since its a syscall interruption
+	;				preserving all registers isnt necessary
 	push rbx
 	push r12
 	push r13
@@ -316,7 +316,7 @@ _irq60_handler:
 	mov rcx, rdx
 	mov rdx, rsi
 	mov rsi, rdi
-	mov rdi, 60h ; pasaje de parametro de irq code
+	mov rdi, 60h ; passing of parameter irq code
 	call irq_dispatcher
 	
 	mov rsp, rbp

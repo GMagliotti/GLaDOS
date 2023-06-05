@@ -12,23 +12,18 @@
 struct memoryManager {
   size_t size;
   void *start;
-  // TODO what the fuck is this
-  // size 1????
   size_t longest[MMAN_PAGECOUNT];
 };
 
 static inline int left_child(int index) {
-  /* index * 2 + 1 */
   return ((index << 1) + 1);
 }
 
 static inline int right_child(int index) {
-  /* index * 2 + 2 */
   return ((index << 1) + 2);
 }
 
 static inline int parent(int index) {
-  /* (index+1)/2 - 1 */
   return (((index + 1) >> 1) - 1);
 }
 
@@ -38,7 +33,6 @@ static inline bool is_power_of_2(int index) { return !(index & (index - 1)); }
 #define min(a, b) (((a) < (b)) ? (a) : (b))
 
 static inline unsigned next_power_of_2(unsigned size) {
-  /* depend on the fact that size < 2^32 */
   size -= 1;
   size |= (size >> 1);
   size |= (size >> 2);
@@ -63,9 +57,6 @@ struct memoryManager *buddy_new(void *const restrict memory_for_memory_manager,
     return NULL;
   }
 
-  /* allocate an array to represent a complete binary tree */
-  // self = (struct buddy *) b_malloc(sizeof(struct buddy)
-  //                                  + 2 * num_of_fragments * sizeof(size_t));
   self = (struct memoryManager *)memory_for_memory_manager;
   self->start = managed_memory;
   self->size = num_of_fragments;
@@ -123,7 +114,6 @@ int buddy_alloc(struct memoryManager *self, size_t size) {
   for (node_size = self->size; node_size != size; node_size >>= 1) {
     /* choose the child with smaller longest value which is still larger
      * than *size* */
-    /* TODO */
     index = choose_better_child(self, index, size);
   }
 
@@ -153,7 +143,7 @@ void buddy_free(struct memoryManager *self, int offset) {
   index = offset + self->size - 1;
 
   for (; self->longest[index] != 0; index = parent(index)) {
-    node_size <<= 1; /* node_size *= 2; */
+    node_size <<= 1; 
 
     if (index == 0) {
       break;
@@ -210,16 +200,6 @@ void buddy_dump(struct memoryManager *self) {
                66);
 }
 
-// int buddy_size(struct memoryManager *self, int offset) {
-//   unsigned node_size = 1;
-//   unsigned index = offset + self->size - 1;
-
-//   for (; self->longest[index]; index = parent(index)) {
-//     node_size >>= 1;
-//   }
-
-//   return node_size;
-// }
 
 // WRAPPERS
 

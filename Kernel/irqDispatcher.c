@@ -80,8 +80,6 @@ uint64_t int_21() {
       print_scheduler_robin();
       return 0;
     } else {
-      // si estoy en bash imprimo el caracter y ademas lo guardo en buffer (para
-      // su posterior validacion de comando)
       save_key(c);
     }
     sem_post(r_w_sem_id);
@@ -94,7 +92,7 @@ uint64_t int_21() {
 
 uint64_t int_80(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rcx,
                 uint64_t r8, uint64_t r9) {
-  switch (rdi) { // las funciones que estan comentadas no se usan en Userland
+  switch (rdi) {
   case 0:
     sys_exit();
     break;

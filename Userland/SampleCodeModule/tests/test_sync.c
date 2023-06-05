@@ -30,7 +30,6 @@ void my_process_inc(int argc, char *argv[]) {
     n = 4;
 
   if (use_sem) {
-    // if (!my_sem_open(SEM_ID, 1)) {
     if ((my_sem = my_sem_open(SEM_ID, 1)) == -1) {
       printf("test_sync: ERROR opening semaphore\n");
       return;
@@ -46,11 +45,6 @@ void my_process_inc(int argc, char *argv[]) {
     if (use_sem) {
       my_sem_post(my_sem);
     }
-  }
-
-  if (use_sem) {
-    // call_to_destroy_sem(my_sem);
-    // my_sem_close(SEM_ID);
   }
 
   return;

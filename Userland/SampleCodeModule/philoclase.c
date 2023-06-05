@@ -32,7 +32,6 @@ void philo(int argc, char **argv) {
   }
 
   num_philos = string_to_int(argv[1]);
-  printf("number of philos: %d\n", num_philos);
   if (num_philos > 20 || num_philos < 2) {
     printf(
         "There must be at least 2 philosophers and at most 20 philosophers!\n");
@@ -98,7 +97,6 @@ void philo(int argc, char **argv) {
 
   // kill processes and semaphores
   for (int i = 0; i < num_philos; i++) {
-    // printf("killing philo %d\n", i);
     call_to_pkill_process(philo_pids[i]);
     call_to_destroy_sem(philo_sems[i]);
   }
@@ -112,15 +110,6 @@ void philo(int argc, char **argv) {
 
 // remove last philosopher added
 int remove_philosopher() {
-  /*if(waiting_list_size > 0) {
-    // Remove philosopher last philosopher from waiting list
-    int last_philosopher = waiting_list[waiting_list_size - 1];
-    call_to_pkill_process(philo_pids[last_philosopher]);
-    call_to_destroy_sem(philo_sems[last_philosopher]);
-    waiting_list_size--;
-    num_philos--;
-    return 1;
-  } else*/
   if (num_philos > 1) { // remove last philosopher added
     call_to_pkill_process(philo_pids[num_philos - 1]);
     call_to_destroy_sem(philo_sems[num_philos - 1]);

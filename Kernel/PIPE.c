@@ -5,11 +5,11 @@
 typedef struct {
   int r_index;
   int w_index;
-  int sem_read; // id del sem para leer en este pipe
+  int sem_read; // id of the reading sem for this pipe
   char sem_read_name[MAX_PIPE_NAME];
   char buffer[BUFFER_SIZE];
   char name[MAX_PIPE_NAME];
-  int amount_processes; // cantidad de procesos que estan usando el pipe
+  int amount_processes; // amount of processes using the pipe
 } pipe_t;
 
 typedef struct {
@@ -17,7 +17,7 @@ typedef struct {
   int available;
 } space;
 
-int sem_pipe_manager; // id del sem para controlar el acceso al vetor de pipes.
+int sem_pipe_manager; // id of sem to control access to the array of pipes
 
 space pipes[MAX_PIPES];
 
@@ -44,27 +44,27 @@ int init_pipes() {
   return 0;
 }
 
-// Retorna -1 en caso de error
+// Returns -1 in case of error
 int pipe_open(char *name) {
   if (!sem_wait(sem_pipe_manager)) {
     print("Error sem_wait en pipe_open\n");
     return -1;
   }
-  // Busco si existe un pipe en nuestra estructura de datos
 
+  // Search for that pipe
   int id = find_pipe(name);
   if (id == 0) {
-    // Si no existe un pipe con ese nombre
+    // A pipe of that name does not exist
     id = create_pipe(name);
   }
   if (id == -1) {
-    print("Error en pipeOpen, id=-1\n");
+    print("Error in pipe_open, id=-1\n");
     sem_post(sem_pipe_manager);
     return -1;
   }
   pipes[id - 1].pipe.amount_processes++;
   if (!sem_post(sem_pipe_manager)) {
-    print("Error semPost en pipe_close\n");
+    print("Error sem_post in pipe_close\n");
     return -1;
   }
   return id;
@@ -75,20 +75,20 @@ int pipe_close(int pipe_index) {
     return -1;
 
   if (sem_wait(sem_pipe_manager) == -1) {
-    print("Error sem_wait en pipe_close\n");
+    print("Error sem_wait in pipe_close\n");
     return -1;
   }
 
   int close_read = sem_close(pipes[pipe_index - 1].pipe.sem_read_name);
 
   if (close_read == -1) {
-    print("pipe_close: Error en los sem close del pipe\n");
+    print("pipe_close: Error in the sem closes of pipe\n");
     return -1;
   }
   pipes[pipe_index - 1].available = true;
 
   if (sem_post(sem_pipe_manager) == -1) {
-    print("Error sem_post en pipe_close\n");
+    print("Error sem_post in pipe_close\n");
     return -1;
   }
   return 1;
@@ -156,7 +156,7 @@ int find_available_space() {
       return i;
     }
   }
-  return -1; // No hay mas espacio en el vector para crear otro pipe
+  return -1; // No more space in array to create another pipe
 }
 
 int create_pipe(char *name) {
@@ -168,7 +168,7 @@ int create_pipe(char *name) {
   int pos;
   if ((pos = find_available_space()) != -1) {
     pipe_t *new_pipe = &pipes[pos].pipe;
-    // Inicializamos la estructura
+    // Initializing the structure
     str_cpy(new_pipe->name, name);
     new_pipe->r_index = 0;
     new_pipe->w_index = 0;

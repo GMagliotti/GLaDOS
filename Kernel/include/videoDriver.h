@@ -10,7 +10,6 @@
 #include <stdint.h>
 #include <textDriver.h>
 #include <time.h>
-// #include <syscalls.h>
 
 void debug_print_grid();
 uint8_t scroll_if_full_screen(int pen_ptr_y);

@@ -5,7 +5,7 @@
 rr_queue_ptr create_new_round_robin(process_ptr idle) {
   if (idle == NULL)
     return NULL;
-  // reservamos espacio para la estructura
+  // allocating memory for the structure
   rr_queue *queue = sys_malloc(sizeof(rr_queue));
 
   queue->list = add_to_empty(queue->list, idle);
@@ -51,7 +51,7 @@ process_ptr find_next_process(rr_queue_ptr queue) {
   return queue->list->data;
 }
 
-// Agregado de proceso al scheduler
+// Adding process to scheduler
 NodeType enqueue_process(rr_queue_ptr queue, process *p) {
   if (p == NULL)
     return NULL;
@@ -59,10 +59,9 @@ NodeType enqueue_process(rr_queue_ptr queue, process *p) {
   return add_last(queue->list, (void *)p);
 }
 
-// Borrado de proceso al scheduler (lo deberiamos de poder llamar nosotros) que
-// pasa cuando un proceso termina?
+// Removing process from scheduler
 void dequeue_process(rr_queue_ptr queue, process *p) {
-  delete_node(&queue->list, (void *)p); // borrará el nodo con pid: p->pid
+  delete_node(&queue->list, (void *)p); // will delete node with pid: p->pid
 
   if (!wants_to_run(queue->list->data))
     find_next_process(queue);
@@ -94,7 +93,6 @@ process_ptr next_tick(rr_queue_ptr queue) {
     process->current_lives = get_max_lives(process->priority);
     return next_process(queue);
   } else if (process->current_lives < 0) { // error case
-    // print_string("Error: Un proceso tiene vidas negativas.", 64);
     return NULL;
   } else if (!process->current_lives) {
     process->current_lives = get_max_lives(process->priority);

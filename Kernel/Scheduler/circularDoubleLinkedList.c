@@ -21,46 +21,6 @@ struct Node *add_to_empty(struct Node *last, void *data) {
   return last;
 }
 
-// add node to the front
-// struct Node *add_front(struct Node *last, void *data) {
-//   if (last == NULL)
-//     return NULL;
-
-//   struct Node *new_node = (struct Node *)sys_malloc(sizeof(struct Node));
-
-//   new_node->data = data;
-//   new_node->next = last->next;
-//   new_node->prev = last;
-//   last->next->prev = new_node;
-
-//   last->next = new_node;
-
-//   return last;
-// }
-
-// add node to the end
-// struct Node *add_end(struct Node *last, void *data) {
-//   if (last == NULL)
-//     return add_to_empty(last, data);
-
-//   struct Node *new_node = (struct Node *)sys_malloc(sizeof(struct Node));
-//   if (new_node == NULL) {
-//     // Handle memory allocation failure
-//     // printf("Error: Failed to allocate memory for new node\n");
-//     return last;
-//   }
-
-//   new_node->data = data;
-//   new_node->next = last->next;
-//   new_node->prev = last;
-//   last->next->prev = new_node;
-
-//   last->next = new_node;
-//   last = new_node;
-
-//   return last;
-// }
-
 struct Node *add_last(struct Node *last, void *data) {
   if (last == NULL)
     return NULL;
@@ -79,38 +39,6 @@ struct Node *add_last(struct Node *last, void *data) {
 
   return last;
 }
-
-// insert node after a specific node
-// struct Node *add_after(struct Node *last, void *data, void *item) {
-//   // check if the list is empty
-//   if (last == NULL)
-//     return NULL;
-
-//   struct Node *new_node, *p;
-
-//   p = last->next;
-//   do {
-//     if (p->data == item) {
-//       new_node = (struct Node *)sys_malloc(sizeof(struct Node));
-
-//       new_node->data = data;
-//       new_node->next = p->next;
-//       new_node->prev = p;
-
-//       p->next->prev = new_node;
-//       p->next = new_node;
-
-//       if (p == last)
-//         last = new_node;
-//       return last;
-//     }
-
-//     p = p->next;
-//   } while (p != last->next);
-
-//   // printf("\nThe given node is not present in the list");
-//   return last;
-// }
 
 // delete a node
 void delete_node(struct Node **last, void *key) {
@@ -158,19 +86,3 @@ void free_list(struct Node *last) {
   delete_node(&current, current->data);
 }
 
-// void traverse(struct Node *last) {
-//   struct Node *p;
-
-//   if (last == NULL) {
-//     // printf("The list is empty");
-//     return;
-//   }
-
-//   p = last->next;
-
-//   do {
-//     // printf("Imprimi algo");
-//     p = p->next;
-
-//   } while (p != last->next);
-// }

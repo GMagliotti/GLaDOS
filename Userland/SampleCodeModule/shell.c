@@ -10,11 +10,11 @@
 int min_char_size = 1;
 int max_char_size = 6;
 
-static char command_buffer[256] = {0}; // buffer local en base al buffer
-static int command_buffer_pos = 0;     // current position de command_buffer
+static char command_buffer[256] = {0}; // local buffer
+static int command_buffer_pos = 0;     // current position of command_buffer
 void save_char(char c) {
-  // si tecla que recibo de kernel es un enter, chequeo lo que ya tenia, si es
-  // backspace borro ultimo char, si no lo guardo en buffer local
+  // if received key is an enter, check what I already had, if it is a
+  // backspace delete last char, else save in local buffer
   if (c == '\n') {
     printf("\n");
     check_buffer();
@@ -37,8 +37,8 @@ void save_char(char c) {
   }
 }
 
-// chequea si lo que esta en el buffer antes del \n es un comando correcto, y
-// ademas limpia el buffer
+//checks if whats in buffer before the \n is a valid command, and also
+// clears the buffer
 char *valid_commands[32][2] = {
     {"HELP", "Provides a list of available programs"},
     {"CLEAR", "Clears the screen"},
@@ -167,9 +167,6 @@ void check_buffer() {
       printf("Cmd 2 not found, matando 1\n");
     }
 
-    // call_to_pipe_close(pipe_id);
-    // pipe close cuando??
-
   } else {
     if ((command_pos = is_valid_command(params[0])) != -1) {
       pid1 = call_to_create_process(argc, params,
@@ -179,8 +176,7 @@ void check_buffer() {
   }
 
   if (pid1 > 0 && !string_equals(params[argc - 1], "&")) {
-    /*int ret = */ call_to_waitpid(pid1);
-    // printf("hola!! espere a mi hijo, devolvio %d\n", ret);
+    call_to_waitpid(pid1);
   }
 
   if (!found && !is_only_space(command_buffer)) {
@@ -189,10 +185,9 @@ void check_buffer() {
 
   printf(">");
 
-  clear_command_buffer(); // limpio el buffer local y seteo posicion de contador
-                          // en 0
+  clear_command_buffer(); // clear local buffer, set current position at 0
 
-  call_to_clear_buffer(); // limpio el buffer de kernel mediante syscall
+  call_to_clear_buffer(); // clear kernel buffer through syscall
 }
 
 void clear_command_buffer() {
@@ -244,7 +239,7 @@ void show_arqui_commands() {
 }
 
 void return_to_shell() {
-  hvd_clear(); // limpio pantalla
+  hvd_clear(); // clear screen
 }
 
 void print_registers() { call_to_print_registers(); }

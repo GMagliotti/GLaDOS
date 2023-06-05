@@ -8,10 +8,6 @@ extern uint8_t accessRTC(uint8_t register);
 
 extern uint8_t memoryAt(int dir);
 
-// int isUpdateInProgress() {
-// 	return accessRTC(RTCREGISTERA) & 0x80;
-// }
-
 void sleep(uint32_t seconds) {
   uint32_t startTime = seconds_elapsed();
   while (seconds > seconds_elapsed() - startTime)

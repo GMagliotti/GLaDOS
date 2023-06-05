@@ -48,8 +48,8 @@ GLOBAL call_to_clear_screen
     mov rcx, rdx    ;arg 3
     mov rdx, rsi    ;arg 2
     mov rsi, rdi    ;arg 1
-    mov rdi, %1     ;syscall deseada
-    int 80h         ;interrupcion 80
+    mov rdi, %1     ;desired syscall
+    int 80h         ;interruption 80
     mov rsp, rbp
 	pop rbp
     ret

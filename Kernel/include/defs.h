@@ -5,12 +5,12 @@
 #ifndef _defs_
 #define _defs_
 
-/* Flags para derechos de acceso de los segmentos */
-#define ACS_PRESENT 0x80 /* segmento presente en memoria */
-#define ACS_CSEG 0x18    /* segmento de codigo */
-#define ACS_DSEG 0x10    /* segmento de datos */
-#define ACS_READ 0x02    /* segmento de lectura */
-#define ACS_WRITE 0x02   /* segmento de escritura */
+/* Flags for permissions of access to segments */
+#define ACS_PRESENT 0x80 /* segment: present in memory */
+#define ACS_CSEG 0x18    /* segment: code */
+#define ACS_DSEG 0x10    /* segment: data */
+#define ACS_READ 0x02    /* segment: read */
+#define ACS_WRITE 0x02   /* segment: write */
 #define ACS_IDT ACS_DSEG
 #define ACS_INT_386 0x0E /* Interrupt GATE 32 bits */
 #define ACS_INT (ACS_PRESENT | ACS_INT_386)

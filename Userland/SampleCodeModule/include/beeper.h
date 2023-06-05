@@ -4,7 +4,6 @@
 #include <funclib.h>
 #include <user_syscalls.h>
 
-// void beep_sample();
 void boot_sound();
 void victory();
 void beeper_songs(int argc, char **argv);

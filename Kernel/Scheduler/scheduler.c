@@ -6,7 +6,7 @@
 
 rr_queue_ptr rr_scheduler;
 
-// newScheduler: crea un scheduler de tipo RoundRobinWithPriority
+// creates a scheduler of the type RoundRobinWithPriority
 rr_queue_ptr create_scheduler(void (*idle)(int, char **),
                               void (*shell)(int, char **)) {
   rr_scheduler = create_new_round_robin(initialize_idle(idle));
@@ -28,7 +28,7 @@ int get_current_pid(void) {
 
 bool initialized = false;
 
-// función que se llama cada vez que ocurre el timertick, o termina un proceso.
+// function is called whenever a timertick occurs, or a process finishes
 void *scheduler(void *rsp) {
 
   process_ptr current = get_current_process(rr_scheduler);
@@ -62,7 +62,7 @@ void *scheduler(void *rsp) {
   return (void *)context_switch(current);
 }
 
-// Agregado de proceso al scheduler
+// Adding a process to the scheduler
 int scheduler_enqueue_process(process_ptr p) {
   if (enqueue_process(rr_scheduler, p) == NULL)
     return ERROR;
@@ -83,8 +83,7 @@ int scheduler_create_process(int argc, char **argv, void (*fn)(int, char **),
   return created_process->pid;
 }
 
-// Borrado de proceso al scheduler (lo deberiamos de poder llamar nosotros) ¿que
-// pasa cuando un proceso termina?
+// Removing a process from the scheduler
 int scheduler_dequeue_process(process_ptr p) {
   dequeue_process(rr_scheduler, p);
   return 1;
@@ -107,7 +106,6 @@ void scheduler_revive_process(int pid) {
   process_ptr proc = get_process(pid);
   if (proc != NULL && proc->status == BLOCKED) {
     proc->status = ALIVE;
-    // proc->visibility = proc->og_visibility;
   }
 }
 
@@ -146,97 +144,3 @@ process_ptr finished_process_handler(process_ptr current) {
 
   return next;
 }
-
-// #include <stdio.h>
-// #include <string.h>
-
-// int main(int argc, char * argv[]) {
-
-//     uint64_t the_process = 0;
-
-//     rr_scheduler = create_scheduler();
-
-//     char * procNames[20] = {
-//         "Sneezy Boogle",
-//         "Giggles McWiggle",
-//         "Wobble Doodle",
-//         "Snickerdoodle",
-//         "Bumble Whimsy",
-//         "Ziggy Zoodle",
-//         "Flibbertigibbet",
-//         "Quibble Quackington",
-//         "Wobblefluff",
-//         "Jellybean McSquish",
-//         "Noodle Nutter",
-//         "Guffaw Snickerbottom",
-//         "Whimsical Wobblebottom",
-//         "Chuckletwist",
-//         "Doodlebug McSillypants",
-//         "Gigglefritz",
-//         "Fizzbang McGiggle",
-//         "Mirthful McSprinkle",
-//         "Teehee Wobblekins",
-//         "Guffaw Snickerdoodle" };
-
-//     int fd[2] = { 10, 10};
-
-//     char input[100];
-
-//     int count = 0;
-
-//     while (1) {
-//         process_ptr proc = (process_ptr)(rr_scheduler->list->data);
-
-//         printf("TheProcess: %lx\n", the_process);
-
-//         printf("\nRRLIST\n");
-//         print_robin(rr_scheduler->list);
-//         printf("-- Por ejecutar: %s - Process status: %s, RSP: %lx, Remaining
-//         lives: %i --\n", proc->name, getProcessStatus((int)proc->status),
-//         the_process, proc->current_lives); printf("-- Tiene %i hijos: ",
-//         proc->children_count);
-
-//         for (int i = 0; i< proc->children_count; i++) {
-//             process_ptr child = get_process(proc->children[i]);
-//             printf("%i - %s, ", child->pid, child->name);
-//         }
-
-//         printf("\nEnter an operation [ 'next', 'kill', 'block', 'finished',
-//         'add', 'print', 'end' ]: "); fgets(input, sizeof(input), stdin);
-//         input[strcspn(input, "\n")] = '\0';
-
-//         if (strcmp(input, "end") == 0 || strcmp(input, "e") == 0) {
-//             break;  // Exit the loop if "end" is entered
-//         } else if ( strcmp(input, "next") == 0 || strcmp(input, "n") == 0 ||
-//         strcmp(input, "") == 0 ) {
-
-//         } else if (strcmp(input, "kill") == 0 || strcmp(input, "k") == 0) {
-//             if (proc->priority != -1 && proc->pid != 0) {
-//                 kill_process(proc->pid);
-//             }
-//         } else if (strcmp(input, "block") == 0 || strcmp(input, "b") == 0) {
-//             if (proc->priority != -1 && proc->pid != 0) {
-//                 proc->status = BLOCKED;
-//             }
-//         } else if (strcmp(input, "finished") == 0 || strcmp(input, "f") == 0)
-//         {
-//             if (proc->priority != -1 && proc->pid != 0) {
-//                 proc->status = FINISHED;
-//             }
-//         } else if (strcmp(input, "add") == 0 || strcmp(input, "a") == 0) {
-//             scheduler_create_process(procNames[count++ % 20], 0, NULL, NULL,
-//             FOREGROUND, fd);
-//         } else if (strcmp(input, "print") == 0 || strcmp(input, "p") == 0) {
-//             ps();
-//         }
-
-//         uint64_t rsp = proc->rsp;
-
-//         the_process = *(uint64_t *)(scheduler(&rsp));
-
-//     }
-
-//     free_scheduler();
-
-//     return 0;
-// }

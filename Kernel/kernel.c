@@ -33,7 +33,6 @@ typedef int (*EntryPoint)();
 
 void clearBSS(void *bss_address, uint64_t bss_size) {
   memset(bss_address, 0, bss_size);
-  // memset(&bss, 0, &endOfBinary - &bss);
 }
 
 void *get_stack_base() {
@@ -78,8 +77,6 @@ void *initializeKernelBinary() {
   // this makes more questions pop up since the code at 0x400000 is in section
   // .text which should be WRITE PROTECTED
 
-  // clearBSS(&bss, 0x1000);
-
   nc_print("  text: 0x");
   nc_print_hex((uint64_t)&text);
   nc_newline();
@@ -119,8 +116,6 @@ int main() {
 
 void idle(int argc, char **argv) {
   while (1) {
-    // print_color_string("This is truly a runescape crocodile moment",
-    // 0xFFFFFFFFFFFFFFFF, 0x0000FF); print_char('\n');
     _hlt();
   }
 }

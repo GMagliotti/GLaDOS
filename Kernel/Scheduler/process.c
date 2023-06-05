@@ -6,7 +6,7 @@
 extern void *sys_malloc(size_t requested_size);
 extern void sys_free(void *memptr);
 
-// array con todos los procesos (organizado por pid)
+// array with all the processes (organized by pid)
 process_ptr process_array[MAX_PROCESS_AMOUNT];
 int current_pid = 0;
 int foreground_process_pid = 0;
@@ -30,7 +30,7 @@ process_ptr initialize_idle(void (*idle_fn)(int, char **)) {
   return idle;
 }
 
-// free de shell y idle
+// freeing of shell and idle
 void uninitialize(void) {
   for (int i = 1; i < MAX_PROCESS_AMOUNT; i++) {
     free_process(i);
@@ -58,13 +58,13 @@ process_ptr create_process(int argc, char **argv, void (*fn)(int, char **),
   }
 
   process_ptr new_process = (process_ptr)sys_malloc(
-      sizeof(process) + STACK_SIZE); // definir STACK SIZE !!
+      sizeof(process) + STACK_SIZE);
   if (new_process == NULL) {
     sys_free(new_process);
     return NULL;
   }
 
-  // aloco espacio para los argumentos
+  // allocating memory for the arguments
   char **args = (char **)sys_malloc(sizeof(char *) * argc);
 
   if (args == NULL) {
@@ -121,8 +121,6 @@ process_ptr create_process(int argc, char **argv, void (*fn)(int, char **),
   process_array[pid] = new_process;
   process_count++;
 
-  // char pid_string[4] = { 0 };
-  // int_to_string(new_process->pid, pid_string, 10);
   char *semnem = "the_sem";
   new_process->done_sem = create_sem(0, semnem /*str_cat("sem_", pid_string)*/);
 
@@ -175,16 +173,13 @@ void init(int argc, char **argv, void (*fn)(int, char **)) {
   return;
 }
 
-// ps: imprime todos los procesos con sus propiedades (nombre, id, prioridad,
-// SP, BP, foreground, etc)
 void ps(void) {
-  int printed_count = 0; // trackea cuantos procesos se accedieron realmente
+  int printed_count = 0; // counts how many processes were accessed
 
   for (int i = 0; i < MAX_PROCESS_AMOUNT && printed_count <= process_count;
        i++) {
     process_ptr current_process;
     if ((current_process = process_array[i]) != NULL) {
-      // con funciones de textDriver.c:
       print_color_string("\n|| ", str_length("\n||"), colors[i % 5]);
       print_color_string("Process Name: ", str_length("Process Name: "),
                          colors[i % 5]);
@@ -247,7 +242,6 @@ int kill_process(int pid) {
   sem_post(process_array[pid]->done_sem);
 
   if (current_pid == pid) {
-    // forzar timer tick
     force_timer();
     print_color_string("Evil runescape crocodile", 0xFFFF, 0xFF0000);
   }
@@ -261,7 +255,6 @@ int kill_current_process() { return kill_process(current_pid); }
 int free_process(int pid) {
   if (!process_exists(pid))
     return -1;
-  // if (pid <= 1) return 0;
 
   process_ptr proc = get_process(pid);
   process_ptr grandpa = get_process(proc->ppid);
@@ -287,26 +280,20 @@ int free_process(int pid) {
   return 1;
 }
 
-// nice: cambia la prioridad de un proceso dado su PID y una nueva prioridad
+// nice: changes the priority of a process given its pid and new priority level
 int nice_process(int pid, int priority) {
   if (pid == 0 || !process_exists(pid) || priority < 0 ||
-      priority > 5) // errores: proceso shell, no existe proceso, nivel de
-                    // prioridad incorrecto
+      priority > 5)           
     return -1;
 
-  if (process_array[pid]->priority == priority) // misma prioridad que ya tenia
+  if (process_array[pid]->priority == priority) // same priority as before
     return 0;
 
-  // cambiamos la prioridad, se cambiarán sus vidas la proxima vez que se le
-  // entregue un quantum
-  //  scheduler_dequeue_process(process_array[pid]);
   process_array[pid]->priority = priority;
-  // scheduler_enqueue_process(process_array[pid]);
 
   return 1;
 }
 
-// block: cambia el estado de un proceso entre bloqueado y listo dado su pid
 int block_process(int pid) {
   if (pid == 0)
     return 0;
@@ -321,16 +308,9 @@ int block_process(int pid) {
   }
 
   process_array[pid]->status = BLOCKED;
-  // if (foreground_process_pid == pid && pid != 1) {
-  //     process_array[pid]->visibility = BACKGROUND;
-  //     foreground_process_pid = process_array[pid]->ppid;
-  //     process_array[foreground_process_pid]->visibility = FOREGROUND;
-  // }
 
   // if the process blocked was the one running, force a timer tick
   if (current_pid == pid) {
-    // forzar un timer tick
-    //  printf("Timer was forced\n");
     force_timer();
   }
   return 0;
@@ -350,7 +330,6 @@ int unblock_process(int pid) {
   return 0;
 }
 
-// get_process: retorna un proceso dado su PID
 process_ptr get_process(int pid) { return process_array[pid]; }
 
 int get_foreground_process() { return foreground_process_pid; }
@@ -390,7 +369,6 @@ void copy_args(char **destination, char **source, int amount) {
         (char *)sys_malloc(sizeof(char) * (str_length(source[i]) + 1));
     if (destination[i] == NULL)
       return;
-    // str_cpy(destination[i], source[i], str_length(source[i]));
     str_cpy(destination[i], source[i]);
   }
 }
@@ -475,8 +453,6 @@ int waitpid(int pid) {
     return ERROR;
   }
 
-  //   process_ptr current_proc = get_process(current_pid);
-
   process_ptr proc = process_array[pid];
 
   sem_wait(proc->done_sem);
@@ -484,19 +460,17 @@ int waitpid(int pid) {
 
   int aux = proc->ret_value;
 
-  // parent has done waitpid for this process, it can now be freed
-  // destroy_sem(proc->done_sem);
+  // parent has executed waitpid for this process, it can now be freed
   free_process(pid);
 
   return aux;
 }
 
-// waitpid for orphan processes it has inherited (receives parent pid)
+// freeing of orphan processes it has inherited (receives parent pid)
 void free_adopted_zombies(int pid) {
   for (int i = 0; process_array[pid]->children[i] != -1; i++) {
     process_ptr child = process_array[process_array[pid]->children[i]];
     if (child->status == ZOMBIE) {
-      // waitpid(child->pid);
       free_process(child->pid);
     }
   }

@@ -2,7 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 #include <funclib.h>
 
-// funcion auxiliar que me retorna la resta de dos strings (sus chars)
+// returns 1 if strings are equal, 0 if not
 int string_equals(char *buf, char *arr) {
   int len = str_length(buf); // length del buffer
   if (len != str_length(arr))
@@ -22,21 +22,8 @@ int str_length(char *str) {
   return i;
 }
 
-// int begins_with(char *container, char *contains) {
-//   int len = str_length(contains); // length del buffer
-//   if (len > str_length(container)) {
-//     return -1;
-//   }
-//   int j = 0;
-//   for (; j < len; j++) {
-//     if (container[j] != contains[j])
-//       return -1;
-//   }
-//   return j;
-// }
-
 int check_num_with_base(
-    char val, int base) { // verifica si es un numero, si lo es, lo retorna
+    char val, int base) { 
   switch (base) {
   case (2):
     if (val >= '0' && val <= '1') {
@@ -122,7 +109,7 @@ void print_memory_at(int argc, char **argv) {
 
   int dir = string_to_int(argv[1]);
 
-  if (dir < 0) { // habria que poner un maximo?
+  if (dir < 0) { 
     printf("Invalid direction format, accepted bases: 2, 10, 16\n");
     return;
   }
@@ -140,81 +127,6 @@ void print_memory_at(int argc, char **argv) {
     sleepms(250);
   }
 }
-
-// char *str_cat(char *destination, const char *source) {
-//   // make `ptr` point to the end of the destination string
-//   char *ptr = destination + str_length(destination);
-
-//   // appends characters of the source to the destination string
-//   while (*source != '\0') {
-//     *ptr++ = *source++;
-//   }
-
-//   // null terminate destination string
-//   *ptr = '\0';
-
-//   // the destination is returned by standard `str_cat()`
-//   return destination;
-// }
-
-// Retorna como parametro de entrada salida un string del numero ingresado.
-// void num_to_str(int num, char *string, int len) {
-//   string[len] = 0;
-//   for (int i = len - 1; i >= 0; i--) {
-//     string[i] = (num % 10) + '0';
-//     num /= 10;
-//   }
-// }
-
-// uint32_t uint_to_base2(uint64_t value, char *buffer, uint32_t base) {
-//   char *p = buffer;
-//   char *p1, *p2;
-//   uint32_t digits = 0;
-
-//   // Calculate characters for each digit
-//   do {
-//     uint32_t remainder = value % base;
-//     *p++ = (remainder < 10) ? remainder + '0' : remainder + 'A' - 10;
-//     digits++;
-//   } while (value /= base);
-
-//   // Terminate string in buffer.
-//   *p = 0;
-
-//   // Reverse string in buffer.
-//   p1 = buffer;
-//   p2 = p - 1;
-//   while (p1 < p2) {
-//     char tmp = *p1;
-//     *p1 = *p2;
-//     *p2 = tmp;
-//     p1++;
-//     p2--;
-//   }
-
-//   return digits;
-// }
-
-// int atoi2(char *str) {
-//   // Initialize result
-//   int res = 0;
-
-//   // Iterate through all characters
-//   // of input string and update result
-//   // take ASCII character of corosponding digit and
-//   // subtract the code from '0' to get numerical
-//   // value and multiply res by 10 to shuffle
-//   // digits left to update running total
-//   int flag = (str[0] == '-' ? -1 : 1);
-//   if (flag == -1) {
-//     str++;
-//   }
-//   for (int i = 0; str[i] != '\0'; ++i)
-//     res = res * 10 + str[i] - '0';
-
-//   // return result.
-//   return res * flag;
-// }
 
 void reverse(char str[], int length) {
   int start = 0;

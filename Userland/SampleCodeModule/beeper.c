@@ -30,8 +30,6 @@ void beeper_songs(int argc, char **argv) {
   }
 }
 
-// void beep_sample() { call_to_beep(1000, 1000); }
-
 void boot_sound() {
   call_to_beep(261, 250);
   call_to_beep(392, 500);
@@ -44,8 +42,8 @@ void victory() {
   call_to_beep(392, 625);
 }
 
-// canciones obtenidas de los repositorios:
-// https://github.com/ShaneMcC/call_to_beeps y
+// Songs obtained from the repositories:
+// https://github.com/ShaneMcC/call_to_beeps and
 // https://github.com/NaWer/call_to_beep
 
 void zelda() {

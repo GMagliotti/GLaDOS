@@ -48,8 +48,6 @@ typedef struct vbe_mode_info_structure {
   uint8_t reserved1[206];
 } __attribute__((packed)) VBEModeInfoStructT;
 
-// void vprintf(const uint8_t * fmt, va_list ap);
-
 int str_length(char *str);
 int string_equals(char *buf, char *arr);
 
@@ -96,17 +94,13 @@ void fill_rect(uint16_t x, uint16_t y, uint32_t rgb_value, uint16_t w,
       (uint8_t *)((uint64_t)((vbe_mode_info_block->framebuffer) +
                              y * (vbe_mode_info_block->pitch) +
                              (x * ((vbe_mode_info_block->bpp) / 8))));
-  // uint8_t *where = (vbe_mode_info_block->framebuffer);
   int i, j;
 
   uint32_t pixel_width = ((vbe_mode_info_block->bpp) / 8),
            pitch = vbe_mode_info_block->pitch;
-  // uint8_t *where = (vbe_mode_info_block->framebuffer) + y * pitch + (x *
-  // pixel_width);
 
   for (i = 0; i < h; i++) {
     for (j = 0; j < w; j++) {
-      // put_pixel(vram, 64 + j, 64 + i, (r << 16) + (g << 8) + b);
       where[j * pixel_width] = rgb_value & 0xFF;
       where[j * pixel_width + 1] = (rgb_value >> 8) & 0xFF;
       where[j * pixel_width + 2] = (rgb_value >> 16) & 0xFF;
@@ -114,18 +108,6 @@ void fill_rect(uint16_t x, uint16_t y, uint32_t rgb_value, uint16_t w,
     where += pitch;
   }
 }
-
-// void debug_print_grid() {
-//   uint32_t screen_width = vbe_mode_info_block->width,
-//            screen_height = vbe_mode_info_block->height;
-//   uint32_t i, j;
-//   for (j = 0; j < screen_height; j += screen_height / 32) {
-//     for (i = 0; i < screen_width; i += screen_width / 32) {
-//       fill_rect(i, j, 0xFF00FF, 1, screen_height);
-//     }
-//     fill_rect(i, j, 0xFF00FF, screen_width, 1);
-//   }
-// }
 
 /* Returns the width (in pixels) of the current screen */
 uint32_t get_screen_width() { return vbe_mode_info_block->width; }
@@ -137,14 +119,12 @@ uint32_t get_screen_height() { return vbe_mode_info_block->height; }
 void hvd_clear() {
   fill_rect(0, 0, 0x0, vbe_mode_info_block->width, vbe_mode_info_block->height);
   set_bash();
-  //	memset(screenText, 0, (screenPixelHeight*screenPixelWidth)/64);
-  //// screenText vuelve a estar vacio
 }
 
 // Clears the screen if the next font to write is beyond the boundaries of the
 // screen
 uint8_t scroll_if_full_screen(
-    int pen_ptr_y) { // TODO BIEN A FUTURO - Implementar bien el scroll
+    int pen_ptr_y) { 
   if (pen_ptr_y >= vbe_mode_info_block->height) {
     hvd_clear();
     return 1;

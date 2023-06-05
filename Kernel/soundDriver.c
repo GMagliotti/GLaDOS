@@ -36,5 +36,4 @@ extern void outb(uint16_t out1, uint8_t in1);
  	 play_sound(freq);
  	 sleepms(time);
  	 nosound();
-          //set_PIT_2(old_frequency);
  }

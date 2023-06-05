@@ -1,6 +1,6 @@
 #ifndef _KEYBOARD_DRIVER_H
 #define _KEYBOARD_DRIVER_H
-// Font array: bitmap para mapear los chars que querramos en un font designado
+// Font array: bitmap to map chars we want in a designated font
 
 #include <stdint.h>
 

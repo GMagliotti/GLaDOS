@@ -17,12 +17,12 @@ typedef struct pNode {
 
 typedef struct {
   char name[MAX_NAME];
-  sem_process_t *first_process; // primer proceso esperando (waiting) en la fila
-  sem_process_t *last_process;  // ultimo proceso esperando en la fila
+  sem_process_t *first_process; // first process waiting in line
+  sem_process_t *last_process;  // last process waiting in line
   uint64_t lock;
   int value;
-  uint64_t size;      // cantidad de procesos que usan el sem
-  uint64_t size_list; // cantidad de procesos bloqueados
+  uint64_t size;      // amount of processes using the sem
+  uint64_t size_list; // amount of blocked processes
 } sem_t;
 
 int find_available_semaphore();
@@ -31,18 +31,9 @@ void init_sem();
 void destroy_sem(int sem_index);
 int sem_open(int initial_value, char *name);
 int sem_close(char *name);
-// Locks a semaphore. If successful (the lock was acquired), sem_wait() and
-// sem_trywait() will return 0.  Otherwise, -1 is returned and errno is set, and
-// the state of the semaphore is unchanged.
 uint64_t sem_wait(uint64_t sem_idx);
-// the value of the semaphore is incremented, and all threads which are waiting
-// on the semaphore are awakened. If successful, sem_post() will return 0.
-// Otherwise, -1 is returned.
 uint64_t sem_post(uint64_t sem_idx);
-// void sem();
 int find_sem_index(char *name);
-// char *getSemName(uint64_t semIndex);
-// void printProcessesSem(uint64_t semIndex);
 int sem_enqueue_process(int sem_index, int pid);
 int sem_dequeue_process(int sem_index);
 

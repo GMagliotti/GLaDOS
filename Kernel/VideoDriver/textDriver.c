@@ -14,21 +14,9 @@ uint32_t font_color = DEFAULT_FONT_COLOR;
 void set_ptrx(int num) { pen_ptr_x = num; }
 void set_ptry(int num) { pen_ptr_y = num; }
 
-/* Placeholder if multiple fonts are added*/
-// void set_font_type(int type) {
-//   switch (type) {
-//   default:
-//     font_width = DEFAULT_FONT_WIDTH;
-//     font_height = DEFAULT_FONT_HEIGHT;
-//     fontType = &font8x8_basic;
-//     break;
-//   }
-// }
-
 void set_font_size(int size) {
-  // validacion de parametros se hace en shell
+  // parameter validation done in shell
   font_size = size;
-  // si no esta entre esos valores no lo modifico
 }
 
 void set_bash() {
@@ -40,7 +28,7 @@ void print_char(uint8_t key_code) {
   uint8_t letter = key_code; // get_character_from_keyboard_hex(key_code);
   if (letter == '\0')
     return;
-  if (letter == '\n') { // es un enter
+  if (letter == '\n') { 
     pen_ptr_y += font_size * font_height;
     pen_ptr_x = 0;
     if (scroll_if_full_screen(pen_ptr_y))
@@ -49,7 +37,6 @@ void print_char(uint8_t key_code) {
   } else if (letter == '\b') {
     pen_ptr_x -= font_size * font_width;
     if (pen_ptr_x < 0) {
-      // deberia estar en linea de arriba
       pen_ptr_x = ((get_screen_width() / (font_size * font_width)) - 1) *
                       (font_size * font_width) -
                   1;
@@ -99,7 +86,7 @@ void print_number(int value, int base) {
   print_string(buffer_aux, uint_to_base(value, buffer_aux, base));
 }
 
-// funcion auxiliar que me retorna la resta de dos strings (sus chars)
+// returns 1 if strings are equal, 0 if not
 int string_equals(char *buf, char *arr) {
   int len = str_length(buf); // length del buffer
   if (len != str_length(arr))
@@ -128,12 +115,12 @@ void str_cpy(char *dest, char *src) {
   dest[i] = '\0'; // Don't forget to add the null terminator at the end
 }
 
-/* -------------------------------- GUARDADO DE KEY INTERRUPTS
+/* -------------------------------- SAVING OF KEY INTERRUPTS
  * --------------------------------*/
 static char key_buffer[256] = {0};
 static int key_buffer_pos = 0;
 static int retrieved_pos =
-    0; // va a trackear hasta que posicion del buffer el userland ya pidió char
+    0; // will track till what buffer position userland already requested char
 void save_key(uint8_t c) {
   if (key_buffer_pos + 1 == 256) {
     clear_buffer();
@@ -150,21 +137,6 @@ char get_char() {
     return key_buffer[retrieved_pos++];
   return 0;
 }
-// int get_buffer_pos() { return key_buffer_pos; }
-// char buffer_at(int n) {
-//   if (n > key_buffer_pos)
-//     return 0;
-//   return key_buffer[n];
-// }
-
-// char *str_cat(char *destination, const char *source) {
-//   char *ptr = destination + str_length(destination);
-//   while (*source != '\0') {
-//     *ptr++ = *source++;
-//   }
-//   *ptr = '\0';
-//   return destination;
-// }
 
 void reverse(char str[], int length) {
   int start = 0;

@@ -3,10 +3,10 @@
 #include <idtLoader.h>
 #include <interrupts.h>
 
-#pragma pack(push) /* Push de la alineación actual */
-#pragma pack(1)    /* Alinear las siguiente estructuras a 1 byte */
+#pragma pack(push) /* Push of current alignment */
+#pragma pack(1)    /* Align following structures to 1 byte */
 
-/* Descriptor de interrupcion */
+/* Interruption descriptor */
 typedef struct {
   uint16_t offset_l;
   uint16_t selector;
@@ -17,9 +17,9 @@ typedef struct {
   uint32_t other_cero;
 } DESCR_INT;
 
-#pragma pack(pop) /* Reestablece la alineación actual */
+#pragma pack(pop) /* Reestablishes current alignment */
 
-DESCR_INT *idt = (DESCR_INT *)0; // IDT de 255 entradas
+DESCR_INT *idt = (DESCR_INT *)0; // IDT with 255 entries
 
 static void setup_IDT_entry(int index, uint64_t offset);
 
@@ -35,7 +35,7 @@ void load_idt() {
 
   initialize_irq_functions_array();
 
-  // Interrupciones timer tick y teclado unicamente
+  // Timer tick and key interruptions only
   pic_master_mask(0xFC);
   pic_slave_mask(0xFF);
 

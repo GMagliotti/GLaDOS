@@ -32,7 +32,7 @@ void pic_master_mask(uint8_t mask);
 
 void pic_slave_mask(uint8_t mask);
 
-// Termina la ejecución de la cpu.
+// Ends execution/running of CPU
 void haltcpu(void);
 
 #endif /* INTERRUPS_H_ */

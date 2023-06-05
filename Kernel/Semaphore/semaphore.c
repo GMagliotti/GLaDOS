@@ -17,7 +17,6 @@ typedef struct {
 } space;
 static space sem_spaces[MAX_SEM];
 
-// Is there a race condition here?
 int find_available_semaphore() {
   for (int i = 0; i < MAX_SEM; i++) {
     if (sem_spaces[i].available == TRUE) {
@@ -28,7 +27,7 @@ int find_available_semaphore() {
   return -1;
 }
 
-// sets all semaphores status as available
+// sets all semaphores status' as available
 void init_sem() {
   for (int i = 0; i < MAX_SEM; i++) {
     sem_spaces[i].available = TRUE;
@@ -150,7 +149,7 @@ int sem_enqueue_process(int sem_index, int pid) {
     sem->last_process = created_process;
   } else {
     sem->last_process->next =
-        created_process; // ex-last process now in front of created_process
+        created_process; // ex-last-process now in front of created_process
     sem->last_process =
         created_process; // created process now the last one in the list
   }
@@ -169,8 +168,8 @@ int find_sem_index(char *name) {
   return -1;
 }
 
-// searches for sem with that name, returns its index (does not create sem if
-// not found, returns -1)
+// searches for sem with that name, returns its index (if not found
+// creates sem and returns its index)
 int sem_open(int initial_value, char *name) {
     int sem_index;
     if((sem_index = find_sem_index(name)) == -1) {
@@ -200,25 +199,3 @@ void sem_whiff(uint64_t sem_index) {
   }
   scheduler_block_current_process();
 }
-
-// void sem_yield(uint64_t sem_index) {
-//   space *sem_space = &sem_spaces[sem_index];
-//   if (sem_space->available == TRUE) { // space doesnt exist
-//     return;
-//   }
-//   sem_t *sem = &(sem_space->sem);
-
-//   if (sem->size_list <= 1) {
-//     return;
-//   }
-
-//   sem_process_t *aux = sem->first_process;
-
-//   sem->first_process = aux->next;
-//   sem->last_process->next = aux;
-//   aux->next = NULL;
-//   sem->last_process = aux;
-// }
-
-// TODO: hacer que el dequeue de un proceso chequee si contiene un sem -> si
-// tiene uno y es el unico que lo accede -> destroy_sem

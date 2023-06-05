@@ -8,7 +8,6 @@
 #include "user_syscalls.h"
 #include <beeper.h>
 #include <stdint.h>
-// #include <phylo.h>
 #include "../programs/include/ipc_processes.h"
 #include "../programs/include/process_info.h"
 #include "../tests/test_util.h"

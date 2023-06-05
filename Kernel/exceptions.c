@@ -51,17 +51,17 @@ void exceptionDispatcher(int exception, registerStructT *dumped_registers) {
 }
 
 static void zero_division() {
-  hvd_clear(); // _handler para manejar exception de div 0
+  hvd_clear(); // _handler that handles div 0 exception
   print_color_string("Floating point exception\n", 99, RED);
 }
 
 static void
-invalid_opcode() { // _handler para manejar exception de codigo de op invalido
+invalid_opcode() { // _handler that handles invalid op code exception
   hvd_clear();
   print_color_string("Invalid opcode\n", 99, RED);
 }
 
-static void page_fault() { // Falta un comentario de lo que hace esta exception
+static void page_fault() { 
   hvd_clear();
   print_color_string("Falla de segmentacion\n", 99, RED);
 }
@@ -86,9 +86,3 @@ void guruMeditation() {
   print_current_registers(&registerDump);
   haltcpu();
 }
-
-// void terminate() {
-//   hvd_clear();
-//   while (1)
-//     ;
-// }

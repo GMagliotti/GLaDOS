@@ -7,6 +7,5 @@
 
 void test_invalid_exc();
 void test0_div();
-// void test_malloc();
 
 #endif
