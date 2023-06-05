@@ -17,14 +17,13 @@ rr_queue_ptr create_scheduler(void (*idle)(int, char **),
   return rr_scheduler;
 }
 
-// para que se pueda acceder al current_process estando en process
 process_ptr current_process(void) { return get_current_process(rr_scheduler); }
 
 int get_current_pid(void) {
-  process_ptr current_proc = current_process();
-  if (current_proc == NULL)
+  process_ptr current = current_process();
+  if (current == NULL)
     return ERROR;
-  return current_proc->pid;
+  return current->pid;
 }
 
 bool initialized = false;
@@ -32,10 +31,10 @@ bool initialized = false;
 // función que se llama cada vez que ocurre el timertick, o termina un proceso.
 void *scheduler(void *rsp) {
 
-  process_ptr current_process = get_current_process(rr_scheduler);
+  process_ptr current = get_current_process(rr_scheduler);
 
   if (initialized) {
-    save_rsp(current_process, rsp);
+    save_rsp(current, rsp);
   } else {
     initialized = true;
   }
@@ -44,24 +43,23 @@ void *scheduler(void *rsp) {
     print_current_process();
   }
 
-  free_adopted_zombies(current_process->pid);
+  free_adopted_zombies(current->pid);
 
-  scheduler_free_killed_children(current_process->pid);
+  scheduler_free_killed_children(current->pid);
 
-  if (current_process->status == FINISHED) {
-    current_process = finished_process_handler(current_process);
+  if (current->status == FINISHED) {
+    current = finished_process_handler(current);
 
-  } else if (current_process->status == BLOCKED ||
-             current_process->status == KILLED) {
-    current_process = next_process(rr_scheduler);
+  } else if (current->status == BLOCKED || current->status == KILLED) {
+    current = next_process(rr_scheduler);
 
   } else {
-    current_process = next_tick(rr_scheduler);
+    current = next_tick(rr_scheduler);
   }
 
-  set_current_process(current_process->pid);
+  set_current_process(current->pid);
 
-  return (void *)context_switch(current_process);
+  return (void *)context_switch(current);
 }
 
 // Agregado de proceso al scheduler
@@ -139,12 +137,12 @@ void scheduler_free_killed_children(int pid) {
   }
 }
 
-process_ptr finished_process_handler(process_ptr current_process) {
+process_ptr finished_process_handler(process_ptr current) {
   process_ptr next = next_process(rr_scheduler);
 
-  scheduler_dequeue_process(current_process);
+  scheduler_dequeue_process(current);
 
-  set_zombie(current_process->pid);
+  set_zombie(current->pid);
 
   return next;
 }

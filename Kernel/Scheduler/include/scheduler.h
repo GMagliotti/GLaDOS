@@ -27,6 +27,6 @@ int scheduler_waitpid(int pid);
 
 void print_scheduler_robin();
 void scheduler_free_killed_children(int pid);
-process_ptr finished_process_handler(process_ptr current_process);
+process_ptr finished_process_handler(process_ptr current);
 
 #endif

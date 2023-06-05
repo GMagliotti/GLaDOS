@@ -27,10 +27,7 @@ int64_t test_processes(int argc, char **argv) {
 
   printf("Max processes per loop: %d\n", (int)max_processes);
 
-  int cycles = 5;
-  int current_cycle = 0;
-
-  while (current_cycle < cycles) {
+  while (1) {
 
     // Create max_processes processes
     for (rq = 0; rq < max_processes; rq++) {

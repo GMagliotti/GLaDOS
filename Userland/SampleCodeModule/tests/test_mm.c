@@ -13,19 +13,15 @@ typedef struct MM_rq {
 uint64_t test_mm(int argc, char **argv) {
 
   mm_rq mm_rqs[MAX_BLOCKS];
-  // uint8_t rq;
-  // uint32_t total;
   uint64_t max_memory = satoi(argv[0]);
 
-  if (max_memory <= 0 || max_memory > TEST_MAXMEM)
+  if (max_memory == 0 || max_memory > TEST_MAXMEM)
     max_memory = TEST_MAXMEM;
 
   printf("Memory requested (capped at %d): %d\n", TEST_MAXMEM, (int)max_memory);
   while (1) {
     uint8_t rq = 0;
-    // rq = 0;
     uint32_t total = 0;
-    // total = 0;
 
     // Request as many blocks as we can
     while (rq < MAX_BLOCKS && total < max_memory) {
