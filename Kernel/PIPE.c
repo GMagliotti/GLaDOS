@@ -1,12 +1,14 @@
+// This is a personal academic project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 #include <pipe.h>
 
 typedef struct {
   int r_index;
   int w_index;
   int sem_read; // id del sem para leer en este pipe
-  char sem_read_name[MAX_LEN];
+  char sem_read_name[MAX_PIPE_NAME];
   char buffer[BUFFER_SIZE];
-  char name[MAX_LEN];
+  char name[MAX_PIPE_NAME];
   int amount_processes; // cantidad de procesos que estan usando el pipe
 } pipe_t;
 
@@ -163,7 +165,7 @@ int create_pipe(char *name) {
     print("create_pipe: Nombre demasiado largo\n");
     return -1;
   }
-  uint64_t pos;
+  int pos;
   if ((pos = find_available_space()) != -1) {
     pipe_t *new_pipe = &pipes[pos].pipe;
     // Inicializamos la estructura
@@ -186,6 +188,5 @@ int create_pipe(char *name) {
 }
 
 int index_valid(int pipe_index) {
-  return !((pipe_index == 0 || pipe_index > MAX_PIPES) &&
-           pipes[pipe_index - 1].available == FALSE);
+  return !(pipe_index == 0 || (pipe_index > MAX_PIPES && pipes[pipe_index - 1].available == FALSE));
 }

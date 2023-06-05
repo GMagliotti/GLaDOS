@@ -1,8 +1,9 @@
+// This is a personal academic project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 #include <textModeDriver.h>
 
 static uint32_t uint_to_base(uint64_t value, char *buffer, uint32_t base);
 
-static uint8_t buffer[64] = {'0'};
 static uint8_t *const video = (uint8_t *)0xB8000;
 static uint8_t *current_video = (uint8_t *)0xB8000;
 static const uint32_t width = 80;
@@ -35,27 +36,30 @@ void hvd_print_hex(uint64_t value, uint8_t attribute) {
   hvd_print_base(value, 16, attribute);
 }
 
-void hvd_print_bin(uint64_t value, uint8_t attribute) {
-  hvd_print_base(value, 2, attribute);
-}
+// void hvd_print_bin(uint64_t value, uint8_t attribute) {
+//   hvd_print_base(value, 2, attribute);
+// }
 
 void hvd_print_base(uint64_t value, uint32_t base, uint8_t attribute) {
-  uint_to_base(value, buffer, base);
-  hvd_print(buffer, attribute);
+
+  uint8_t buffer[64] = {0};
+
+  uint_to_base(value, (char *)buffer, base);
+  hvd_print((char *)buffer, attribute);
 }
 
-void hvd_erase_char() {
-  while ((uint64_t)current_video % 2 != 0)
-    ; // We cycle until we are on a character position!
-  current_video -= 2;
-  *(current_video) = 0x0;
-  *(current_video + 1) = 0x0;
-}
+// void hvd_erase_char() {
+//   while ((uint64_t)current_video % 2 != 0)
+//     ; // We cycle until we are on a character position!
+//   current_video -= 2;
+//   *(current_video) = 0x0;
+//   *(current_video + 1) = 0x0;
+// }
 
-void hvd_erase_line() {
-  while ((uint64_t)(current_video - video) % (width * 2) != 0)
-    hvd_erase_char();
-}
+// void hvd_erase_line() {
+// while ((uint64_t)(current_video - video) % (width * 2) != 0)
+//   hvd_erase_char();
+// }
 
 uint32_t uint_to_base(uint64_t value, char *buffer, uint32_t base) {
   char *p = buffer;
@@ -86,9 +90,9 @@ uint32_t uint_to_base(uint64_t value, char *buffer, uint32_t base) {
   return digits;
 }
 
-void text_clear() {
-  for (int i = 0; i < 80 * 25 * 2; i++) {
-    current_video = video;
-    hvd_put_char(' ', WHITE_LT);
-  }
-}
+// void text_clear() {
+//   for (int i = 0; i < 80 * 25 * 2; i++) {
+//     current_video = video;
+//     hvd_put_char(' ', WHITE_LT);
+//   }
+// }

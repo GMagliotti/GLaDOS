@@ -1,4 +1,7 @@
+// This is a personal academic project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 #include "test_util.h"
+#include <stdint.h>
 
 #define MAX_BLOCKS 128
 
@@ -30,9 +33,9 @@ uint64_t test_mm(int argc, char **argv) {
     // Request as many blocks as we can
     while (rq < MAX_BLOCKS && total < max_memory) {
       mm_rqs[rq].size = GetUniform(max_memory - total - 1) + 1;
-      printf("Size: %d - ", mm_rqs[rq].size);
+      printf("Size: %d - ", (int)mm_rqs[rq].size);
       mm_rqs[rq].address = call_to_malloc(mm_rqs[rq].size);
-      printf("Addr: %x\n", mm_rqs[rq].address);
+      printf("Addr: %x\n", (uint64_t)mm_rqs[rq].address);
 
       if (mm_rqs[rq].address) {
         total += mm_rqs[rq].size;
@@ -57,7 +60,7 @@ uint64_t test_mm(int argc, char **argv) {
     // Free
     for (i = 0; i < rq; i++)
       if (mm_rqs[i].address) {
-        printf("Free addr: %x\n", mm_rqs[i].address);
+        printf("Free addr: %x\n", (uint64_t)mm_rqs[i].address);
         call_to_free(mm_rqs[i].address);
       }
   }

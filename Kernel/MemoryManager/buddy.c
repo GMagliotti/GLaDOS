@@ -1,3 +1,5 @@
+// This is a personal academic project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 /* buddy.c
  *
  * Description:
@@ -5,9 +7,9 @@
  *
  * Idea & part of the code are from https://github.com/wuwenbin/buddy2
  */
-#include <MemoryManager.h>
+#include "../include/memoryManager.h"
 
-struct MemoryManager {
+struct memoryManager {
   size_t size;
   void *start;
   // TODO what the fuck is this
@@ -49,10 +51,10 @@ static inline unsigned next_power_of_2(unsigned size) {
 /** allocate a new buddy structure
  * @param num_of_fragments number of fragments of the memory to be managed
  * @return pointer to the allocated buddy structure */
-struct MemoryManager *buddy_new(void *const restrict memory_for_memory_manager,
+struct memoryManager *buddy_new(void *const restrict memory_for_memory_manager,
                                 unsigned num_of_fragments,
                                 void *managed_memory) {
-  struct MemoryManager *self = NULL;
+  struct memoryManager *self = NULL;
   size_t node_size;
 
   int i;
@@ -64,7 +66,7 @@ struct MemoryManager *buddy_new(void *const restrict memory_for_memory_manager,
   /* allocate an array to represent a complete binary tree */
   // self = (struct buddy *) b_malloc(sizeof(struct buddy)
   //                                  + 2 * num_of_fragments * sizeof(size_t));
-  self = (struct MemoryManager *)memory_for_memory_manager;
+  self = (struct memoryManager *)memory_for_memory_manager;
   self->start = managed_memory;
   self->size = num_of_fragments;
   node_size = num_of_fragments * 2;
@@ -83,7 +85,7 @@ struct MemoryManager *buddy_new(void *const restrict memory_for_memory_manager,
 
 /* choose the child with smaller longest value which is still larger
  * than *size* */
-unsigned choose_better_child(struct MemoryManager *self, unsigned index,
+unsigned choose_better_child(struct memoryManager *self, unsigned index,
                              size_t size) {
   struct compound {
     size_t size;
@@ -105,7 +107,7 @@ unsigned choose_better_child(struct MemoryManager *self, unsigned index,
 
 /** allocate *size* from a buddy system *self*
  * @return the offset from the beginning of memory to be managed */
-int buddy_alloc(struct MemoryManager *self, size_t size) {
+int buddy_alloc(struct memoryManager *self, size_t size) {
   if (self == NULL || self->size < size) {
     return -1;
   }
@@ -138,7 +140,7 @@ int buddy_alloc(struct MemoryManager *self, size_t size) {
   return offset;
 }
 
-void buddy_free(struct MemoryManager *self, int offset) {
+void buddy_free(struct memoryManager *self, int offset) {
   if (self == NULL || offset < 0 || offset > (int)self->size) {
     return;
   }
@@ -175,15 +177,10 @@ void buddy_free(struct MemoryManager *self, int offset) {
   }
 }
 
-void buddy_dump(struct MemoryManager *self) {
+void buddy_dump(struct memoryManager *self) {
   int len = self->size << 1;
-  int max_col = self->size << 1;
   int level = 0;
-  int i, j;
-
-  char cs[] = {'/', '\\'};
-  int idx = 0;
-  char c;
+  int i;
 
   print_string(
       "---------------------------------------------------------------\n", 64);
@@ -194,11 +191,9 @@ void buddy_dump(struct MemoryManager *self) {
 
   print_color_string("PAGESIZE = 4096B\n", 0x100, 0x0364ff);
 
-  for (i = 0, max_col = len, level = 0; i < len - 1; i++) {
+  for (i = 0; i < len - 1; i++) {
     if (is_power_of_2(i + 1)) {
-      max_col >>= 1;
       level++;
-      idx = 0;
       sleep(2);
 
       print_string("\n|| Level: ", 16);
@@ -215,20 +210,20 @@ void buddy_dump(struct MemoryManager *self) {
                66);
 }
 
-int buddy_size(struct MemoryManager *self, int offset) {
-  unsigned node_size = 1;
-  unsigned index = offset + self->size - 1;
+// int buddy_size(struct memoryManager *self, int offset) {
+//   unsigned node_size = 1;
+//   unsigned index = offset + self->size - 1;
 
-  for (; self->longest[index]; index = parent(index)) {
-    node_size >>= 1;
-  }
+//   for (; self->longest[index]; index = parent(index)) {
+//     node_size >>= 1;
+//   }
 
-  return node_size;
-}
+//   return node_size;
+// }
 
 // WRAPPERS
 
-MemoryManagerADT
+memoryManagerADT
 create_memory_manager(void *const restrict memory_for_memory_manager,
                       void *const restrict managed_memory) {
   unsigned int size = MMAN_MEMSIZE;
@@ -237,7 +232,7 @@ create_memory_manager(void *const restrict memory_for_memory_manager,
                    managed_memory);
 }
 
-void *alloc_memory(MemoryManagerADT const restrict memory_manager,
+void *alloc_memory(memoryManagerADT const restrict memory_manager,
                    const size_t memory_to_allocate) {
   int offset =
       buddy_alloc(memory_manager, (memory_to_allocate % MMAN_PAGESIZE == 0)
@@ -248,11 +243,11 @@ void *alloc_memory(MemoryManagerADT const restrict memory_manager,
   return (void *)((char *)memory_manager->start + offset * MMAN_PAGESIZE);
 }
 
-void mman_free(struct MemoryManager *const restrict memory_manager, void *ptr) {
+void mman_free(struct memoryManager *const restrict memory_manager, void *ptr) {
   buddy_free(memory_manager,
              ((char *)ptr - (char *)memory_manager->start) / MMAN_PAGESIZE);
 }
 
-void print_mem(MemoryManagerADT const restrict memory_manager) {
+void print_mem(memoryManagerADT const restrict memory_manager) {
   buddy_dump(memory_manager);
 }

@@ -2,11 +2,11 @@
 #define TESTS_H
 
 #include <stdint.h>
-#include <user_syscalls.h>
 #include <stdio.h>
+#include <user_syscalls.h>
 
-void testInvalidExc();
-void test0Div();
-void testMalloc(); 
+void test_invalid_exc();
+void test0_div();
+// void test_malloc();
 
 #endif

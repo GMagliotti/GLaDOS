@@ -1,20 +1,22 @@
-#include <MemoryManager.h>
+// This is a personal academic project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+#include <memoryManager.h>
 
 typedef struct page_info {
   uint8_t state;
 } page_info;
 
-typedef struct MemoryManager {
+typedef struct memoryManager {
   uint8_t *managed_memory_start_address;
   page_info page_info_array[MMAN_PAGECOUNT];
-} MemoryManagerCDT;
+} memoryManagerCDT;
 
-MemoryManagerADT
+memoryManagerADT
 create_memory_manager(void *const restrict memory_for_memory_manager,
                       void *const restrict managed_memory) {
-  MemoryManagerADT the_mman = (MemoryManagerADT)memory_for_memory_manager;
+  memoryManagerADT the_mman = (memoryManagerADT)memory_for_memory_manager;
   if (!bmp_initialize((uint8_t *)memory_for_memory_manager +
-                          sizeof(MemoryManagerCDT),
+                          sizeof(memoryManagerCDT),
                       MMAN_PAGECOUNT))
     return NULL;
   the_mman->managed_memory_start_address = (uint8_t *)managed_memory;
@@ -24,7 +26,7 @@ create_memory_manager(void *const restrict memory_for_memory_manager,
   return the_mman;
 }
 
-void *alloc_memory(MemoryManagerADT const restrict memory_manager,
+void *alloc_memory(memoryManagerADT const restrict memory_manager,
                    const size_t memory_to_allocate) {
   bit_index bit_idx;
   slot_index slot_idx;
@@ -47,7 +49,7 @@ void *alloc_memory(MemoryManagerADT const restrict memory_manager,
                   (slot_idx * BITS_PER_SLOT + bit_idx) * MMAN_PAGESIZE);
 }
 
-void mman_free(MemoryManagerADT const restrict memory_manager, void *ptr) {
+void mman_free(memoryManagerADT const restrict memory_manager, void *ptr) {
   if (ptr == NULL)
     return;
   uint32_t start_page =
@@ -63,6 +65,6 @@ void mman_free(MemoryManagerADT const restrict memory_manager, void *ptr) {
   bmp_set_off(curr_page - start_page, start_page);
 }
 
-void print_mem(MemoryManagerADT const restrict memory_manager) {
+void print_mem(memoryManagerADT const restrict memory_manager) {
   print_bitmap();
 }

@@ -3,7 +3,7 @@
 
 #include "process.h"
 #include "roundRobin.h"
-#include <MemoryManager.h>
+#include <memoryManager.h>
 
 rr_queue_ptr create_scheduler(void (*idle)(int, char **),
                               void (*shell)(int, char **));

@@ -1,3 +1,5 @@
+// This is a personal academic project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 #include "include/process.h"
 #include <stdio.h>
 
@@ -76,6 +78,9 @@ process_ptr create_process(int argc, char **argv, void (*fn)(int, char **),
     current_proc->children[current_proc->children_count++] = pid;
   }
   new_process->children_count = 0;
+  for (int i = 0; i < MAX_PROCESS_AMOUNT; i++) {
+    new_process->children[i] = -1;
+  }
 
   new_process->name = (char *)sys_malloc(str_length(argv[0]));
   if (new_process->name == NULL) {
@@ -228,6 +233,8 @@ int kill_process(int pid) {
     return ERROR;
   }
 
+  save_children(pid);
+
   process_array[pid]->status = KILLED;
   process_array[pid]->ret_value = KILLED;
 
@@ -236,8 +243,6 @@ int kill_process(int pid) {
     foreground_process_pid = process_array[pid]->ppid;
     process_array[foreground_process_pid]->visibility = FOREGROUND;
   }
-
-  print_string("Killed\n", 20);
 
   sem_post(process_array[pid]->done_sem);
 
@@ -471,7 +476,7 @@ int waitpid(int pid) {
     return ERROR;
   }
 
-//   process_ptr current_proc = get_process(current_pid);
+  //   process_ptr current_proc = get_process(current_pid);
 
   process_ptr proc = process_array[pid];
 
@@ -489,7 +494,7 @@ int waitpid(int pid) {
 
 // waitpid for orphan processes it has inherited (receives parent pid)
 void free_adopted_zombies(int pid) {
-  for (int i = 0; process_array[pid]->children[i] != NULL; i++) {
+  for (int i = 0; process_array[pid]->children[i] != -1; i++) {
     process_ptr child = process_array[process_array[pid]->children[i]];
     if (child->status == ZOMBIE) {
       // waitpid(child->pid);

@@ -1,3 +1,5 @@
+// This is a personal academic project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 #include "Scheduler/include/process.h"
 #include "Scheduler/include/scheduler.h"
 #include "Semaphore/include/semaphore.h"
@@ -143,10 +145,10 @@ uint64_t int_80(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rcx,
   case 17:
     return sys_memoryAt((int)rsi);
   case 18:
-    sys_setSize((int)rsi);
+    sys_set_size((int)rsi);
     break;
   case 19:
-    sys_printRegisters();
+    sys_print_registers();
     break;
   case 20:
     return (uint64_t)sys_malloc((uint32_t)rsi);

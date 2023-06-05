@@ -1,5 +1,5 @@
 section .text
-GLOBAL call_to_setbash
+GLOBAL call_to_set_bash
 GLOBAL call_to_putpixel
 GLOBAL call_to_sys_write
 GLOBAL call_to_sys_read
@@ -8,15 +8,15 @@ GLOBAL call_to_setptrx
 GLOBAL call_to_setptry
 GLOBAL call_to_getvbeheight
 GLOBAL call_to_getvbewidth
-GLOBAL call_to_clearbuffer
+GLOBAL call_to_clear_buffer
 GLOBAL call_to_beep
 GLOBAL call_to_fillrectangle
 GLOBAL call_to_hlt
 GLOBAL call_to_getticks
 GLOBAL call_to_accessRTC
 GLOBAL call_to_memoryAt
-GLOBAL call_to_setSize
-GLOBAL call_to_printRegisters
+GLOBAL call_to_set_size
+GLOBAL call_to_print_registers
 GLOBAL call_to_malloc
 GLOBAL call_to_free
 GLOBAL call_to_getpid
@@ -79,7 +79,7 @@ call_to_getvbeheight:
 call_to_getvbewidth:
     call_to_handler 9
 
-call_to_clearbuffer:
+call_to_clear_buffer:
     call_to_handler 11
 
 call_to_beep:
@@ -100,10 +100,10 @@ call_to_hlt:
 call_to_memoryAt:
     call_to_handler 17
 
-call_to_setSize:
+call_to_set_size:
     call_to_handler 18
 
-call_to_printRegisters:
+call_to_print_registers:
     call_to_handler 19
 
 call_to_malloc:

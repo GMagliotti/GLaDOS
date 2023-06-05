@@ -1,3 +1,5 @@
+// This is a personal academic project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 #include <videoDriver.h>
 
 typedef int (*prueba)();
@@ -113,17 +115,17 @@ void fill_rect(uint16_t x, uint16_t y, uint32_t rgb_value, uint16_t w,
   }
 }
 
-void debug_print_grid() {
-  uint32_t screen_width = vbe_mode_info_block->width,
-           screen_height = vbe_mode_info_block->height;
-  uint32_t i, j;
-  for (j = 0; j < screen_height; j += screen_height / 32) {
-    for (i = 0; i < screen_width; i += screen_width / 32) {
-      fill_rect(i, j, 0xFF00FF, 1, screen_height);
-    }
-    fill_rect(i, j, 0xFF00FF, screen_width, 1);
-  }
-}
+// void debug_print_grid() {
+//   uint32_t screen_width = vbe_mode_info_block->width,
+//            screen_height = vbe_mode_info_block->height;
+//   uint32_t i, j;
+//   for (j = 0; j < screen_height; j += screen_height / 32) {
+//     for (i = 0; i < screen_width; i += screen_width / 32) {
+//       fill_rect(i, j, 0xFF00FF, 1, screen_height);
+//     }
+//     fill_rect(i, j, 0xFF00FF, screen_width, 1);
+//   }
+// }
 
 /* Returns the width (in pixels) of the current screen */
 uint32_t get_screen_width() { return vbe_mode_info_block->width; }

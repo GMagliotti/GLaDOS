@@ -40,13 +40,13 @@
 
 void hvd_print(char *string, char attribute);
 void hvd_put_char(char character, char attribute);
-void hvd_erase_char();
+// void hvd_erase_char();
 void hvd_newline();
 void hvd_print_dec(uint64_t value, uint8_t attribute);
 void hvd_print_hex(uint64_t value, uint8_t attribute);
 void hvd_print_bin(uint64_t value, uint8_t attribute);
 void hvd_print_base(uint64_t value, uint32_t base, uint8_t attribute);
 void hvd_erase_line();
-void text_clear();
+// void text_clear();
 
 #endif

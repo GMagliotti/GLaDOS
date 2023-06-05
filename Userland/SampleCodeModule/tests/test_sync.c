@@ -1,3 +1,5 @@
+// This is a personal academic project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 #include "test_util.h"
 
 #define SEM_ID "sem_sem"
@@ -11,8 +13,8 @@ void slowInc(int64_t *p, int64_t inc) {
   *p = aux;
 }
 
-uint64_t my_process_inc(int argc, char *argv[]) {
-  uint64_t n = 4;
+void my_process_inc(int argc, char *argv[]) {
+  uint64_t n = 2;
   int8_t inc = 1;
   int8_t use_sem = true;
 
@@ -26,13 +28,14 @@ uint64_t my_process_inc(int argc, char *argv[]) {
   // if ((inc = satoi(argv[2])) == 0)
   //   return -1;
   if ((use_sem = satoi(argv[3])) < 0)
-    return -1;
+    return;
 
-  if (use_sem)
+  if (use_sem) {
     // if (!my_sem_open(SEM_ID, 1)) {
     if ((my_sem = call_to_sem_open(1, SEM_ID)) == -1) {
         printf("test_sync: ERROR opening semaphore\n");
-        return -1;
+        return;
+      }
     }
 
   uint64_t i;
@@ -56,11 +59,12 @@ uint64_t my_process_inc(int argc, char *argv[]) {
   //   // my_sem_close(SEM_ID);
   // }
 
-  return 0;
+  return;
 }
 
 uint64_t test_sync(int argc, char *argv[]) { //{n, use_sem, 0}
-  const char *amount = "2";
+  // const char *amount = "4";
+  char *amount = "4";
   uint64_t pair_proc_num = satoi(amount);
   uint64_t pids[2 * pair_proc_num];
 
@@ -89,14 +93,15 @@ uint64_t test_sync(int argc, char *argv[]) { //{n, use_sem, 0}
   for (i = 0; i < pair_proc_num * 2; i++) {
     // my_wait(pids[i]);
     // my_wait(pids[i + TOTAL_PAIR_PROCESSES]);
-    call_to_setSize(1);
+    call_to_set_size(1);
     // call_to_clear_screen();
     printf("Esperando las creatura\n");
     // call_to_ps();
     call_to_waitpid(pids[i]);
   }
 
-  printf("Final value: %d\n", global);
+  printf("Final value: %d\n", (int)global);
 
+  call_to_set_size(2);
   return 0;
 }

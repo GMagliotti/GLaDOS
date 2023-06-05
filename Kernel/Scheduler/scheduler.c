@@ -1,3 +1,5 @@
+// This is a personal academic project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 #include "include/scheduler.h"
 #include "include/process.h"
 #include "include/roundRobin.h"
@@ -79,9 +81,9 @@ int scheduler_create_process(int argc, char **argv, void (*fn)(int, char **),
   if (scheduler_enqueue_process(created_process) == ERROR) {
     return ERROR;
   }
-  if (created_process != NULL) {
-    return created_process->pid;
-  }
+
+  return created_process->pid;
+  
   return 1;
 }
 

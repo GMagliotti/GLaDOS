@@ -1,3 +1,5 @@
+// This is a personal academic project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 #include <textDriver.h>
 
 static int pen_ptr_x = 0, pen_ptr_y = 0;
@@ -8,21 +10,20 @@ uint16_t font_size = 2; // default font size
 uint16_t font_width = DEFAULT_FONT_WIDTH;
 uint16_t font_height = DEFAULT_FONT_HEIGHT;
 uint32_t font_color = DEFAULT_FONT_COLOR;
-static uint8_t buffer[64] = {'0'};
 
 void set_ptrx(int num) { pen_ptr_x = num; }
 void set_ptry(int num) { pen_ptr_y = num; }
 
 /* Placeholder if multiple fonts are added*/
-void set_font_type(int type) {
-  switch (type) {
-  default:
-    font_width = DEFAULT_FONT_WIDTH;
-    font_height = DEFAULT_FONT_HEIGHT;
-    fontType = &font8x8_basic;
-    break;
-  }
-}
+// void set_font_type(int type) {
+//   switch (type) {
+//   default:
+//     font_width = DEFAULT_FONT_WIDTH;
+//     font_height = DEFAULT_FONT_HEIGHT;
+//     fontType = &font8x8_basic;
+//     break;
+//   }
+// }
 
 void set_font_size(int size) {
   // validacion de parametros se hace en shell
@@ -94,8 +95,8 @@ void print_color_string(char *string, uint64_t str_length, uint32_t color) {
 }
 
 void print_number(int value, int base) {
-  char buffer[64] = {0};
-  print_string(buffer, uint_to_base(value, buffer, base));
+  char buffer_aux[64] = {0};
+  print_string(buffer_aux, uint_to_base(value, buffer_aux, base));
 }
 
 // funcion auxiliar que me retorna la resta de dos strings (sus chars)
@@ -140,7 +141,7 @@ void save_key(uint8_t c) {
   key_buffer[key_buffer_pos++] = c;
 }
 void clear_buffer() {
-  memset(buffer, 0, 256); // clear buffer
+  memset(key_buffer, 0, 256); // clear buffer
   key_buffer_pos = 0;
   retrieved_pos = 0;
 }
@@ -149,21 +150,21 @@ char get_char() {
     return key_buffer[retrieved_pos++];
   return 0;
 }
-int get_buffer_pos() { return key_buffer_pos; }
-char buffer_at(int n) {
-  if (n > key_buffer_pos)
-    return 0;
-  return key_buffer[n];
-}
+// int get_buffer_pos() { return key_buffer_pos; }
+// char buffer_at(int n) {
+//   if (n > key_buffer_pos)
+//     return 0;
+//   return key_buffer[n];
+// }
 
-char *str_cat(char *destination, const char *source) {
-  char *ptr = destination + str_length(destination);
-  while (*source != '\0') {
-    *ptr++ = *source++;
-  }
-  *ptr = '\0';
-  return destination;
-}
+// char *str_cat(char *destination, const char *source) {
+//   char *ptr = destination + str_length(destination);
+//   while (*source != '\0') {
+//     *ptr++ = *source++;
+//   }
+//   *ptr = '\0';
+//   return destination;
+// }
 
 void reverse(char str[], int length) {
   int start = 0;

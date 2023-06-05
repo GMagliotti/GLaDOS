@@ -1,3 +1,5 @@
+// This is a personal academic project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 //  code to perform circular linked list operations
 // https://www.programiz.com/dsa/circular-linked-list con nuevas
 // funcionalidades.
@@ -156,19 +158,19 @@ void free_list(struct Node *last) {
   delete_node(&current, current->data);
 }
 
-void traverse(struct Node *last) {
-  struct Node *p;
+// void traverse(struct Node *last) {
+//   struct Node *p;
 
-  if (last == NULL) {
-    // printf("The list is empty");
-    return;
-  }
+//   if (last == NULL) {
+//     // printf("The list is empty");
+//     return;
+//   }
 
-  p = last->next;
+//   p = last->next;
 
-  do {
-    // printf("Imprimi algo");
-    p = p->next;
+//   do {
+//     // printf("Imprimi algo");
+//     p = p->next;
 
-  } while (p != last->next);
-}
+//   } while (p != last->next);
+// }

@@ -1,8 +1,10 @@
+// This is a personal academic project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 #include "./Scheduler/include/scheduler.h"
 #include "include/lib.h"
 #include "include/pipe.h"
+#include "memoryManager.h"
 #include "syscalls.h"
-#include <MemoryManager.h>
 #include <idtLoader.h>
 #include <interrupts.h>
 #include <lib.h>
@@ -18,7 +20,7 @@ extern uint8_t bss;
 extern uint8_t end_of_kernel_binary;
 extern uint8_t end_of_kernel;
 
-MemoryManagerADT the_memory_manager = NULL;
+memoryManagerADT the_memory_manager = NULL;
 rr_queue_ptr the_scheduler = NULL;
 static const uint64_t page_size = 0x1000;
 
@@ -97,7 +99,7 @@ void *initializeKernelBinary() {
   return get_stack_base();
 }
 
-extern void testInvalidExc();
+extern void test_invalid_exc();
 
 int main() {
   hvd_clear();

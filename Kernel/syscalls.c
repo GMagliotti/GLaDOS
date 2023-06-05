@@ -1,12 +1,10 @@
-#include "Scheduler/include/process.h"
-#include "Scheduler/include/scheduler.h"
-#include "include/videoDriver.h"
+// This is a personal academic project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 #include <syscalls.h>
-
 
 extern uint8_t memoryAt(int dir);
 
-extern MemoryManagerADT the_memory_manager;
+extern memoryManagerADT the_memory_manager;
 
 int r_w_sem_id = 10;
 
@@ -26,21 +24,21 @@ void sys_write(char *string, int length) {
   process_ptr proc = current_process();
 
   if (proc->fd_w == 0) {
-    // if (current_is_foreground()) {
-    for (int i = 0; i < length; i++) {
-      print_char(string[i]);
+    if (current_is_foreground()) {
+      for (int i = 0; i < length; i++) {
+        print_char(string[i]);
+      }
     }
-    // }
   } else {
     write_pipe(proc->fd_w, string);
   }
 }
 
 /* Reads a specified amount of characters from the file descriptor passed, and
-   stores said characters in the specified buffer toRet FileDescriptors
+   stores said characters in the specified buffer to_ret FileDescriptors
    supported: 0 - STDIN
 */
-int sys_read(uint8_t fd, char *toRet, int cant_chars) {
+int sys_read(uint8_t fd, char *to_ret, int cant_chars) {
 
   int read_count = 0;
   bool null_found = false;
@@ -51,14 +49,14 @@ int sys_read(uint8_t fd, char *toRet, int cant_chars) {
     if (current_is_foreground()) {
       for (; read_count < cant_chars && !null_found; read_count++) {
         sem_wait(r_w_sem_id);
-        toRet[read_count] = get_char();
-        if (toRet[read_count] == '\0')
+        to_ret[read_count] = get_char();
+        if (to_ret[read_count] == '\0')
           null_found = true;
       }
     }
   } else {
     for (; read_count < cant_chars; read_count++) {
-      toRet[read_count] = read_pipe(proc->fd_r);
+      to_ret[read_count] = read_pipe(proc->fd_r);
     }
   }
 
@@ -93,12 +91,12 @@ void sys_fill_rectangle(uint16_t x, uint16_t y, uint32_t color, uint16_t width,
   return;
 }
 
-void sys_set_bash() {
-  if (current_is_foreground()) {
-    set_bash();
-  }
-  return;
-}
+// void sys_set_bash() {
+//   if (current_is_foreground()) {
+//     set_bash();
+//   }
+//   return;
+// }
 
 /* Halts the execution of instructions for a specified amount of milliseconds */
 void sys_sleep(uint32_t milliseconds) {
@@ -130,7 +128,7 @@ void sys_clear_buffer() {
   return;
 }
 
-int sys_getbufferpos() { return get_buffer_pos(); }
+// int sys_getbuffer_pos() { return get_buffer_pos(); }
 
 void sys_beep(int freq, int timems) { beep(freq, timems); }
 
@@ -141,28 +139,28 @@ void sys_hlt() {
 
 int sys_getticks() { return ticks_elapsed(); }
 
-void sys_accessRTC(timeStructT *timeStruct) {
-  timeStruct->seconds = accessRTC(RTCSECONDS);
-  timeStruct->minutes = accessRTC(RTCMINUTES);
-  timeStruct->hours = accessRTC(RTCHOURS);
+void sys_accessRTC(timeStructT *time_struct) {
+  time_struct->seconds = accessRTC(RTCSECONDS);
+  time_struct->minutes = accessRTC(RTCMINUTES);
+  time_struct->hours = accessRTC(RTCHOURS);
 }
 
 uint8_t sys_memoryAt(int dir) { return memoryAt(dir); }
 
-void sys_setSize(int newSize) {
+void sys_set_size(int new_size) {
   if (current_is_foreground()) {
-    set_font_size(newSize);
+    set_font_size(new_size);
   }
 }
 
-void sys_printRegisters() {
+void sys_print_registers() {
   if (current_is_foreground()) {
     print_current_registers(&registerDump);
   }
 }
 
-void *sys_malloc(size_t requestedMemory) {
-  return alloc_memory(the_memory_manager, requestedMemory);
+void *sys_malloc(size_t requested_memory) {
+  return alloc_memory(the_memory_manager, requested_memory);
 }
 
 void sys_free(void *memptr) { mman_free(the_memory_manager, memptr); }

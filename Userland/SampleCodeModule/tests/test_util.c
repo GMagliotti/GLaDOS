@@ -1,3 +1,5 @@
+// This is a personal academic project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 #include "test_util.h"
 
 void tests(int argc, char **argv) {
@@ -20,7 +22,6 @@ void tests(int argc, char **argv) {
     return;
   }
 
-  int argc_aux = 3;
   char *argv_aux[3] = {argv[2], "1", "1"};
 
   if (argc >= 4) {
