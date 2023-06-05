@@ -4,8 +4,6 @@
 #define TOTAL_PAIR_PROCESSES 2
 
 int64_t global; // shared memory
-int my_sem;
-
 void slowInc(int64_t *p, int64_t inc) {
   uint64_t aux = *p;
   call_to_yield(); // This makes the race condition highly probable
@@ -14,9 +12,11 @@ void slowInc(int64_t *p, int64_t inc) {
 }
 
 uint64_t my_process_inc(int argc, char *argv[]) {
-  uint64_t n = 2;
+  uint64_t n = 4;
   int8_t inc = 1;
   int8_t use_sem = true;
+
+  int my_sem = -1;
 
   // if (argc != 3)
   //   return -1;
@@ -30,11 +30,9 @@ uint64_t my_process_inc(int argc, char *argv[]) {
 
   if (use_sem)
     // if (!my_sem_open(SEM_ID, 1)) {
-    if ((my_sem = call_to_sem_open(SEM_ID)) == -1) {
-      if ((my_sem = call_to_create_sem(1, SEM_ID)) == -1) {
+    if ((my_sem = call_to_sem_open(1, SEM_ID)) == -1) {
         printf("test_sync: ERROR opening semaphore\n");
         return -1;
-      }
     }
 
   uint64_t i;
@@ -62,7 +60,7 @@ uint64_t my_process_inc(int argc, char *argv[]) {
 }
 
 uint64_t test_sync(int argc, char *argv[]) { //{n, use_sem, 0}
-  const char *amount = "4";
+  const char *amount = "2";
   uint64_t pair_proc_num = satoi(amount);
   uint64_t pids[2 * pair_proc_num];
 

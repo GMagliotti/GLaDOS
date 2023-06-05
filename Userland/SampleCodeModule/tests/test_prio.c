@@ -19,8 +19,9 @@ void test_prio() {
   char *argv[] = {0};
   uint64_t i;
 
-  for (i = 0; i < TOTAL_PROCESSES; i++)
-    pids[i] = my_create_process("endless_loop_print", 0, argv);
+  argv[0] = "startfull_loop_print";
+  for (i = 0; i < TOTAL_PROCESSES; i++) 
+    pids[i] = call_to_create_process(1, argv, &endless_loop_print, NULL);
 
   bussy_wait(WAIT);
   printf("\nCHANGING PRIORITIES...\n");
