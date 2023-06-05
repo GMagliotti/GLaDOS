@@ -471,7 +471,7 @@ int waitpid(int pid) {
     return ERROR;
   }
 
-//   process_ptr current_proc = get_process(current_pid);
+  //   process_ptr current_proc = get_process(current_pid);
 
   process_ptr proc = process_array[pid];
 
