@@ -171,7 +171,13 @@ int find_sem_index(char *name) {
 
 // searches for sem with that name, returns its index (does not create sem if
 // not found, returns -1)
-int sem_open(char *name) { return find_sem_index(name); }
+int sem_open(int initial_value, char *name) {
+    int sem_index;
+    if((sem_index = find_sem_index(name)) == -1) {
+        sem_index = create_sem(initial_value, name);
+    }
+    return sem_index;
+}
 
 int sem_close(char *name) {
   int sem_index = find_sem_index(name);

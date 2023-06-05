@@ -15,17 +15,12 @@ uint64_t test_mm(int argc, char **argv) {
   mm_rq mm_rqs[MAX_BLOCKS];
   // uint8_t rq;
   // uint32_t total;
-  uint64_t max_memory;
+  uint64_t max_memory = satoi(argv[0]);
 
-  // if (argc != 1)
-  //   return -1;
+  if (max_memory <= 0 || max_memory > TEST_MAXMEM)
+    max_memory = TEST_MAXMEM;
 
-  // if ((max_memory = satoi(argv[0])) <= 0)
-  //   return -1;
-
-  max_memory = TEST_MAXMEM;
-
-  printf("Hello\n");
+  printf("Memory requested (capped at %d): %d\n", TEST_MAXMEM, (int)max_memory);
   while (1) {
     uint8_t rq = 0;
     // rq = 0;

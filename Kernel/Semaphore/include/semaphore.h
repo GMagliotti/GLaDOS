@@ -29,7 +29,7 @@ int find_available_semaphore();
 uint64_t create_sem(uint64_t initial_value, char *name);
 void init_sem();
 void destroy_sem(int sem_index);
-int sem_open(char *name);
+int sem_open(int initial_value, char *name);
 int sem_close(char *name);
 // Locks a semaphore. If successful (the lock was acquired), sem_wait() and
 // sem_trywait() will return 0.  Otherwise, -1 is returned and errno is set, and

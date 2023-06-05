@@ -187,7 +187,7 @@ uint64_t int_80(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rcx,
     sys_destroy_sem((int)rsi);
     break;
   case 32:
-    return sys_sem_open((char *)rsi);
+    return sys_sem_open((int) rsi, (char *)rdx);
     break;
   case 33:
     return sys_sem_close((char *)rsi);

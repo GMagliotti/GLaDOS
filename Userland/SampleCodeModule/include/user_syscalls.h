@@ -48,7 +48,7 @@ int call_to_waitpid(int pid);
 
 int call_to_create_sem(int initial_value, char *sem_name);
 void call_to_destroy_sem(int sem_index);
-int call_to_sem_open(char *sem_name);
+int call_to_sem_open(int initial_value, char *sem_name);
 int call_to_sem_close(char *sem_name);
 int call_to_sem_wait(int sem_index);
 int call_to_sem_post(int sem_index);

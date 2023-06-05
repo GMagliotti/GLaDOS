@@ -250,7 +250,6 @@ pic_slave_mask:
 
 ;8254 Timer (Timer Tick)
 _irq00_handler:
-
 	pushState
 
 	mov rdi, 0h ; pasaje de parametro de irq code

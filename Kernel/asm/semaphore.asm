@@ -11,12 +11,14 @@ enter_region:
     JNE  .success
     PUSH rdi 
     MOV  rdi, rsi
+    PUSH rsi
     CALL sem_whiff
+    POP  rsi
     POP  rdi
     JMP  .whiff
 
 .success:
-    STI
+    ; STI
     RET                  ;Requires process list to be implemented in semaphore.c.
 
 .whiff:
@@ -27,7 +29,7 @@ enter_region:
 leave_region:
     PUSH rbp
     MOV  rbp, rsp
-    MOV  rax, 0x00
+    MOV  rax, unlocked
     MOV  QWORD [rdi], rax
     MOV  rsp, rbp
     POP  rbp

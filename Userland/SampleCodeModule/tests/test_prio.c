@@ -10,9 +10,9 @@
           // processes beeing run at least twice
 
 #define TOTAL_PROCESSES 5
-#define LOWEST 0  // TODO: Change as required
-#define MEDIUM 3  // TODO: Change as required
-#define HIGHEST 5 // TODO: Change as required
+#define LOWEST 0
+#define MEDIUM 3
+#define HIGHEST 5
 
 int64_t prio[TOTAL_PROCESSES] = {LOWEST, MEDIUM, HIGHEST, MEDIUM, LOWEST};
 
@@ -21,8 +21,9 @@ void test_prio() {
   char *argv[] = {0};
   uint64_t i;
 
+  argv[0] = "startfull_loop_print";
   for (i = 0; i < TOTAL_PROCESSES; i++)
-    pids[i] = my_create_process("endless_loop_print", 0, argv);
+    pids[i] = call_to_create_process(1, argv, endless_loop_print, NULL);
 
   bussy_wait(WAIT);
   printf("\nCHANGING PRIORITIES...\n");

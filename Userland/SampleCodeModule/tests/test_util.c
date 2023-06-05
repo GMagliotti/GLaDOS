@@ -4,13 +4,13 @@
 
 void tests(int argc, char **argv) {
   if (argc < 2) {
-    printf("Usage: TEST <test_number> <param_1> <param_2>\n");
+    printf("Usage: TEST <test_number> <param_1>\n");
     printf("Available tests:\n");
     printf("  1 - Test memory manager <max_mem>\n");
     printf("  2 - Test priority\n");
     printf("  3 - Test processes <max_processes>\n");
-    printf("  4 - Test synchronization <n> <inc>\n");
-    printf("  5 - Test without synchronization <n> <inc>\n");
+    printf("  4 - Test synchronization <n>\n");
+    printf("  5 - Test without synchronization <n>\n");
 
     return;
   }
@@ -22,12 +22,7 @@ void tests(int argc, char **argv) {
     return;
   }
 
-  char *argv_aux[3] = {argv[2], "1", "1"};
-
-  if (argc >= 4) {
-    argv_aux[0] = argv[2];
-    argv_aux[1] = argv[3];
-  }
+  char *argv_aux[2] = {argv[2], "1"};
 
   switch (test_num) {
   case 1:
@@ -40,12 +35,12 @@ void tests(int argc, char **argv) {
     test_processes(1, argv_aux);
     break;
   case 4:
-    argv_aux[2] = "1";
-    test_sync(5, argv_aux);
+    argv_aux[1] = "1";
+    test_sync(2, argv_aux);
     break;
   case 5:
-    argv_aux[2] = "0";
-    test_sync(5, argv_aux);
+    argv_aux[1] = "0";
+    test_sync(2, argv_aux);
     break;
   }
 }
@@ -107,10 +102,10 @@ void bussy_wait(uint64_t n) {
     ;
 }
 
-// void endless_loop() {
-//   while (1)
-//     ;
-// }
+void endless_loop() {
+  while (1)
+    ;
+}
 
 void endless_loop_print() {
   int pid = my_getpid();
