@@ -23,6 +23,7 @@ int waiting_list_size = 0;
 
 int num_philos = 0;
 int r_w_sem_index;
+int add_remove_mutex_index;
 
 // Starting function
 void philo(int argc, char **argv) {
@@ -41,6 +42,8 @@ void philo(int argc, char **argv) {
   r_w_sem_index = call_to_sem_open(1, R_W_SEMNAME);
 
   mutex_id = call_to_create_sem(1, "philo_mutex");
+
+  add_remove_mutex_index = call_to_create_sem(1, "philo_ar_mutex");
 
   // Initialize STATE and waiting list
   for (int i = 0; i < num_philos; i++) {
@@ -63,7 +66,9 @@ void philo(int argc, char **argv) {
   for (int i = 0; i < num_philos; i++) {
     num = int_to_string(i, num, 10);
     char *args[3] = {"philo", num, "&"};
+    call_to_sem_wait(add_remove_mutex_index);
     philo_pids[i] = call_to_create_process(3, args, &philosopher, NULL);
+    call_to_sem_post(add_remove_mutex_index);
   }
 
   printf("\n");
@@ -75,15 +80,17 @@ void philo(int argc, char **argv) {
       if (num_philos < MAX_PHILOS) {
         num = int_to_string(num_philos, num, 10);
         char *args[3] = {"philo", num, "&"};
+        call_to_sem_wait(add_remove_mutex_index);
         philo_pids[num_philos] =
             call_to_create_process(3, args, &philosopher, NULL);
         num_philos++;
+        call_to_sem_post(add_remove_mutex_index);
         printf("\nAdded philosopher\n");
       } else {
         printf("\nCannot add more than 20 philosophers\n");
       }
     } else if (c == 'R') {
-      if (remove_philosopher() == -1) { // RACE CONDITION !!!
+      if (remove_philosopher() == -1) { 
         printf("\nFailed to remove philosopher: there must always be at least "
                "one philosopher\n");
       } else {
@@ -102,6 +109,7 @@ void philo(int argc, char **argv) {
   }
 
   call_to_destroy_sem(mutex_id);
+  call_to_destroy_sem(add_remove_mutex_index);
 
   call_to_set_size(2);
 
@@ -111,11 +119,13 @@ void philo(int argc, char **argv) {
 // remove last philosopher added
 int remove_philosopher() {
   if (num_philos > 1) { // remove last philosopher added
+    call_to_sem_wait(add_remove_mutex_index);
     call_to_pkill_process(philo_pids[num_philos - 1]);
     call_to_destroy_sem(philo_sems[num_philos - 1]);
     philo_pids[num_philos - 1] = -1; // Set the removed pid to -1
     philo_sems[num_philos - 1] = -1; // Set the removed semaphore to -1
     num_philos--;
+    call_to_sem_post(add_remove_mutex_index);
     return 1;
   } else {
     return -1;
