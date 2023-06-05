@@ -39,7 +39,7 @@ void philo(int argc, char **argv) {
     return;
   }
 
-  r_w_sem_index = call_to_sem_open(R_W_SEMNAME);
+  r_w_sem_index = call_to_sem_open(1, R_W_SEMNAME);
 
   mutex_id = call_to_create_sem(1, "philo_mutex");
 
