@@ -24,10 +24,10 @@ void sys_write(char *string, int length) {
   process_ptr proc = current_process();
 
   if (proc->fd_w == 0) {
-    if (current_is_foreground()) {
-      for (int i = 0; i < length; i++) {
-        print_char(string[i]);
-      }
+    // if (current_is_foreground()) {
+    for (int i = 0; i < length; i++) {
+      print_char(string[i]);
+      // }
     }
   } else {
     write_pipe(proc->fd_w, string);
@@ -196,7 +196,9 @@ int sys_create_sem(int initial_value, char *sem_name) {
 
 void sys_destroy_sem(int sem_index) { destroy_sem(sem_index); }
 
-int sys_sem_open(int initial_value, char *sem_name) { return sem_open(initial_value, sem_name); }
+int sys_sem_open(int initial_value, char *sem_name) {
+  return sem_open(initial_value, sem_name);
+}
 
 int sys_sem_close(char *sem_name) { return sem_close(sem_name); }
 

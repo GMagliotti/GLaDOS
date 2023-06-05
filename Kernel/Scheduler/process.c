@@ -472,7 +472,6 @@ bool on_print_mode() { return print_mode; }
 
 int waitpid(int pid) {
   if (pid == 0 || pid == 1 || !process_exists(pid)) {
-    print_string("ERROR: pid invalido\n", 50);
     return ERROR;
   }
 

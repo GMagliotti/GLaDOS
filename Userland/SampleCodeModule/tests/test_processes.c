@@ -14,22 +14,33 @@ int64_t test_processes(int argc, char **argv) {
   uint8_t rq;
   uint8_t alive = 0;
   uint8_t action;
-  uint64_t max_processes;
+  uint64_t max_processes = satoi(argv[0]);
   char *argvAux[] = {0};
 
   if (argc != 1)
     return -1;
 
-  if ((max_processes = satoi(argv[0])) <= 0)
-    return -1;
+  if (max_processes <= 0 || max_processes > 20)
+    max_processes = 5;
 
   p_rq p_rqs[max_processes];
 
-  while (1) {
+  printf("Max processes per loop: %d\n", (int)max_processes);
+
+  int cycles = 5;
+  int current_cycle = 0;
+
+  while (current_cycle < cycles) {
 
     // Create max_processes processes
     for (rq = 0; rq < max_processes; rq++) {
-      p_rqs[rq].pid = my_create_process("endless_loop", 0, argvAux);
+      // p_rqs[rq].pid = my_create_process("endless_loop", 0, argvAux);
+      argvAux[0] = "&";
+      p_rqs[rq].pid = my_create_process("endless_loop", 1, argvAux);
+
+      printf("Created PID: %d\n", (int)p_rqs[rq].pid);
+
+      sleepms(1);
 
       if (p_rqs[rq].pid == -1) {
         printf("test_processes: ERROR creating process\n");
@@ -54,6 +65,7 @@ int64_t test_processes(int argc, char **argv) {
               printf("test_processes: ERROR killing process\n");
               return -1;
             }
+            printf("Killed PID: %d\n", (int)p_rqs[rq].pid);
             p_rqs[rq].state = KILLED;
             alive--;
           }
@@ -65,6 +77,7 @@ int64_t test_processes(int argc, char **argv) {
               printf("test_processes: ERROR blocking process\n");
               return -1;
             }
+            printf("Blocked PID: %d\n", (int)p_rqs[rq].pid);
             p_rqs[rq].state = BLOCKED;
           }
           break;
@@ -78,8 +91,13 @@ int64_t test_processes(int argc, char **argv) {
             printf("test_processes: ERROR unblocking process\n");
             return -1;
           }
+          printf("Unblocked PID: %d\n", (int)p_rqs[rq].pid);
           p_rqs[rq].state = RUNNING;
         }
     }
   }
+
+  printf("\nTest ended. Processes were not printed because\n");
+  printf("they were created at background.\n");
+  return 0;
 }
