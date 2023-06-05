@@ -1,3 +1,5 @@
+// This is a personal academic project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 #include "include/roundRobin.h"
 
 rr_queue_ptr create_new_round_robin(process_ptr idle) {

@@ -1,3 +1,5 @@
+// This is a personal academic project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 #include "include/semaphore.h"
 #include <textDriver.h>
 
@@ -67,7 +69,7 @@ void destroy_sem(int sem_index) {
  * @return 1 if sem_idx is not valid, 0 otherwise
  */
 uint64_t sem_post(uint64_t sem_idx) {
-  if (sem_idx >= MAX_SEM)
+  if (sem_idx == 0 || sem_idx >= MAX_SEM)
     return 1;
   sem_t *the_sem = &(sem_spaces[sem_idx].sem);
   uint64_t *lock_addr = &(the_sem->lock);
@@ -90,8 +92,8 @@ uint64_t sem_post(uint64_t sem_idx) {
  * @return 1 if sem_idx is not valid, 0 otherwise
  */
 uint64_t sem_wait(uint64_t sem_idx) {
-  if (sem_idx >= MAX_SEM)
-    return 0xFFFFFFFFFFFFFFFF;
+  if (sem_idx == 0 || sem_idx >= MAX_SEM)
+    return 1;
   uint64_t *lock_addr = &(sem_spaces[sem_idx].sem.lock);
   enter_region(lock_addr, sem_idx); // will call sem_whiff -> enqueues and
                                     // blocks process if sem value is 0

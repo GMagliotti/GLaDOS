@@ -1,3 +1,5 @@
+// This is a personal academic project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 #include <stdio.h>
 #include <user_syscalls.h>
 
@@ -50,7 +52,7 @@ void vprintf(char *fmt, va_list ap) {
       } break;
       case 'c': {
         char *c = va_arg(ap, char *);
-        if (*c <= 0x7F && *c >= 0x10)
+        if (*c >= 0x10)
           buffer[length++] = *c;
         else
           buffer[length++] = ' ';
@@ -227,13 +229,10 @@ char get_char() {
 // uses get_char for input and returns the number inputted
 void get_input() {
   int i = buffer_pos;
-  char c;
   do {
     buffer[i] = get_char();
-    if (buffer[i] != 0) {
-      c = buffer[i++];
-    }
-  } while (c != '\n' && i < BUFFER_SIZE);
+    i++;
+  } while (i < BUFFER_SIZE && buffer[i] != '\n');
 
   if (i == BUFFER_SIZE) {
     buffer[i - 1] = '\0';

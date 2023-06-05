@@ -1,8 +1,9 @@
+// This is a personal academic project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 #include <naiveConsole.h>
 
 static uint32_t uint_to_base(uint64_t value, char *buffer, uint32_t base);
 
-static char buffer[64] = {[0 ... 63] = '0'}; // pvs warning fix
 static uint8_t *const video = (uint8_t *)0xB8000;
 static uint8_t *current_video = (uint8_t *)0xB8000;
 static const uint32_t width = 80;
@@ -35,6 +36,9 @@ void nc_print_hex(uint64_t value) { nc_print_base(value, 16); }
 // void nc_print_bin(uint64_t value) { nc_print_base(value, 2); }
 
 void nc_print_base(uint64_t value, uint32_t base) {
+
+  char buffer[64] = {0};
+
   uint_to_base(value, buffer, base);
   nc_print(buffer);
 }

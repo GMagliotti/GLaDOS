@@ -1,3 +1,5 @@
+// This is a personal academic project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 #include <funclib.h>
 
 // funcion auxiliar que me retorna la resta de dos strings (sus chars)
@@ -134,7 +136,7 @@ void print_memory_at(int argc, char **argv) {
             b3 = call_to_memoryAt(aligneddir + i + 2),
             b4 = call_to_memoryAt(aligneddir + i + 3);
     printf("%x | %x %x %x %x | %c %c %c %c\n", aligneddir + i, b1, b2, b3, b4,
-           &b1, &b2, &b3, &b4);
+           (char)b1, (char)b2, (char)b3, (char)b4);
     sleepms(250);
   }
 }

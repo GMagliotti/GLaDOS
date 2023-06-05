@@ -1,3 +1,5 @@
+// This is a personal academic project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 #include "test_util.h"
 
 #define SEM_ID "sem_sem"
@@ -101,5 +103,6 @@ uint64_t test_sync(int argc, char *argv[]) { //{n, use_sem, 0}
 
   printf("Final value: %d\n", (int)global);
 
+  call_to_set_size(2);
   return 0;
 }

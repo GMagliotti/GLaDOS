@@ -2,7 +2,6 @@
 #define PIPE_H
 
 #define BUFFER_SIZE 1024
-#define MAX_LEN 20
 #define MAX_PIPES 10
 #define MAX_PIPE_NAME 32
 

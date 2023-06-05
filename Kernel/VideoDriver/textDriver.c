@@ -1,3 +1,5 @@
+// This is a personal academic project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 #include <textDriver.h>
 
 static int pen_ptr_x = 0, pen_ptr_y = 0;
@@ -8,7 +10,6 @@ uint16_t font_size = 2; // default font size
 uint16_t font_width = DEFAULT_FONT_WIDTH;
 uint16_t font_height = DEFAULT_FONT_HEIGHT;
 uint32_t font_color = DEFAULT_FONT_COLOR;
-static uint8_t buffer[64] = {[0 ... 63] = '0'};
 
 void set_ptrx(int num) { pen_ptr_x = num; }
 void set_ptry(int num) { pen_ptr_y = num; }
@@ -140,7 +141,7 @@ void save_key(uint8_t c) {
   key_buffer[key_buffer_pos++] = c;
 }
 void clear_buffer() {
-  memset(buffer, 0, 64); // clear buffer
+  memset(key_buffer, 0, 256); // clear buffer
   key_buffer_pos = 0;
   retrieved_pos = 0;
 }
