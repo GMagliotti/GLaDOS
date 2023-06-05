@@ -1,6 +1,6 @@
 // This is a personal academic project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
-#include "include/philoclase.h"
+#include "include/philosophers.h"
 #include "include/funclib.h"
 #include "include/stdio.h"
 #include "include/user_syscalls.h"

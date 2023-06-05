@@ -1,5 +1,5 @@
-#ifndef _PHILO_CLASE_H
-#define _PHILO_CLASE_H
+#ifndef _PHILOSOPHERS_H
+#define _PHILOSOPHERS_H
 
 void philo(int argc, char** argv);
 void philosopher(int argc, char** argv);

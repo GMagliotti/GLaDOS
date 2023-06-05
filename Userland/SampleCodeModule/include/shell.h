@@ -11,7 +11,7 @@
 #include "../programs/include/ipc_processes.h"
 #include "../programs/include/process_info.h"
 #include "../tests/test_util.h"
-#include "philoclase.h"
+#include "philosophers.h"
 #include <stdbool.h>
 
 #define MAX_PARAMS 8
