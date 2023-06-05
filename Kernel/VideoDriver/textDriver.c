@@ -8,7 +8,7 @@ uint16_t font_size = 2; // default font size
 uint16_t font_width = DEFAULT_FONT_WIDTH;
 uint16_t font_height = DEFAULT_FONT_HEIGHT;
 uint32_t font_color = DEFAULT_FONT_COLOR;
-static uint8_t buffer[64] = {'0'};
+static uint8_t buffer[64] = {[0 ... 63] = '0'};
 
 void set_ptrx(int num) { pen_ptr_x = num; }
 void set_ptry(int num) { pen_ptr_y = num; }

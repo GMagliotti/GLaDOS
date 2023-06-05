@@ -11,5 +11,6 @@ int right2(int i);
 void think2();
 void eat2();
 void print_state2();
+int remove_philosopher();
 
 #endif
