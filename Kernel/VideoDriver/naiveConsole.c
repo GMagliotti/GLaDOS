@@ -2,7 +2,7 @@
 
 static uint32_t uint_to_base(uint64_t value, char *buffer, uint32_t base);
 
-static char buffer[64] = {'0'};
+static char buffer[64] = {[0 ... 63] = '0'}; //pvs warning fix
 static uint8_t *const video = (uint8_t *)0xB8000;
 static uint8_t *current_video = (uint8_t *)0xB8000;
 static const uint32_t width = 80;
