@@ -176,7 +176,7 @@ int create_pipe(char *name) {
     str_cpy(new_pipe->sem_read_name, name);
     new_pipe->sem_read_name[len] = 'R';
     new_pipe->sem_read_name[len + 1] = 0;
-    uint64_t sem_read = create_sem(0, new_pipe->sem_read_name);
+    int sem_read = create_sem(0, new_pipe->sem_read_name);
 
     if (sem_read == -1) {
       print("Create_pipe: Error en los sem del pipe");

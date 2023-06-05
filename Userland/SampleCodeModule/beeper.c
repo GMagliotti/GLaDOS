@@ -30,7 +30,7 @@ void beeper_songs(int argc, char **argv) {
   }
 }
 
-void beep_sample() { call_to_beep(1000, 1000); }
+// void beep_sample() { call_to_beep(1000, 1000); }
 
 void boot_sound() {
   call_to_beep(261, 250);

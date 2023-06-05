@@ -41,12 +41,13 @@ void sys_write(char *string, int length) {
 int sys_read(uint8_t fd, char *to_ret, int cant_chars) {
 
   int read_count = 0;
-  bool null_found = false;
+  // bool null_found = false;
 
   process_ptr proc = current_process();
 
   if (proc->fd_r == 0) {
     if (current_is_foreground()) {
+      bool null_found = false;
       for (; read_count < cant_chars && !null_found; read_count++) {
         sem_wait(r_w_sem_id);
         to_ret[read_count] = get_char();

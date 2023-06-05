@@ -20,7 +20,8 @@ int64_t test_processes(int argc, char **argv) {
   if (argc != 1)
     return -1;
 
-  if ((max_processes = satoi(argv[0])) <= 0)
+  // if ((max_processes = satoi(argv[0])) <= 0)
+  if ((max_processes = satoi(argv[0])) == 0)
     return -1;
 
   p_rq p_rqs[max_processes];

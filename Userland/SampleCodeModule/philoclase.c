@@ -80,6 +80,8 @@ void philo(int argc, char **argv) {
             call_to_create_process(3, args, &philosopher, NULL);
         num_philos++;
         printf("\nAdded philosopher\n");
+      } else {
+        printf("\nCannot add more than 20 philosophers\n");
       }
     } else if (c == 'R') {
       if (remove_philosopher() == -1) { // RACE CONDITION !!!
@@ -168,12 +170,12 @@ void put_forks(int i) {
 
   // Check waiting list and unblock philosophers in order
   for (int j = 0; j < waiting_list_size; j++) {
-    int philosopher = waiting_list[j];
-    if (state[philosopher] != EATING && state[left(philosopher)] != EATING &&
-        state[right(philosopher)] != EATING) {
-      state[philosopher] = EATING;
+    int philosopher_iter = waiting_list[j];
+    if (state[philosopher_iter] != EATING && state[left(philosopher_iter)] != EATING &&
+        state[right(philosopher_iter)] != EATING) {
+      state[philosopher_iter] = EATING;
 
-      call_to_sem_post(philo_sems[philosopher]);
+      call_to_sem_post(philo_sems[philosopher_iter]);
 
       // Remove philosopher from waiting list
       for (int k = j; k < waiting_list_size - 1; k++) {

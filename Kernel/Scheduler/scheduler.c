@@ -83,8 +83,6 @@ int scheduler_create_process(int argc, char **argv, void (*fn)(int, char **),
   }
 
   return created_process->pid;
-  
-  return 1;
 }
 
 // Borrado de proceso al scheduler (lo deberiamos de poder llamar nosotros) ¿que

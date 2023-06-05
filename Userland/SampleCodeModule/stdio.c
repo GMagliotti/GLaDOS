@@ -10,8 +10,8 @@
 char buffer[BUFFER_SIZE] = {0};
 uint16_t buffer_pos = 0;
 uint64_t uint_to_base(uint64_t value, char *buffer, uint32_t base);
-void get_input();
-int base_to_int(uint32_t base, uint8_t *err_flag);
+// void get_input();
+// int base_to_int(uint32_t base, uint8_t *err_flag);
 int base_to_uint(char *str, uint8_t base);
 int vscanf(const char *format, va_list args);
 
@@ -227,61 +227,61 @@ char get_char() {
 // }
 
 // uses get_char for input and returns the number inputted
-void get_input() {
-  int i = buffer_pos;
-  do {
-    buffer[i] = get_char();
-    i++;
-  } while (i < BUFFER_SIZE && buffer[i] != '\n');
+// void get_input() {
+//   int i = buffer_pos;
+//   do {
+//     buffer[i] = get_char();
+//     i++;
+//   } while (i < BUFFER_SIZE && buffer[i] != '\n');
 
-  if (i == BUFFER_SIZE) {
-    buffer[i - 1] = '\0';
-    call_to_sys_write("\nMAXIMO DE CARACTERES ALCANZADO\n", 32, STDERR);
-  } else {
-    buffer[i] = '\0';
-  }
-}
+//   if (i == BUFFER_SIZE) {
+//     buffer[i - 1] = '\0';
+//     call_to_sys_write("\nMAXIMO DE CARACTERES ALCANZADO\n", 32, STDERR);
+//   } else {
+//     buffer[i] = '\0';
+//   }
+// }
 
-// function that converts a string to a signed integer
-int32_t base_to_int(uint32_t base, uint8_t *err_flag) {
-  char *str = buffer;
-  int sign = 1;
-  int32_t num = 0;
-  if (str[0] == '-') {
-    sign = -1;
-    str += 1;
-  }
-  num = base_to_uint(str, base);
-  if (sign == -1) {
-    buffer_pos++;
-  }
-  if (num == -1) {
-    *err_flag = 1;
-  } else {
-    *err_flag = 0;
-  }
-  return num * sign;
-}
+// // function that converts a string to a signed integer
+// int32_t base_to_int(uint32_t base, uint8_t *err_flag) {
+//   char *str = buffer;
+//   int sign = 1;
+//   int32_t num = 0;
+//   if (str[0] == '-') {
+//     sign = -1;
+//     str += 1;
+//   }
+//   num = base_to_uint(str, base);
+//   if (sign == -1) {
+//     buffer_pos++;
+//   }
+//   if (num == -1) {
+//     *err_flag = 1;
+//   } else {
+//     *err_flag = 0;
+//   }
+//   return num * sign;
+// }
 
 // function that converts a string to an unsigned integer
-int32_t base_to_uint(char *str, uint8_t base) {
-  int32_t ret = 0;
-  int i = buffer_pos;
-  while (str[i] != '\0' && str[i] != '\n') {
-    if (str[i] >= '0' && str[i] <= '9') {
-      ret = ret * base + (str[i] - '0');
-    } else if (str[i] >= 'A' && str[i] <= 'F' && base == 16) {
-      ret = ret * base + (str[i] - 'A' + 10);
-    } else if (str[i] >= 'a' && str[i] <= 'f' && base == 16) {
-      ret = ret * base + (str[i] - 'a' + 10);
-    } else {
-      call_to_sys_write("\nERROR: CARACTER NO VALIDO\n", 27, STDERR);
-      call_to_sleep(3);
-      buffer_pos = i;
-      return ret == 0 && i != 0 ? -1 : ret;
-    }
-    i++;
-  }
-  buffer_pos = i;
-  return ret;
-}
+// int32_t base_to_uint(char *str, uint8_t base) {
+//   int32_t ret = 0;
+//   int i = buffer_pos;
+//   while (str[i] != '\0' && str[i] != '\n') {
+//     if (str[i] >= '0' && str[i] <= '9') {
+//       ret = ret * base + (str[i] - '0');
+//     } else if (str[i] >= 'A' && str[i] <= 'F' && base == 16) {
+//       ret = ret * base + (str[i] - 'A' + 10);
+//     } else if (str[i] >= 'a' && str[i] <= 'f' && base == 16) {
+//       ret = ret * base + (str[i] - 'a' + 10);
+//     } else {
+//       call_to_sys_write("\nERROR: CARACTER NO VALIDO\n", 27, STDERR);
+//       call_to_sleep(3);
+//       buffer_pos = i;
+//       return ret == 0 && i != 0 ? -1 : ret;
+//     }
+//     i++;
+//   }
+//   buffer_pos = i;
+//   return ret;
+// }

@@ -22,44 +22,44 @@ struct Node *add_to_empty(struct Node *last, void *data) {
 }
 
 // add node to the front
-struct Node *add_front(struct Node *last, void *data) {
-  if (last == NULL)
-    return NULL;
+// struct Node *add_front(struct Node *last, void *data) {
+//   if (last == NULL)
+//     return NULL;
 
-  struct Node *new_node = (struct Node *)sys_malloc(sizeof(struct Node));
+//   struct Node *new_node = (struct Node *)sys_malloc(sizeof(struct Node));
 
-  new_node->data = data;
-  new_node->next = last->next;
-  new_node->prev = last;
-  last->next->prev = new_node;
+//   new_node->data = data;
+//   new_node->next = last->next;
+//   new_node->prev = last;
+//   last->next->prev = new_node;
 
-  last->next = new_node;
+//   last->next = new_node;
 
-  return last;
-}
+//   return last;
+// }
 
 // add node to the end
-struct Node *add_end(struct Node *last, void *data) {
-  if (last == NULL)
-    return add_to_empty(last, data);
+// struct Node *add_end(struct Node *last, void *data) {
+//   if (last == NULL)
+//     return add_to_empty(last, data);
 
-  struct Node *new_node = (struct Node *)sys_malloc(sizeof(struct Node));
-  if (new_node == NULL) {
-    // Handle memory allocation failure
-    // printf("Error: Failed to allocate memory for new node\n");
-    return last;
-  }
+//   struct Node *new_node = (struct Node *)sys_malloc(sizeof(struct Node));
+//   if (new_node == NULL) {
+//     // Handle memory allocation failure
+//     // printf("Error: Failed to allocate memory for new node\n");
+//     return last;
+//   }
 
-  new_node->data = data;
-  new_node->next = last->next;
-  new_node->prev = last;
-  last->next->prev = new_node;
+//   new_node->data = data;
+//   new_node->next = last->next;
+//   new_node->prev = last;
+//   last->next->prev = new_node;
 
-  last->next = new_node;
-  last = new_node;
+//   last->next = new_node;
+//   last = new_node;
 
-  return last;
-}
+//   return last;
+// }
 
 struct Node *add_last(struct Node *last, void *data) {
   if (last == NULL)
@@ -81,36 +81,36 @@ struct Node *add_last(struct Node *last, void *data) {
 }
 
 // insert node after a specific node
-struct Node *add_after(struct Node *last, void *data, void *item) {
-  // check if the list is empty
-  if (last == NULL)
-    return NULL;
+// struct Node *add_after(struct Node *last, void *data, void *item) {
+//   // check if the list is empty
+//   if (last == NULL)
+//     return NULL;
 
-  struct Node *new_node, *p;
+//   struct Node *new_node, *p;
 
-  p = last->next;
-  do {
-    if (p->data == item) {
-      new_node = (struct Node *)sys_malloc(sizeof(struct Node));
+//   p = last->next;
+//   do {
+//     if (p->data == item) {
+//       new_node = (struct Node *)sys_malloc(sizeof(struct Node));
 
-      new_node->data = data;
-      new_node->next = p->next;
-      new_node->prev = p;
+//       new_node->data = data;
+//       new_node->next = p->next;
+//       new_node->prev = p;
 
-      p->next->prev = new_node;
-      p->next = new_node;
+//       p->next->prev = new_node;
+//       p->next = new_node;
 
-      if (p == last)
-        last = new_node;
-      return last;
-    }
+//       if (p == last)
+//         last = new_node;
+//       return last;
+//     }
 
-    p = p->next;
-  } while (p != last->next);
+//     p = p->next;
+//   } while (p != last->next);
 
-  // printf("\nThe given node is not present in the list");
-  return last;
-}
+//   // printf("\nThe given node is not present in the list");
+//   return last;
+// }
 
 // delete a node
 void delete_node(struct Node **last, void *key) {
