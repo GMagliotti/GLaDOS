@@ -250,7 +250,6 @@ pic_slave_mask:
 
 ;8254 Timer (Timer Tick)
 _irq00_handler:
-	cli
 	pushState
 
 	mov rdi, 0h ; pasaje de parametro de irq code
@@ -265,12 +264,10 @@ _irq00_handler:
 	out 20h, al
 
 	popState
-	sti
 	iretq
 
 ;Keyboard
 _irq01_handler:
-	cli
 	pushState
 
 	mov rdi, 1h ; pasaje de parametro de irq code
@@ -284,7 +281,6 @@ _irq01_handler:
 	out 20h, al
 
 	popState
-	sti
 	iretq
 
 ;Cascade pic never called
@@ -305,7 +301,6 @@ _irq05_handler:
 
 ;User-called syscalls
 _irq60_handler:
-	cli
 	;pushState -> no usare push y pop state porque quiero retornar un valor en rax
 	;			ademas al ser una interrupcion de syscall (a pedido del user) no es necesario preservar todos los registros
 	push rbx
@@ -332,7 +327,6 @@ _irq60_handler:
 	pop r13
 	pop r12
 	pop rbx
-	sti
 	iretq
 
 ;Zero Division Exception
