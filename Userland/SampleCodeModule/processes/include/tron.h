@@ -13,7 +13,7 @@
 void tron();
 int hit_player(uint32_t p1_currX, uint32_t p1_currY, uint32_t p2_currX,
                uint32_t p2_currY);
-void tron_char(uint8_t scancode);
+void tron_char(uint8_t c);
 void game_over(int whoHit);
 void tron_menu();
 void print_winner();

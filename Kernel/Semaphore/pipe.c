@@ -188,6 +188,6 @@ int create_pipe(char *name) {
 }
 
 int index_valid(int pipe_index) {
-  return !(pipe_index == 0 || (pipe_index > MAX_PIPES &&
+  return !(pipe_index == 0 || (pipe_index >= MAX_PIPES &&
                                pipes[pipe_index - 1].available == FALSE));
 }
