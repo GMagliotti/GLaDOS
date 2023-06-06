@@ -1,8 +1,8 @@
 // This is a personal academic project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 #include "./Scheduler/include/scheduler.h"
+#include "./Semaphore/include/pipe.h"
 #include "include/lib.h"
-#include "include/pipe.h"
 #include "memoryManager.h"
 #include "syscalls.h"
 #include <idtLoader.h>

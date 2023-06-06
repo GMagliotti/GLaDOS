@@ -1,6 +1,6 @@
 // This is a personal academic project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
-#include <tron.h>
+#include "include/tron.h"
 
 #define NONE 0
 #define UP -1
@@ -54,7 +54,7 @@ void tron() {
 
   // Arbitrary starting positions:
   player p1 = {16 * GRIDSQUARE, SCREEN_PIXEL_HEIGHT - 4 * GRIDSQUARE};
-  
+
   player p2 = {16 * GRIDSQUARE, 3 * GRIDSQUARE};
 
   int whoHit = 0;
@@ -68,7 +68,7 @@ void tron() {
       char c = get_char();
       if (c == 'Q') { // quit game
         end_game();
-        return; 
+        return;
       }
       if (c != 0) {
         tron_char(c); // change directions flags based on
@@ -80,8 +80,8 @@ void tron() {
     move_players(&p1, &p2);
   }
   game_over(whoHit); // prints winner of a game of 3
-  
-  clear_taken();     // set taken array as 0's for next game
+
+  clear_taken();            // set taken array as 0's for next game
   p1XFlag = p2XFlag = NONE; // set default starting positions
   p1YFlag = UP;
   p2YFlag = DOWN;
@@ -89,7 +89,7 @@ void tron() {
   if (played_games < CANTGAMES) { // play again
     tron();
   } else {
-    print_winner(); 
+    print_winner();
     end_game();
   }
 }
@@ -105,8 +105,7 @@ void end_game() {
   call_to_clear_buffer();
 }
 void clear_taken() {
-  for (int i = 0; i < GRIDXLIMIT;
-       i++) 
+  for (int i = 0; i < GRIDXLIMIT; i++)
     for (int j = 0; j < GRIDYLIMIT; j++)
       taken[i][j] = NONE;
 }
@@ -126,7 +125,7 @@ void print_winner() {
     victory(); // sound
   } else if (wins[0] < wins[1]) {
     printf("Player 2 won!");
-    victory(); 
+    victory();
   } else {
     printf("Its a tie!");
     mario(); // sound
@@ -135,7 +134,7 @@ void print_winner() {
 }
 
 void move_players(player *p1, player *p2) {
-  p1->x += p1XFlag * GRIDSQUARE; 
+  p1->x += p1XFlag * GRIDSQUARE;
   p1->y += p1YFlag * GRIDSQUARE;
   p2->x += p2XFlag * GRIDSQUARE;
   p2->y += p2YFlag * GRIDSQUARE;

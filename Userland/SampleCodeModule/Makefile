@@ -1,7 +1,7 @@
 include ../Makefile.inc
 
 MODULE=0000-sampleCodeModule.bin
-SOURCES=$(wildcard [^_]*.c) $(wildcard tests/*.c) $(wildcard programs/*.c)
+SOURCES=$(wildcard [^_]*.c) $(wildcard tests/*.c) $(wildcard processes/*.c)
 LIBRARIES=$(wildcard libraries/*.c)
 
 SOURCES_ASM=$(wildcard asm/*.asm)

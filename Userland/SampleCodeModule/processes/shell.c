@@ -1,9 +1,9 @@
 // This is a personal academic project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 #include "include/shell.h"
-#include "include/user_syscalls.h"
-#include "programs/include/process_info.h"
+#include "include/process_info.h"
 #include <stdio.h>
+#include <user_syscalls.h>
 
 #define MAX_CHARS_PER_COMMAND 128
 
@@ -37,8 +37,8 @@ void save_char(char c) {
   }
 }
 
-//checks if whats in buffer before the \n is a valid command, and also
-// clears the buffer
+// checks if whats in buffer before the \n is a valid command, and also
+//  clears the buffer
 char *valid_commands[32][2] = {
     {"HELP", "Provides a list of available programs"},
     {"CLEAR", "Clears the screen"},

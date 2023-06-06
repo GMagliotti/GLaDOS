@@ -1,10 +1,9 @@
 // This is a personal academic project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 #include "include/philosophers.h"
-#include "include/funclib.h"
-#include "include/stdio.h"
-#include "include/user_syscalls.h"
+#include <funclib.h>
 #include <stdio.h>
+#include <user_syscalls.h>
 
 #define R_W_SEMNAME "r_w_sem"
 
@@ -54,8 +53,7 @@ void philo(int argc, char **argv) {
 
   // Print menu
   printf("\n\t\t\t\t\t\t\tWelcome to the philosopher's dilemma\n");
-  printf("\t\t\t\t\t\tYou have chosen %d initial philosophers\n",
-         num_philos);
+  printf("\t\t\t\t\t\tYou have chosen %d initial philosophers\n", num_philos);
   printf("\nPress 'Q' at any time to quit the demo\n");
   printf("Press 'A' to add a philosopher, or 'R' to remove one\n");
 
@@ -90,7 +88,7 @@ void philo(int argc, char **argv) {
         printf("\nCannot add more than 20 philosophers\n");
       }
     } else if (c == 'R') {
-      if (remove_philosopher() == -1) { 
+      if (remove_philosopher() == -1) {
         printf("\nFailed to remove philosopher: there must always be at least "
                "one philosopher\n");
       } else {
@@ -151,7 +149,7 @@ void take_forks(int i) {
   call_to_sem_post(r_w_sem_index);
 
   waiting_list[waiting_list_size++] = i; // Add philosopher to waiting list
-  test(i);                              // Try to acquire 2 forks
+  test(i);                               // Try to acquire 2 forks
 
   if (state[i] != EATING) {
     call_to_sem_post(mutex_id);      // Exit critical region
@@ -170,7 +168,8 @@ void put_forks(int i) {
   // Check waiting list and unblock philosophers in order
   for (int j = 0; j < waiting_list_size; j++) {
     int philosopher_iter = waiting_list[j];
-    if (state[philosopher_iter] != EATING && state[left(philosopher_iter)] != EATING &&
+    if (state[philosopher_iter] != EATING &&
+        state[left(philosopher_iter)] != EATING &&
         state[right(philosopher_iter)] != EATING) {
       state[philosopher_iter] = EATING;
 

@@ -1,6 +1,6 @@
 // This is a personal academic project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
-#include <beeper.h>
+#include "include/beeper.h"
 
 void beeper_songs(int argc, char **argv) {
 
@@ -229,7 +229,7 @@ void tetris_intro() {
 }
 
 void mortal_kombat() {
-  for (int i = 0; i< 2; i++) {  
+  for (int i = 0; i < 2; i++) {
     call_to_beep(220, 250);
     call_to_beep(220, 250);
     call_to_beep(261, 250);
@@ -311,7 +311,6 @@ void mortal_kombat() {
     call_to_beep(196, 125);
     call_to_beep(220, 250);
   }
-
 }
 
 void mario() {

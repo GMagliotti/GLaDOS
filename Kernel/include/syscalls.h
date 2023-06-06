@@ -6,11 +6,11 @@
 
 #include "../Scheduler/include/process.h"
 #include "../Scheduler/include/scheduler.h"
+#include "../Semaphore/include/pipe.h"
 #include "../Semaphore/include/semaphore.h"
 #include "interrupts.h"
 #include "lib.h"
 #include "memoryManager.h"
-#include "pipe.h"
 #include "registers.h"
 #include "soundDriver.h"
 #include "textDriver.h"

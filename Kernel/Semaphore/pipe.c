@@ -1,6 +1,6 @@
 // This is a personal academic project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
-#include <pipe.h>
+#include "include/pipe.h"
 
 typedef struct {
   int r_index;
@@ -188,5 +188,6 @@ int create_pipe(char *name) {
 }
 
 int index_valid(int pipe_index) {
-  return !(pipe_index == 0 || (pipe_index > MAX_PIPES && pipes[pipe_index - 1].available == FALSE));
+  return !(pipe_index == 0 || (pipe_index > MAX_PIPES &&
+                               pipes[pipe_index - 1].available == FALSE));
 }

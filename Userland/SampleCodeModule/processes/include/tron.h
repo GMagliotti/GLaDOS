@@ -1,8 +1,8 @@
 #ifndef TRON_H
 #define TRON_H
 
-#include <beeper.h>
-#include <shell.h>
+#include "beeper.h"
+#include "shell.h"
 #include <stdint.h>
 #include <stdio.h>
 #include <user_syscalls.h>

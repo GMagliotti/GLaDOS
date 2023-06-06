@@ -1,18 +1,18 @@
 #ifndef SHELL_H
 #define SHELL_H
 
-#include "funclib.h"
+#include "../../tests/test_util.h"
+#include "beeper.h"
+#include "ipc_processes.h"
+#include "philosophers.h"
+#include "process_info.h"
 #include "tests.h"
 #include "time.h"
 #include "tron.h"
 #include "user_syscalls.h"
-#include <beeper.h>
-#include <stdint.h>
-#include "../programs/include/ipc_processes.h"
-#include "../programs/include/process_info.h"
-#include "../tests/test_util.h"
-#include "philosophers.h"
+#include <funclib.h>
 #include <stdbool.h>
+#include <stdint.h>
 
 #define MAX_PARAMS 8
 
