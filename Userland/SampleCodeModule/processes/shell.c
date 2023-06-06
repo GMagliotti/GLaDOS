@@ -59,7 +59,6 @@ char *valid_commands[32][2] = {
     {"NICE", "Changes the priority of a process"},
     {"BLOCK", "Block a process (YMMV)"},
     {"UNBLOCK", "Unblock a process (YMMV)"},
-    {"SHELL", "Creates a new shell!! (Limit testing)"},
     {"CAT", "Prints the stdin it recieves"},
     {"WC", "Counts the amount of lines in input"},
     {"FILTER", "Filters the vocals in the input"},
@@ -86,7 +85,6 @@ void (*command_functions[32])(int, char **) = {help,
                                                nice_process,
                                                block_process,
                                                unblock_process,
-                                               shell,
                                                cat,
                                                wc,
                                                filter,
@@ -164,7 +162,7 @@ void check_buffer() {
 
     if (!found2) {
       call_to_pkill_process(pid1);
-      printf("Cmd 2 not found, matando 1\n");
+      printf("Cmd 2 not found, killing process 1\n");
     }
 
   } else {
