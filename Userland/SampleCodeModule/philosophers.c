@@ -211,20 +211,11 @@ void think() { sleep(3); }
 void eat() { sleep(3); }
 
 void print_state() {
-  printf("\nEATING: ");
   for (int i = 0; i < num_philos; i++) {
     if (state[i] == EATING)
-      printf("%d ", i);
+      printf("E ");
+    else
+      printf(". ");
   }
-  printf("\nTHINKING: ");
-  for (int i = 0; i < num_philos; i++) {
-    if (state[i] == THINKING)
-      printf("%d ", i);
-  }
-  printf("\nHUNGRY: ");
-  for (int i = 0; i < num_philos; i++) {
-    if (state[i] == HUNGRY)
-      printf("%d ", i);
-  }
-  printf("\n<-------------------------Press Q to quit at any time------>\n");
+  printf("\n\n\t\t\t\t\t\t\t\t\t\t\t\t\tPress Q to quit at any time\n\n");
 }
