@@ -183,9 +183,6 @@ int sem_close(char *name) {
   if (sem_index == -1) {
     return -1;
   }
-  sem_t sem = sem_spaces[sem_index].sem;
-  while (sem.value > 0)
-    ;
   destroy_sem(sem_index);
   return 0;
 }
