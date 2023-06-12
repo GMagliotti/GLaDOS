@@ -6,6 +6,7 @@
 #include "ipc_processes.h"
 #include "philosophers.h"
 #include "process_info.h"
+#include "process_shmem.h"
 #include "tests.h"
 #include "time.h"
 #include "tron.h"

@@ -59,4 +59,6 @@ void call_to_yield(void);
 void call_to_print_mem();
 void call_to_clear_screen();
 
+uintptr_t *call_to_shmem_open(char *shmem_name);
+
 #endif

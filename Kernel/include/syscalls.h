@@ -8,6 +8,7 @@
 #include "../Scheduler/include/scheduler.h"
 #include "../Semaphore/include/pipe.h"
 #include "../Semaphore/include/semaphore.h"
+#include "../Semaphore/include/shared_mem.h"
 #include "interrupts.h"
 #include "lib.h"
 #include "memoryManager.h"
@@ -77,4 +78,5 @@ int sys_pipe_close(int pipe_index);
 void sys_print_mem();
 void sys_yield();
 void sys_clear_screen();
+uintptr_t *sys_shmem_open(char *shmem_name);
 #endif

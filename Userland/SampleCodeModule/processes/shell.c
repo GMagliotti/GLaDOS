@@ -64,7 +64,10 @@ char *valid_commands[32][2] = {
     {"FILTER", "Filters the vocals in the input"},
     {"PRINTSCHEDULER", "Sets the scheduler on print mode"},
     {"PHYLO", "Runs Philosophers dilemma"},
-    {"TEST", "Runs one of the available tests"}};
+    {"TEST", "Runs one of the available tests"},
+    {"SHMEMW", "Starts writing on shmem"},
+    {"SHMEMR", "Starts reading on shmem"},
+};
 
 void (*command_functions[32])(int, char **) = {help,
                                                return_to_shell,
@@ -90,7 +93,9 @@ void (*command_functions[32])(int, char **) = {help,
                                                filter,
                                                call_to_set_print_mode,
                                                philo,
-                                               tests};
+                                               tests,
+                                               shmem_writer,
+                                               shmem_reader};
 
 int find_pipe(char *params[], int argc) {
   for (int i = 0; i < argc; i++) {

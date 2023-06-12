@@ -1,5 +1,6 @@
 // This is a personal academic project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+#include <sys/types.h>
 #include <syscalls.h>
 
 extern uint8_t memoryAt(int dir);
@@ -206,3 +207,5 @@ void sys_print_mem() { print_mem(the_memory_manager); }
 void sys_yield() { force_timer(); }
 
 void sys_clear_screen() { hvd_clear(); }
+
+uintptr_t *sys_shmem_open(char *shmem_name) { return shmem_open(shmem_name); };

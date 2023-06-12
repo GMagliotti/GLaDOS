@@ -214,6 +214,10 @@ uint64_t int_80(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rcx,
   case 41:
     sys_clear_screen();
     break;
+  case 42:
+    sys_shmem_open((char *)rsi);
+    break;
+
   default:
     return 0;
     break;
